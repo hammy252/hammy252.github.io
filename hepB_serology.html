@@ -79,9 +79,11 @@
         button {
             @apply px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed;
         }
+        /* Interpret button (primary action) */
         button#interpret-btn {
             @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
         }
+        /* Reset button (secondary action) */
         button#reset-btn {
              @apply bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400;
         }
@@ -113,7 +115,7 @@
 
             <fieldset>
                 <legend>Core Serological Markers</legend>
-                <div class="fieldset-grid md:grid-cols-2"> {/* Changed grid-cols here */}
+                <div class="fieldset-grid"> {/* Removed md:grid-cols-2 here to let the base class handle it */}
                     <div class="input-group">
                         <label for="hbsag">HBsAg (Surface Antigen):</label>
                         <select id="hbsag" name="hbsag">
@@ -151,7 +153,7 @@
 
              <fieldset>
                 <legend>Additional Markers (for Phasing/Staging)</legend>
-                <div class="fieldset-grid md:grid-cols-2"> {/* Changed grid-cols here */}
+                <div class="fieldset-grid"> {/* Removed md:grid-cols-2 here */}
                      <div class="input-group">
                         <label for="hbeag">HBeAg (e Antigen):</label>
                         <select id="hbeag" name="hbeag">
@@ -174,8 +176,8 @@
                             <option value="na">Not Tested</option>
                             <option value="Undetectable">Undetectable</option>
                             <option value="Low (<2000 IU/mL)">Low (<2000 IU/mL)</option>
-                             <option value="Mod (2000-20k IU/mL)">Moderate (2k-20k IU/mL)</option> {/* Added Moderate */}
-                            <option value="High (>=20k IU/mL)">High (≥20k IU/mL)</option> {/* Adjusted High */}
+                            <option value="Mod (2000-20k IU/mL)">Moderate (2k-20k IU/mL)</option>
+                            <option value="High (>=20k IU/mL)">High (≥20k IU/mL)</option>
                         </select>
                     </div>
                      <div class="input-group">
@@ -184,7 +186,7 @@
                             <option value="na">Not Tested</option>
                             <option value="Normal">Normal</option>
                             <option value="Elevated">Elevated</option>
-                            <option value="Slightly Elevated">Slightly Elevated</option> {/* Added for nuance */}
+                            <option value="Slightly Elevated">Slightly Elevated</option>
                         </select>
                     </div>
                 </div>
@@ -206,7 +208,7 @@
                 <p class="result-section-title">Interpretation:</p>
                 <p id="interpretation" class="result-interpretation"></p>
             </div>
-            <div id="phase-stage-section" style="display: none;"> {/* Hide initially */}
+            <div id="phase-stage-section" style="display: none;">
                  <p class="result-section-title">Likely Phase / Stage:</p>
                  <p id="phase-stage" class="result-phase-stage"></p>
             </div>
@@ -304,19 +306,19 @@
                 // 6. Chronic HBV (or early infection if IgM status unclear/negative but clinically acute)
                 else if (antiHbcTotal === 'Positive' && (antiHbcIgm === 'Negative' || antiHbcIgm === 'na')) {
                     interpretation = 'Chronic Hepatitis B Infection (or possibly resolving acute).';
-                     recommendations.push('<li>Presence > 6 months confirms chronic infection.</li>');
+                    recommendations.push('<li>Presence > 6 months confirms chronic infection.</li>');
                     recommendations.push('<li>Requires staging and monitoring. Assess for treatment eligibility.</li>');
 
                     // --- Sub-typing Chronic HBV ---
                     if (hbeag === 'Positive' && (alt === 'Normal' || alt === 'Slightly Elevated') && (hbvDna === 'High (>=20k IU/mL)')) {
                         phaseStage = 'Chronic HBV: Immune-Tolerant Phase';
-                        recommendations.push('<li>Typically high DNA, normal ALT, HBeAg positive. Monitor regularly (e.g., every 6-12 months).</li>');
+                        recommendations.push('<li>Typically high DNA, normal/slightly elevated ALT, HBeAg positive. Monitor regularly (e.g., every 6-12 months).</li>');
                     } else if (hbeag === 'Positive' && alt === 'Elevated' && (hbvDna === 'High (>=20k IU/mL)' || hbvDna === 'Mod (2000-20k IU/mL)')) {
                         phaseStage = 'Chronic HBV: Immune-Active Phase (HBeAg Positive)';
-                        recommendations.push('<li>Elevated ALT, high/mod DNA, HBeAg positive. High priority for treatment assessment.</li>');
-                    } else if (hbeag === 'Negative' && antiHbe === 'Positive' && alt === 'Elevated' && (hbvDna === 'Low (<2000 IU/mL)' || hbvDna === 'Mod (2000-20k IU/mL)' || hbvDna === 'High (>=20k IU/mL)')) { // DNA can vary but often >2000
+                        recommendations.push('<li>Elevated ALT, high/moderate DNA, HBeAg positive. High priority for treatment assessment.</li>');
+                    } else if (hbeag === 'Negative' && antiHbe === 'Positive' && alt === 'Elevated' && (hbvDna === 'Mod (2000-20k IU/mL)' || hbvDna === 'High (>=20k IU/mL)')) { // DNA usually >2000 for HBeAg-neg IA
                          phaseStage = 'Chronic HBV: Immune-Active Phase (HBeAg Negative)';
-                         recommendations.push('<li>Elevated ALT, detectable DNA (often >2000 IU/mL), HBeAg negative, Anti-HBe positive. Assess for treatment.</li>');
+                         recommendations.push('<li>Elevated ALT, moderate/high DNA (>2000 IU/mL typical), HBeAg negative, Anti-HBe positive. Assess for treatment.</li>');
                     } else if (hbeag === 'Negative' && antiHbe === 'Positive' && (alt === 'Normal' || alt === 'Slightly Elevated') && (hbvDna === 'Undetectable' || hbvDna === 'Low (<2000 IU/mL)')) {
                          phaseStage = 'Chronic HBV: Inactive Carrier State';
                          recommendations.push('<li>Normal/Slightly Elevated ALT, low/undetectable DNA, HBeAg negative, Anti-HBe positive. Monitor regularly. Lower risk of progression if truly inactive.</li>');
@@ -325,7 +327,7 @@
                          recommendations.push('<li>Check HBeAg and Anti-HBe to determine phase.</li>');
                     } else {
                          phaseStage = 'Chronic HBV: Pattern does not fit typical phase or requires more data.';
-                         recommendations.push('<li>Further assessment needed (check ALT, HBV DNA, HBeAg/Anti-HBe).</li>');
+                         recommendations.push('<li>Further assessment needed (check ALT, HBV DNA, HBeAg/Anti-HBe, and consider clinical context).</li>');
                     }
                 }
                 // 7. Atypical: HBsAg Positive, Anti-HBc Total Negative (Rare)
@@ -341,13 +343,12 @@
                  recommendations.push('<li>Requires HBsAg, Anti-HBs, and Anti-HBc Total for baseline interpretation.</li>');
             }
 
-            // Final check for recommendation list structure
-            if (recommendations.length > 1) { // Has more than the default item
-                recommendationsDisplay.innerHTML = recommendations.join(''); // Add closing </ul> implicitly? No, add it here.
-            } else {
-                 recommendationsDisplay.innerHTML = '<ul><li>No specific recommendations generated based on this pattern, consult guidelines.</li></ul>';
+            // Final check for recommendation list structure and ensure it's closed
+            if (recommendations.length <= 1) { // Only the default item
+                 recommendations = ['<ul><li>No specific recommendations generated based on this pattern, consult guidelines.</li></ul>'];
             }
-             recommendationsDisplay.innerHTML += '</ul>'; // Ensure list is closed
+            recommendationsDisplay.innerHTML = recommendations.join('') + '</ul>'; // Join items and ensure list is closed
+
 
             // Display results
             interpretationDisplay.textContent = interpretation;
