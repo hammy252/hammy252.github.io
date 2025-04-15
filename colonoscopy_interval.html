@@ -131,7 +131,7 @@
         <h1 class="main-title">Colonoscopy Interval Calculator</h1>
         <p class="sub-title">Determine the recommended surveillance interval based on findings from a high-quality colonoscopy.</p>
 
-        <form id="colonoscopy-form" class="space-y-6"> {/* This controls spacing between fieldsets/sections */}
+        <form id="colonoscopy-form" class="space-y-6"> 
 
             <fieldset>
                 <legend>Adenomas</legend>
@@ -208,7 +208,7 @@
                 </div>
             </fieldset>
 
-             <div class="normal-colo-section"> {/* Spacing after this is handled by button box's mt-8 */}
+             <div class="normal-colo-section">
                 <input type="checkbox" id="normal_colo" name="normal_colo">
                 <label for="normal_colo" class="normal-colo-label">Was the colonoscopy completely normal (no polyps found)?</label>
              </div>
@@ -224,7 +224,7 @@
 
         </form>
 
-        <div id="result" class="result-box" style="display: none;"> {/* Spacing before this is handled by its own mt-8 */}
+        <div id="result" class="result-box" style="display: none;"> 
             <p class="result-title">Recommended Surveillance Interval:</p>
             <p id="interval" class="result-interval"></p>
             <p id="rationale" class="result-rationale"></p>
