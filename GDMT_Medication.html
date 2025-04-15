@@ -29,8 +29,9 @@
         .result-section-title { @apply text-base font-semibold text-blue-900 border-b border-blue-200 pb-1 mb-2; }
         .result-list { @apply list-disc list-inside pl-1 space-y-1 text-sm text-slate-700; }
         .result-list li strong { @apply font-medium text-slate-800; }
-        .result-list li span.caveat { @apply text-xs text-red-700 italic ml-1; }
-         .result-list li span.note { @apply text-xs text-gray-600 italic ml-1; }
+        /* Updated span classes for notes and caveats */
+        .result-list li span.caveat { @apply text-xs text-red-600 italic ml-1; }
+        .result-list li span.note { @apply text-xs text-gray-600 italic ml-1; }
 
         .disclaimer { @apply mt-5 text-xs text-slate-500 border-t border-slate-200 pt-3; }
         button { @apply px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed; }
@@ -74,8 +75,8 @@
                         <label for="qrs_duration">QRS Duration (ms):</label>
                         <input type="number" id="qrs_duration" name="qrs_duration" placeholder="e.g., 160">
                     </div>
-                     <div class="checkbox-container pt-6"> 
-                        <input type="checkbox" id="sinus_rhythm" name="sinus_rhythm" checked>
+                     <div class="checkbox-container pt-6"> {/* Adjusted alignment */}
+                        <input type="checkbox" id="sinus_rhythm" name="sinus_rhythm" checked> {/* Default to checked */}
                         <label for="sinus_rhythm" class="checkbox-label">Sinus Rhythm?</label>
                     </div>
                      <div class="checkbox-container pt-6">
@@ -265,25 +266,33 @@
 
             // --- 1. Foundational GDMT Pillars ---
             let gdmtHtml = '';
-            if (hasAngioedemaHx) {
-                 gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> <span class="caveat">Contraindicated due to Angioedema Hx.</span> Consider Hydralazine/Nitrate if alternative needed.</li>`;
-                 gdmtHtml += `<li><strong>ACEi/ARB:</strong> <span class="caveat">Contraindicated due to Angioedema Hx.</span></li>`;
-            } else {
-                gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> Preferred over ACEi/ARB for NYHA II-IV.</li>`;
-                gdmtHtml += `<li><strong>ACEi/ARB:</strong> Alternative if ARNI intolerant (but not if angioedema with ACEi).</li>`;
-            }
-             gdmtHtml += `<li><strong>Beta-Blocker (Evidence-based):</strong> Metoprolol Succinate, Carvedilol, or Bisoprolol. <span class="caveat">Titrate carefully, avoid in acute decompensation.</span></li>`;
-             gdmtHtml += `<li><strong>MRA (Spironolactone/Eplerenone):</strong> Indicated for NYHA II-IV. <span class="caveat">Monitor K+ and Renal function. Specific timing post-MI applies.</span></li>`;
-             gdmtHtml += `<li><strong>SGLT2 Inhibitor (-gliflozin):</strong> Broad indication for HFrEF. <span class="caveat">Monitor renal function, C/I in T1DM/DKA hx.</span>`;
-             if(hasT2DM) gdmtHtml += ` <span class="note">Also benefits ASCVD risk. GLP-1 Agonist (-glutide) alternative for T2DM/Weight loss but no specific HF benefit.</span>`;
-             gdmtHtml += `</li>`;
-             gdmtPillarsList.innerHTML = gdmtHtml;
 
+            // ARNI / ACEi / ARB
+            if (hasAngioedemaHx) {
+                gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> <span class="caveat">CONTRAINDICATED (Angioedema Hx).</span></li>`;
+                gdmtHtml += `<li><strong>ACEi/ARB:</strong> <span class="caveat">CONTRAINDICATED (Angioedema Hx with ACEi applies to ARNI too).</span> Consider Hydralazine/Nitrate.</li>`;
+            } else {
+                gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> Preferred over ACEi/ARB for NYHA II-IV. <span class="note">C/I: Angioedema Hx, Pregnancy. Caution: Hypotension, Hyperkalemia, Renal Impairment, Bilateral Renal Artery Stenosis.</span></li>`;
+                gdmtHtml += `<li><strong>ACEi/ARB:</strong> Alternative if ARNI intolerant. <span class="note">C/I: Angioedema Hx, Pregnancy. Caution: Hypotension, Hyperkalemia, Renal Impairment, Bilateral Renal Artery Stenosis.</span></li>`;
+            }
+
+            // Beta-Blocker
+            gdmtHtml += `<li><strong>Beta-Blocker (Evidence-based: Metoprolol Succinate, Carvedilol, Bisoprolol):</strong> <span class="note">C/I: Severe Bradycardia, High-Degree AV Block (without pacemaker). Caution: Acute Decompensation (Avoid *initiating* or *up-titrating* acutely, continue if stable & tolerated), Reactive Airway Disease (use cardioselective), Hypotension.</span></li>`;
+
+            // MRA
+            gdmtHtml += `<li><strong>MRA (Spironolactone/Eplerenone):</strong> Indicated for NYHA II-IV (or post-MI EF≤40%+HF/DM). <span class="note">C/I: Hyperkalemia (K+ >5.0 mEq/L), Severe Renal Impairment (e.g., eGFR < 30 mL/min), Anuria. Monitor K+ and Renal function.</span></li>`;
+
+            // SGLT2 Inhibitor
+            gdmtHtml += `<li><strong>SGLT2 Inhibitor (-gliflozin):</strong> Broad indication for HFrEF (NYHA II-IV). <span class="note">C/I: T1DM, History of DKA, Severe Renal Impairment (check specific agent's eGFR cutoff). Caution: Volume Depletion, Risk of Genitourinary Infections.</span>`;
+            if(hasT2DM) gdmtHtml += ` <span class="note">Also benefits ASCVD risk & T2DM control. GLP-1 Agonist (-glutide) alternative for T2DM/Weight loss but less direct HF benefit proven vs SGLT2i.</span>`;
+            gdmtHtml += `</li>`;
+
+            gdmtPillarsList.innerHTML = gdmtHtml;
 
              // --- 2. Symptom Management ---
             if (isCongested) {
                 showSymptom = true;
-                symptomMgmtList.innerHTML += `<li><strong>Diuretics (Loop):</strong> For congestion relief (PO or IV). <span class="note">Adjust dose based on volume status. IV dose often 1-2.5x home PO dose if admitted.</span></li>`;
+                symptomMgmtList.innerHTML += `<li><strong>Diuretics (Loop):</strong> For congestion relief (PO or IV). <span class="note">Adjust dose based on volume status. IV dose often 1-2.5x home PO dose if admitted. Monitor electrolytes & renal function.</span></li>`;
             }
 
              // --- 3. Additional Medications ---
@@ -293,67 +302,77 @@
              }
              if (isIronDeficient) {
                   showAdditional = true;
-                  additionalMedsList.innerHTML += `<li><strong>IV Iron (Ferric Carboxymaltose):</strong> Consider for iron deficiency (Ferritin <100 or TSAT <20%).</li>`;
+                  additionalMedsList.innerHTML += `<li><strong>IV Iron (Ferric Carboxymaltose):</strong> Consider for iron deficiency (Ferritin <100 ng/mL or Ferritin 100-299 ng/mL with TSAT <20%).</li>`; // Updated criteria detail
              }
-             if ((isBlackRace && (nyhaClass === 'III' || nyhaClass === 'IV')) || (nyhaClass === 'III' || nyhaClass === 'IV' /* Add logic here if ARNI/ACEi/ARB intolerant/maxed */ )) {
+             // Corrected logic slightly - added check for NYHA class as per text
+             if ((isBlackRace && (nyhaClass === 'III' || nyhaClass === 'IV')) || ((nyhaClass === 'III' || nyhaClass === 'IV') && !hasAngioedemaHx /* Implies intolerance/maxed on ARNI/ACEi/ARB could be reason */)) {
                   showAdditional = true;
-                  additionalMedsList.innerHTML += `<li><strong>Hydralazine + Isosorbide Dinitrate (Hy/ISDN):</strong> Consider if Black NYHA III-IV, or if intolerant/maxed on ARNI/ACEi/ARB.</li>`;
+                  additionalMedsList.innerHTML += `<li><strong>Hydralazine + Isosorbide Dinitrate (Hy/ISDN):</strong> Consider if Black NYHA III-IV on GDMT, OR persistent NYHA III-IV symptoms despite optimal ARNI/ACEi/ARB/BB/MRA/SGLT2i (especially if intolerant to ARNI/ACEi/ARB).</li>`;
              }
             if (hasAfib) {
                 showAdditional = true;
                  additionalMedsList.innerHTML += `<li><strong>Anticoagulation:</strong> Assess need based on stroke risk (e.g., CHA2DS2-VASc).</li>`;
-                 additionalMedsList.innerHTML += `<li><strong>Rate Control:</strong> Beta-blocker is first-line. <span class="note">Digoxin may be adjunct if needed, careful monitoring required.</span></li>`;
-                  additionalMedsList.innerHTML += `<li><strong>Rhythm Control:</strong> Consider PVI referral based on symptoms/patient preference.</li>`;
+                 additionalMedsList.innerHTML += `<li><strong>Rate Control:</strong> Beta-blocker is first-line (if tolerated). <span class="note">Digoxin may be adjunct if needed, careful monitoring required. Avoid non-dihydropyridine CCBs.</span></li>`;
+                 additionalMedsList.innerHTML += `<li><strong>Rhythm Control:</strong> Consider PVI referral based on symptoms/patient preference after discussing risks/benefits.</li>`;
             }
-            // Last resort digitalis - simplified trigger
-            if (isCongested && (nyhaClass === 'III' || nyhaClass === 'IV')) { // Simplified trigger
-                 // Check if NOT already added via AFib
-                 if (!additionalMedsList.innerHTML.includes('Digoxin')) {
-                     //showAdditional = true; // Decide if it fits better here or advanced
-                    // additionalMedsList.innerHTML += `<li><strong>Digitalis (Digoxin):</strong> Consider for symptom control in specific cases (e.g., persistent symptoms despite optimal GDMT, sometimes adjunct for AF rate control). <span class="caveat">Narrow therapeutic window, monitor levels/toxicity.</span></li>`;
+            // Last resort digitalis
+            if (isRecurrentDecomp || (isCongested && (nyhaClass === 'III' || nyhaClass === 'IV'))) { // Triggered by advanced HF or persistent symptoms
+                 if (!additionalMedsList.innerHTML.includes('Digoxin')) { // Check if NOT already added via AFib note
+                     showAdditional = true;
+                     additionalMedsList.innerHTML += `<li><strong>Digitalis (Digoxin):</strong> Consider for reducing hospitalizations in patients with persistent symptoms (NYHA II-IV) despite optimal GDMT. <span class="caveat">Narrow therapeutic window, monitor levels/toxicity, no mortality benefit, avoid if significant AV block.</span></li>`;
                  }
             }
 
 
             // --- 4. Device Therapy ---
              if (onOptimalGDMT && lvef) {
-                // Primary Prevention ICD
+                // Primary Prevention ICD - Added ischemic/non-ischemic check based on timing notes
+                let icdNote = "Specific timing applies post-MI (>40d) or revascularization (>3mo). Ensure etiology assessed & reversible causes excluded.";
                 if ((lvef <= 35 && (nyhaClass === 'II' || nyhaClass === 'III')) || (lvef <= 30 && nyhaClass === 'I')) {
                      showDevice = true;
-                     deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation:</strong> Consider for primary prevention. <span class="note">Specific timing applies post-MI (>40d) or revascularization (>3mo). Check for reversible causes.</span></li>`;
+                     deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation (Primary Prevention):</strong> Consider if LVEF ≤30% (NYHA I) or LVEF ≤35% (NYHA II-III) despite ≥3 months optimal GDMT, AND reasonable expectation of survival >1 year. <span class="note">${icdNote}</span></li>`;
                 }
                  // CRT
-                if (isSinus && hasLbbb && qrsDuration && lvef <= 35 && (nyhaClass === 'II' || nyhaClass === 'III' || nyhaClass === 'IV')) {
+                if (isSinus && hasLbbb && qrsDuration && lvef <= 35 && (nyhaClass === 'II' || nyhaClass === 'III' || nyhaClass === 'IV ambulatory')) { // Added ambulatory IV
                      if (qrsDuration >= 150) {
                           showDevice = true;
-                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Strong indication (LBBB, QRS ≥ 150ms). <span class="note">Improves symptoms and survival.</span></li>`;
-                     } else if (qrsDuration >= 120) {
+                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Strong indication (LBBB, QRS ≥ 150ms). <span class="note">Improves symptoms, QOL, and survival.</span></li>`;
+                     } else if (qrsDuration >= 130) { // Changed threshold based on flowchart
                            showDevice = true;
-                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Consider (LBBB, QRS 120-149ms). <span class="note">Benefit less pronounced than QRS≥150 but still present, primarily functional capacity.</span></li>`;
+                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Consider (LBBB, QRS 130-149ms). <span class="note">Benefit primarily functional capacity/symptoms, less mortality benefit vs QRS≥150.</span></li>`;
                      }
+                 } else if (isSinus && !hasLbbb && qrsDuration && qrsDuration >=150 && lvef <=35 && (nyhaClass === 'III' || nyhaClass === 'IV ambulatory') ) {
+                     // CRT for Non-LBBB - less common indication
+                     showDevice = true;
+                     deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation (Non-LBBB):</strong> May be considered selectively if QRS ≥150ms, NYHA III/IV ambulatory. <span class="note">Benefit less certain than with LBBB.</span></li>`;
+                 } else if (hasAfib && lvef <= 35 && (nyhaClass === 'III' || nyhaClass === 'IV ambulatory') && /* expecting AV node ablation or biventricular pacing */ true ) {
+                    // CRT in AFib - more complex indication
+                    // showDevice = true;
+                    // deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation (in AFib):</strong> Consider if patient is expected to be biventricularly paced nearly 100% (may require AV node ablation). Indications complex.</li>`;
                  }
+
              }
              // Secondary Prevention ICD (simplified input - assumes user knows if prior SCD/sustained VT occurred)
-             // You could add a checkbox: "History of Sudden Cardiac Death / Sustained VT?"
+             // You could add a checkbox: "History of Resuscitated Cardiac Arrest / Sustained VT?"
              // if (historyOfSCD_VT) {
              //    showDevice = true;
-             //    deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation:</strong> Indicated for secondary prevention.</li>`;
+             //    deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation (Secondary Prevention):</strong> Indicated if reasonable expectation of survival >1 year.</li>`;
              // }
 
              // --- 5. Advanced Therapies / Procedures ---
-              if (isRecurrentDecomp) {
+              if (isRecurrentDecomp && (nyhaClass === 'III' || nyhaClass === 'IV')) { // Tied more strongly to advanced symptoms
                   showAdvanced = true;
-                  advancedTherapyList.innerHTML += `<li><strong>Advanced HF Therapies:</strong> Consider Vericiguat, Omecamtiv Mecarbil, or Digoxin if not already used/contraindicated. <span class="note">Often managed by HF specialists.</span></li>`;
-                  advancedTherapyList.innerHTML += `<li><strong>LVAD / Heart Transplant Evaluation:</strong> Refer if eligible candidate with advanced/refractory symptoms.</li>`;
+                  advancedTherapyList.innerHTML += `<li><strong>Advanced HF Therapies:</strong> Consider Vericiguat or Omecamtiv Mecarbil referral/consultation.</li>`;
+                  advancedTherapyList.innerHTML += `<li><strong>LVAD / Heart Transplant Evaluation:</strong> Refer eligible candidates with refractory Stage D HF.</li>`;
               }
-               if (hasSevereMR && onOptimalGDMT) {
+               if (hasSevereMR && onOptimalGDMT && (nyhaClass === 'II' || nyhaClass === 'III' || nyhaClass === 'IV ambulatory')) { // Ensure symptomatic despite GDMT
                     showAdvanced = true;
-                    advancedTherapyList.innerHTML += `<li><strong>Mitral TEER (e.g., MitraClip):</strong> Consider evaluation for severe functional MR persistent despite optimal GDMT.</li>`;
+                    advancedTherapyList.innerHTML += `<li><strong>Mitral TEER (Transcatheter Edge-to-Edge Repair):</strong> Consider evaluation for severe secondary MR persistent despite optimal GDMT if anatomy suitable and patient meets trial criteria.</li>`;
                }
-                // BAT/CCM - From flowchart, less common, often advanced HF
-                if (qrsDuration && qrsDuration < 120 && isRecurrentDecomp) { // Associating with advanced HF
-                    showAdvanced = true; // Fits better here than device usually
-                    advancedTherapyList.innerHTML += `<li><strong>Consider Referral for Novel Therapies:</strong> Options like BAT/CCM may be considered in specialized centers for select patients with advanced HF and narrow QRS.</li>`;
+                // BAT/CCM - From flowchart, often advanced HF, narrow QRS
+                if (qrsDuration && qrsDuration < 120 && isRecurrentDecomp && (nyhaClass === 'III')) { // Example restrictive criteria
+                    showAdvanced = true;
+                    advancedTherapyList.innerHTML += `<li><strong>Consider Referral for Novel Therapies:</strong> Options like BAT/CCM may be considered in specialized centers for select patients with advanced HF and narrow QRS not eligible for CRT.</li>`;
                 }
 
 
@@ -369,8 +388,7 @@
 
         function resetForm() {
             form.reset();
-            // Manually check the default sinus rhythm box after reset
-            form.sinus_rhythm.checked = true;
+            form.sinus_rhythm.checked = true; // Ensure default is checked on reset
             resultDiv.style.display = 'none';
              gdmtPillarsList.innerHTML = '';
             symptomMgmtList.innerHTML = '';
@@ -383,18 +401,16 @@
             advancedTherapySection.style.display = 'none';
             try {
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (e) { /* ignore */ }
+            } catch (e)
         }
 
-        // --- Event Listeners ---
         suggestBtn.addEventListener('click', suggestTherapies);
         resetBtn.addEventListener('click', resetForm);
         form.addEventListener('change', () => { // Hide result if form changes
             if (resultDiv.style.display !== 'none') resultDiv.style.display = 'none';
         });
 
-        // --- Initial Setup ---
-        resetForm();
+        resetForm(); // Initialize form state on load
 
     </script>
 
