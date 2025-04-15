@@ -4,68 +4,316 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hepatitis B Serology Interpreter</title>
-    <script src="https://cdn.tailwindcss.com"></script> {/* Make sure this loads */}
+    <!-- <script src="https://cdn.tailwindcss.com"></script> REMOVED Tailwind CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Apply Inter font globally */
-        body {
-            font-family: 'Inter', sans-serif;
-            /* @apply bg-slate-100; <-- REMOVED FROM HERE */
+        /* Basic Reset and Font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Custom styles for select dropdown arrow using Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: #f1f5f9; /* Equivalent to bg-slate-100 */
+            padding: 20px; /* Replaces body p-4 */
+        }
+
+        /* Main Container - Mimics Tailwind max-w-4xl, mx-auto, p-6/8, rounded, shadow, border, gradient */
+        .main-container {
+            max-width: 896px; /* Approx max-w-4xl */
+            margin: 20px auto;
+            background: linear-gradient(to bottom, white, #f8fafc); /* from-white to-slate-50 */
+            padding: 24px; /* p-6 */
+            border-radius: 12px; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl (approximation) */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+        }
+
+        /* Headings and Text */
+        h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+            padding-bottom: 10px;
+             border-bottom: 1px solid #eee;
+        }
+
+        .subtitle {
+            font-size: 1rem; /* text-base */
+            color: #475569; /* text-slate-600 */
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            /* space-y-6 handled by fieldset margin */
+        }
+
+        fieldset {
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            padding: 20px; /* p-5 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            background-color: white; /* bg-white */
+            margin-bottom: 1.5rem; /* Replacement for form space-y-6 */
+        }
+
+        legend {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            padding: 0 8px; /* px-2 */
+            margin-left: -8px; /* -ml-2 */
+            margin-bottom: 15px;
+        }
+
+        /* Grid Layout for Inputs */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* grid-cols-1 */
+            gap: 20px 24px; /* gap-y-5 gap-x-6 */
+            margin-top: 12px; /* mt-3 */
+        }
+
+        /* Labels */
+        label {
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #334155; /* text-slate-700 */
+            margin-bottom: 4px; /* mb-1 */
+        }
+
+        /* Select Inputs */
         select {
+            /* Inherited styles from Tailwind */
+            margin-top: 4px; /* mt-1 */
+            display: block;
+            width: 100%;
+            border-radius: 6px; /* rounded-md */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            padding: 10px; /* p-2.5 */
+            background-color: white; /* bg-white */
+            color: #0f172a; /* text-slate-900 */
+            font-size: 0.875rem; /* sm:text-sm */
+
+            /* Custom arrow styling (kept from original) */
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 0.5rem center;
             background-repeat: no-repeat;
             background-size: 1.5em 1.5em;
             padding-right: 2.5rem;
-            appearance: none; /* Remove default styling */
-            -webkit-appearance: none; /* For Safari */
-            -moz-appearance: none; /* For Firefox */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
+
+        select:focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            outline: 1px solid #3b82f6; /* Simple focus ring */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* focus:ring approximation */
+        }
+
+        /* Button Container */
+        .button-container {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem 1rem 1rem 1rem; /* pt-6 pb-4 px-4 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+
+        .button-wrapper {
+             display: flex;
+             justify-content: center;
+             gap: 1rem; /* Replacement for space-x-4 */
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 15px; /* px-6 py-2.5 adjusted */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            border-radius: 6px; /* rounded-md */
+            border: none; /* Added */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+
+        button:focus {
+             outline: 2px solid transparent; /* focus:outline-none */
+             outline-offset: 2px;
+             box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.5); /* focus:ring approximation */
+        }
+
+        button:disabled {
+            opacity: 0.6; /* disabled:opacity-60 */
+            cursor: not-allowed; /* disabled:cursor-not-allowed */
+        }
+
+        /* Primary Button (Interpret) */
+        #interpret-btn {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white; /* text-white */
+        }
+        #interpret-btn:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+         #interpret-btn:focus {
+             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+         }
+
+
+        /* Secondary Button (Reset) */
+        #reset-btn {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            color: #1e293b; /* text-slate-800 */
+        }
+        #reset-btn:hover {
+            background-color: #cbd5e1; /* hover:bg-slate-300 */
+        }
+         #reset-btn:focus {
+              box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5); /* focus:ring-slate-400 */
+         }
+
+        /* Results Area */
+        #result {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem; /* p-6 */
+            background-color: #eff6ff; /* bg-blue-50 */
+            border: 1px solid #93c5fd; /* border-blue-300 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            display: none; /* Initially hidden */
+        }
+
+        #result > div {
+            margin-bottom: 1rem; /* space-y-4 */
+        }
+        #result > div:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .result-label {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #1e40af; /* text-blue-800 */
+            text-transform: uppercase; /* uppercase */
+            letter-spacing: 0.05em; /* tracking-wider */
+            display: block; /* Ensure it's on its own line */
+            margin-bottom: 4px;
+        }
+
+        #interpretation {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1d4ed8; /* text-blue-700 */
+        }
+
+        #phase-stage {
+             font-size: 1rem; /* text-base */
+             font-weight: 500; /* font-medium */
+             color: #2563eb; /* text-blue-600 */
+        }
+
+        #recommendations {
+            font-size: 0.875rem; /* text-sm */
+            color: #334155; /* text-slate-700 */
+            line-height: 1.65; /* leading-relaxed */
+        }
+         /* Style for lists within recommendations */
+        #recommendations ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            margin-top: 0.5rem;
+            padding-left: 0; /* Reset default padding */
+        }
+         #recommendations ul ul { /* Nested lists */
+            margin-left: 1.5rem;
+            margin-top: 0.25rem;
+         }
+         #recommendations li {
+            margin-bottom: 0.25rem; /* space-y-1 */
+         }
+
+
+        .disclaimer {
+             margin-top: 1.25rem; /* mt-5 */
+             font-size: 0.75rem; /* text-xs */
+             color: #64748b; /* text-slate-500 */
+             border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+             padding-top: 0.75rem; /* pt-3 */
+             font-style: italic;
+        }
+         .disclaimer strong {
+            font-style: normal; /* Reset italic for strong tag */
+         }
+
+        /* Responsive Grid */
+        @media (min-width: 768px) { /* md breakpoint */
+            body {
+                padding: 40px; /* Replaces md:p-8 */
+            }
+            .main-container {
+                 padding: 32px; /* md:p-8 */
+            }
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+            }
+        }
+
     </style>
 </head>
-<body class="p-4 md:p-8"> {/* Body padding and background */}
+<body> <!-- Removed Tailwind classes -->
 
-    <div class="max-w-4xl mx-auto bg-gradient-to-b from-white to-slate-50 p-6 md:p-8 rounded-xl shadow-xl border border-slate-200"> {/* Main container styling */}
-        <h1 class="text-3xl font-bold text-slate-800 mb-2 text-center">Hepatitis B Serology Interpreter</h1> {/* Main title */}
-        <p class="text-base text-slate-600 mb-8 text-center">Enter the results of Hepatitis B serological markers to get a likely interpretation based on common patterns.</p> {/* Subtitle */}
+    <div class="main-container"> <!-- Replaced Tailwind classes with CSS class -->
+        <h1>Hepatitis B Serology Interpreter</h1> <!-- Removed Tailwind classes -->
+        <p class="subtitle">Enter the results of Hepatitis B serological markers to get a likely interpretation based on common patterns.</p> <!-- Removed Tailwind classes -->
 
-        <form id="hbv-form" class="space-y-6"> {/* Form with vertical spacing */}
+        <form id="hbv-form"> <!-- Removed Tailwind classes -->
 
-            <fieldset class="border border-slate-200 p-5 rounded-lg shadow-sm bg-white"> {/* Fieldset styling */}
-                <legend class="text-lg font-semibold text-slate-800 px-2 -ml-2">Core Serological Markers</legend> {/* Legend styling */}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3">  {/* Grid layout for inputs */}
-                    <div> {/* Input group */}
-                        <label for="hbsag" class="block text-sm font-medium text-slate-700 mb-1">HBsAg (Surface Antigen):</label> {/* Label styling */}
-                        <select id="hbsag" name="hbsag" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900"> {/* Select styling */}
+            <fieldset> <!-- Removed Tailwind classes -->
+                <legend>Core Serological Markers</legend> <!-- Removed Tailwind classes -->
+                <div class="input-grid">  <!-- Replaced Tailwind classes with CSS class -->
+                    <div>
+                        <label for="hbsag">HBsAg (Surface Antigen):</label> <!-- Removed Tailwind classes -->
+                        <select id="hbsag" name="hbsag"> <!-- Removed Tailwind classes -->
                             <option value="na">N/A</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
-                    <div> {/* Input group */}
-                        <label for="anti_hbs" class="block text-sm font-medium text-slate-700 mb-1">Anti-HBs (Surface Antibody):</label>
-                        <select id="anti_hbs" name="anti_hbs" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                    <div>
+                        <label for="anti_hbs">Anti-HBs (Surface Antibody):</label>
+                        <select id="anti_hbs" name="anti_hbs">
                             <option value="na">N/A</option>
                             <option value="<10">< 10 IU/L</option>
                             <option value=">=10">≥ 10 IU/L</option>
                         </select>
                     </div>
-                    <div> {/* Input group */}
-                        <label for="anti_hbc_total" class="block text-sm font-medium text-slate-700 mb-1">Anti-HBc Total (Core Antibody):</label>
-                        <select id="anti_hbc_total" name="anti_hbc_total" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                    <div>
+                        <label for="anti_hbc_total">Anti-HBc Total (Core Antibody):</label>
+                        <select id="anti_hbc_total" name="anti_hbc_total">
                             <option value="na">N/A</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
-                     <div> {/* Input group */}
-                        <label for="anti_hbc_igm" class="block text-sm font-medium text-slate-700 mb-1">Anti-HBc IgM (IgM Core Antibody):</label>
-                        <select id="anti_hbc_igm" name="anti_hbc_igm" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                     <div>
+                        <label for="anti_hbc_igm">Anti-HBc IgM (IgM Core Antibody):</label>
+                        <select id="anti_hbc_igm" name="anti_hbc_igm">
                             <option value="na">N/A</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
@@ -74,28 +322,28 @@
                 </div>
             </fieldset>
 
-             <fieldset class="border border-slate-200 p-5 rounded-lg shadow-sm bg-white"> {/* Fieldset styling */}
-                <legend class="text-lg font-semibold text-slate-800 px-2 -ml-2">Additional Markers (for Phasing/Staging)</legend> {/* Legend styling */}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3"> {/* Grid layout for inputs */}
-                     <div> {/* Input group */}
-                        <label for="hbeag" class="block text-sm font-medium text-slate-700 mb-1">HBeAg (e Antigen):</label>
-                        <select id="hbeag" name="hbeag" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+             <fieldset> <!-- Removed Tailwind classes -->
+                <legend>Additional Markers (for Phasing/Staging)</legend> <!-- Removed Tailwind classes -->
+                <div class="input-grid"> <!-- Replaced Tailwind classes with CSS class -->
+                     <div>
+                        <label for="hbeag">HBeAg (e Antigen):</label>
+                        <select id="hbeag" name="hbeag">
                             <option value="na">N/A</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
-                     <div> {/* Input group */}
-                        <label for="anti_hbe" class="block text-sm font-medium text-slate-700 mb-1">Anti-HBe (e Antibody):</label>
-                        <select id="anti_hbe" name="anti_hbe" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                     <div>
+                        <label for="anti_hbe">Anti-HBe (e Antibody):</label>
+                        <select id="anti_hbe" name="anti_hbe">
                             <option value="na">N/A</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
-                    <div> {/* Input group */}
-                        <label for="hbv_dna" class="block text-sm font-medium text-slate-700 mb-1">HBV DNA Level:</label>
-                        <select id="hbv_dna" name="hbv_dna" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                    <div>
+                        <label for="hbv_dna">HBV DNA Level:</label>
+                        <select id="hbv_dna" name="hbv_dna">
                             <option value="na">N/A</option>
                             <option value="Undetectable">Undetectable</option>
                             <option value="Low (<2000 IU/mL)">Low (<2000 IU/mL)</option>
@@ -103,56 +351,50 @@
                             <option value="High (>=20k IU/mL)">High (≥20k IU/mL)</option>
                         </select>
                     </div>
-                     <div> {/* Input group */}
-                        <label for="alt" class="block text-sm font-medium text-slate-700 mb-1">ALT Level:</label>
-                        <select id="alt" name="alt" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                     <div>
+                        <label for="alt">ALT Level:</label>
+                        <select id="alt" name="alt">
                             <option value="na">N/A</option>
                             <option value="Normal">Normal</option>
                             <option value="Elevated">Elevated</option>
-                            <option value="Slightly Elevated">Slightly Elevated</option> {/* Added this option based on JS logic */}
+                            <option value="Slightly Elevated">Slightly Elevated</option>
                         </select>
                     </div>
                 </div>
             </fieldset>
 
-             {/* Button Container Box */}
-            <div class="mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm"> {/* Button container styling */}
-                <div class="flex justify-center space-x-4">
-                    <button type="button" id="interpret-btn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"> {/* Interpret button styling */}
-                        Interpret Results
-                    </button>
-                    <button type="reset" id="reset-btn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400"> {/* Reset button styling */}
-                        Reset Form
-                    </button>
+            <div class="button-container"> <!-- Replaced Tailwind classes with CSS class -->
+                <div class="button-wrapper"> <!-- Replaced Tailwind classes with CSS class -->
+                    <button type="button" id="interpret-btn">Interpret Results</button> <!-- Removed Tailwind classes -->
+                    <button type="reset" id="reset-btn">Reset Form</button> <!-- Removed Tailwind classes -->
                 </div>
             </div>
-            {/* End Button Container Box */}
 
         </form>
 
-        <div id="result" class="mt-8 p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-md space-y-4" style="display: none;"> {/* Result box styling */}
+        <div id="result"> <!-- Removed Tailwind classes, display:none handled by CSS -->
             <div>
-                <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Interpretation:</p> {/* Result section title styling */}
-                <p id="interpretation" class="text-xl font-semibold text-blue-700"></p> {/* Result text styling */}
+                <p class="result-label">Interpretation:</p> <!-- Replaced Tailwind classes with CSS class -->
+                <p id="interpretation"></p> <!-- Removed Tailwind classes -->
             </div>
             <div id="phase-stage-section" style="display: none;">
-                 <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Likely Phase / Stage:</p> {/* Result section title styling */}
-                 <p id="phase-stage" class="text-base font-medium text-blue-600"></p> {/* Result text styling */}
+                 <p class="result-label">Likely Phase / Stage:</p> <!-- Replaced Tailwind classes with CSS class -->
+                 <p id="phase-stage"></p> <!-- Removed Tailwind classes -->
             </div>
              <div>
-                 <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Recommendations / Notes:</p> {/* Result section title styling */}
-                 <div id="recommendations" class="text-sm text-slate-700 leading-relaxed"> {/* Recommendations text styling */}
+                 <p class="result-label">Recommendations / Notes:</p> <!-- Replaced Tailwind classes with CSS class -->
+                 <div id="recommendations"> <!-- Removed Tailwind classes -->
                     {/* Recommendations will be inserted here by JS */}
                  </div>
              </div>
-             <p class="mt-5 text-xs text-slate-500 border-t border-slate-200 pt-3"> {/* Disclaimer styling */}
+             <p class="disclaimer"> <!-- Replaced Tailwind classes with CSS class -->
                 <strong>Disclaimer:</strong> This tool provides interpretations based on common serological patterns. Results should always be interpreted in the full clinical context by a qualified healthcare professional. Atypical patterns or specific clinical situations may require expert consultation. This tool does not replace clinical judgment. Follow current AASLD/EASL or local guidelines.
             </p>
         </div>
     </div>
 
     <script>
-        // Get references to form elements
+        // Get references to form elements (NO CHANGES NEEDED HERE)
         const form = document.getElementById('hbv-form');
         const hbsagSelect = document.getElementById('hbsag');
         const antiHbsSelect = document.getElementById('anti_hbs');
@@ -171,7 +413,7 @@
         const phaseStageDisplay = document.getElementById('phase-stage');
         const recommendationsDisplay = document.getElementById('recommendations');
 
-        // --- Interpretation Logic ---
+        // --- Interpretation Logic (NO CHANGES NEEDED HERE) ---
         function interpretSerology() {
             // Read input values
             const hbsag = hbsagSelect.value;
@@ -185,8 +427,8 @@
 
             let interpretation = 'Unable to interpret clearly with provided data.';
             let phaseStage = '';
-            // Use Tailwind classes for list styling within the recommendations
-            let recommendations = ['<ul class="list-disc list-inside space-y-1"><li>Clinical correlation is always required.</li>'];
+             // Use manual HTML for list styling within recommendations
+            let recommendations = ['<ul><li>Clinical correlation is always required.</li>']; // Start list
 
             // --- Core Logic based on HBsAg, Anti-HBc Total, Anti-HBs, Anti-HBc IgM ---
 
@@ -212,9 +454,7 @@
              // 4. Isolated Anti-HBc Positive
             else if (hbsag === 'Negative' && antiHbcTotal === 'Positive' && antiHbs === '<10') {
                 interpretation = 'Isolated Anti-HBc positive.';
-                 recommendations.push('<li>Possible Interpretations:</li>');
-                 // Nested list with styling
-                 recommendations.push('<ul class="list-disc list-inside pl-4 space-y-1"><li>Resolved infection (waning Anti-HBs).</li><li>False-positive Anti-HBc.</li><li>Low-level chronic infection (HBsAg below detection).</li><li>Window period of acute infection (less likely if IgM negative).</li></ul>');
+                 recommendations.push('<li>Possible Interpretations:<ul><li>Resolved infection (waning Anti-HBs).</li><li>False-positive Anti-HBc.</li><li>Low-level chronic infection (HBsAg below detection).</li><li>Window period of acute infection (less likely if IgM negative).</li></ul></li>'); // Nested list
                  if (antiHbcIgm === 'Positive') {
                     recommendations.push('<li>Positive IgM suggests possible acute infection window period - retest HBsAg/IgM later.</li>');
                  } else {
@@ -241,7 +481,6 @@
                     recommendations.push('<li>Requires staging (assess liver fibrosis) and monitoring. Assess for treatment eligibility based on phase, DNA, ALT, and fibrosis.</li>');
 
                     // --- Sub-typing Chronic HBV ---
-                    // Use || 'na' check for ALT/DNA as they might not always be available for initial phasing guess
                     if (hbeag === 'Positive' && (alt === 'Normal' || alt === 'Slightly Elevated' || alt === 'na') && (hbvDna === 'High (>=20k IU/mL)' || hbvDna === 'na')) {
                         phaseStage = 'Chronic HBV: Likely Immune-Tolerant Phase';
                         recommendations.push('<li>Suggests high DNA, normal/near-normal ALT, HBeAg positive. Monitor regularly (e.g., ALT/DNA every 6-12 months). Typically lower priority for immediate treatment unless advanced fibrosis present.</li>');
@@ -265,8 +504,7 @@
                 // 7. Atypical: HBsAg Positive, Anti-HBc Total Negative (Rare)
                 else if (antiHbcTotal === 'Negative') {
                     interpretation = 'Atypical Pattern: HBsAg Positive, Anti-HBc Total Negative.';
-                     recommendations.push('<li>Possible Causes:</li>');
-                      recommendations.push('<ul class="list-disc list-inside pl-4 space-y-1"><li>Very early acute infection (pre-Anti-HBc).</li><li>Severe immunosuppression.</li><li>False-positive HBsAg.</li><li>Rarely after recent vaccination (transient HBsAg).</li></ul>');
+                     recommendations.push('<li>Possible Causes:<ul><li>Very early acute infection (pre-Anti-HBc).</li><li>Severe immunosuppression.</li><li>False-positive HBsAg.</li><li>Rarely after recent vaccination (transient HBsAg).</li></ul></li>'); // Nested list
                     recommendations.push('<li>Requires repeat testing and clinical correlation. Confirm HBsAg. Check Anti-HBc IgM.</li>');
                 }
             }
@@ -278,7 +516,7 @@
 
              // Final check for recommendation list structure and ensure it's closed
             if (recommendations.length <= 1) { // Only the default item
-                 recommendations = ['<ul class="list-disc list-inside space-y-1"><li>No specific recommendations generated based on this pattern, consult guidelines.</li></ul>'];
+                 recommendations = ['<ul><li>No specific recommendations generated based on this pattern, consult guidelines.</li></ul>'];
             } else {
                  recommendations.push('</ul>'); // Close the main UL if items were added
             }
@@ -295,12 +533,11 @@
             }
 
             resultDiv.style.display = 'block';
-            // Scroll to results smoothly
-             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Use 'nearest' to avoid excessive scrolling if already visible
+             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
 
-        // --- Form Handling Logic ---
+        // --- Form Handling Logic (NO CHANGES NEEDED HERE) ---
         function resetForm() {
             form.reset();
             resultDiv.style.display = 'none';
@@ -308,24 +545,18 @@
             phaseStageDisplay.textContent = '';
             recommendationsDisplay.innerHTML = '';
             phaseStageSection.style.display = 'none';
-            // Scroll back to top smoothly if not already there
              window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- Event Listeners ---
+        // --- Event Listeners (NO CHANGES NEEDED HERE) ---
         interpretBtn.addEventListener('click', interpretSerology);
         resetBtn.addEventListener('click', resetForm);
 
-         // Optional: Hide result if form changes after interpretation
         form.addEventListener('change', () => {
             if (resultDiv.style.display !== 'none') {
                  resultDiv.style.display = 'none';
             }
         });
-
-        // --- Initial Setup ---
-        // Don't reset on load, allow potential browser autofill
-        // resetForm();
 
     </script>
 
