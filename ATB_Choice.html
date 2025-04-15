@@ -357,45 +357,95 @@
     </div>
 
     <script>
-        // --- Data (Keep as is) ---
+        // --- FULL COVERAGE DATA ---
+        // Ensure this large object is defined *before* it's used below!
         const coverageData = {
-            "Enterococcus": { /* ... data ... */ },
-            "MRSA": { /* ... data ... */ },
-            "MSSA": { /* ... data ... */ },
-            "Streptococcus_pneumoniae": { /* ... data ... */ },
-            "Beta_hemolytic_strep": { /* ... data ... */ },
-            "Gram_negatives_community": { /* ... data ... */ },
-            "Gram_negatives_hospital": { /* ... data ... */ },
-            "Enterobacter_other_AmpC": { /* ... data ... */ },
-            "Pseudomonas": { /* ... data ... */ },
-            "ESBL_producers": { /* ... data ... */ },
-            "Mouth_anaerobes": { /* ... data ... */ },
-            "Gut_anaerobes": { /* ... data ... */ },
-            "Atypicals": { /* ... data ... */ }
+            "Enterococcus": {
+                "Vancomycin": "good", "Ampicillin": "some", "Nafcillin": "poor", "Unasyn": "some", "Augmentin": "some", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Piperacillin/tazobactam": "some",
+                "Meropenem": "some", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX": "poor", "Doxycycline": "some", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+            "MRSA": {
+                "Vancomycin": "good", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Piperacillin/tazobactam": "poor",
+                "Meropenem": "poor", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "poor",
+                "TMP/SMX": "good", "Doxycycline": "good", "Clindamycin": "good", "Metronidazole": "poor"
+            },
+            "MSSA": {
+                "Vancomycin": "good", "Ampicillin": "poor", "Nafcillin": "good", "Unasyn": "good", "Augmentin": "good", "Cefazolin": "good",
+                "Ceftriaxone": "good", "Ceftazidime": "poor", "Cefepime": "good", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "some", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX": "good", "Doxycycline": "good", "Clindamycin": "good", "Metronidazole": "poor"
+            },
+             "Streptococcus_pneumoniae": {
+                "Vancomycin": "good", "Ampicillin": "some", "Nafcillin": "poor", "Unasyn": "some", "Augmentin": "good", "Cefazolin": "poor",
+                "Ceftriaxone": "good", "Ceftazidime": "poor", "Cefepime": "good", "Piperacillin/tazobactam": "some",
+                "Meropenem": "good", "Ertapenem": "some", "Azithromycin": "some", "Ciprofloxacin": "poor", "Levofloxacin": "good",
+                "TMP/SMX": "some", "Doxycycline": "some", "Clindamycin": "some", "Metronidazole": "poor"
+            },
+             "Beta_hemolytic_strep": { // e.g. GAS, GBS
+                "Vancomycin": "good", "Ampicillin": "good", "Nafcillin": "poor", "Unasyn": "good", "Augmentin": "good", "Cefazolin": "good",
+                "Ceftriaxone": "good", "Ceftazidime": "poor", "Cefepime": "good", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "some", "Ciprofloxacin": "poor", "Levofloxacin": "some",
+                "TMP/SMX": "poor", "Doxycycline": "poor", "Clindamycin": "good", "Metronidazole": "poor"
+            },
+            "Gram_negatives_community": { // e.g., E. coli, Klebsiella, Proteus (non-hospital)
+                "Vancomycin": "poor", "Ampicillin": "some", "Nafcillin": "poor", "Unasyn": "some", "Augmentin": "some", "Cefazolin": "some",
+                "Ceftriaxone": "good", "Ceftazidime": "good", "Cefepime": "good", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "good", "Levofloxacin": "good",
+                "TMP/SMX": "good", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+             "Gram_negatives_hospital": { // Broader resistance expected
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "some", "Ceftazidime": "good", "Cefepime": "good", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "some", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX": "some", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+             "Enterobacter_other_AmpC": {
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "some", "Cefepime": "good", "Piperacillin/tazobactam": "some",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX": "some", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+             "Pseudomonas": {
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "good", "Cefepime": "good", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "good", "Levofloxacin": "good",
+                "TMP/SMX": "poor", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+            "ESBL_producers": { // e.g., E. coli, Klebsiella
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "some", "Piperacillin/tazobactam": "some",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX": "some", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor"
+            },
+            "Mouth_anaerobes": { // e.g., Peptostreptococcus, Prevotella (oral)
+                "Vancomycin": "good", "Ampicillin": "good", "Nafcillin": "poor", "Unasyn": "good", "Augmentin": "good", "Cefazolin": "some",
+                "Ceftriaxone": "some", "Ceftazidime": "poor", "Cefepime": "some", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "some",
+                "TMP/SMX": "poor", "Doxycycline": "poor", "Clindamycin": "good", "Metronidazole": "good"
+            },
+            "Gut_anaerobes": { // e.g., Bacteroides fragilis
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "good", "Augmentin": "good", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Piperacillin/tazobactam": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "some",
+                "TMP/SMX": "poor", "Doxycycline": "poor", "Clindamycin": "some", "Metronidazole": "good"
+            },
+            "Atypicals": { // e.g., Mycoplasma, Chlamydia, Legionella
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin": "poor", "Unasyn": "poor", "Augmentin": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Piperacillin/tazobactam": "poor",
+                "Meropenem": "poor", "Ertapenem": "poor", "Azithromycin": "good", "Ciprofloxacin": "some", "Levofloxacin": "good",
+                "TMP/SMX": "poor", "Doxycycline": "good", "Clindamycin": "poor", "Metronidazole": "poor"
+            }
         };
-         // --- Populate the omitted data for the script to run ---
-         // (Using placeholder values for brevity in this example response)
-         const allOrganisms = Object.keys(coverageData);
-         const antibiotics = [
-             "Vancomycin", "Ampicillin", "Nafcillin", "Unasyn", "Augmentin", "Cefazolin",
-             "Ceftriaxone", "Ceftazidime", "Cefepime", "Piperacillin/tazobactam",
-             "Meropenem", "Ertapenem", "Azithromycin", "Ciprofloxacin", "Levofloxacin",
-             "TMP/SMX", "Doxycycline", "Clindamycin", "Metronidazole"
-         ];
-         allOrganisms.forEach(org => {
-             antibiotics.forEach(abx => {
-                 if (!coverageData[org]) coverageData[org] = {};
-                 if (!coverageData[org][abx]) {
-                    // Assign random values for demo if missing - replace with real data
-                     const activities = ['good', 'some', 'poor'];
-                     coverageData[org][abx] = activities[Math.floor(Math.random() * activities.length)];
-                 }
-             });
-         });
-        // -------------------------------------------------------
+
+        // --- Derive Organism and Antibiotic Lists from Data ---
+        const allOrganisms = Object.keys(coverageData);
+        const antibiotics = Object.keys(coverageData[allOrganisms[0]] || {}); // Get antibiotics from the first organism entry
 
 
-        // Get references to form elements
+        // --- Get references to form elements ---
         const form = document.getElementById('antibiotic-form');
         const modeRadios = document.querySelectorAll('input[name="viewMode"]');
         const organismSelectorGroup = document.getElementById('organism-selector-group');
@@ -410,6 +460,10 @@
 
         // --- Populate Dropdowns ---
         function populateDropdowns() {
+            // Clear existing options first (important if called multiple times)
+            organismSelect.innerHTML = '<option value="">-- Select an Organism --</option>';
+            antibioticSelect.innerHTML = '<option value="">-- Select an Antibiotic --</option>';
+
             // Populate Organisms
             allOrganisms.sort().forEach(orgKey => {
                 const option = document.createElement('option');
@@ -458,10 +512,16 @@
                     return;
                 }
                 titleText = `Antibiotic Activity vs. ${selectedOrganism.replace(/_/g, ' ')}`;
-                const organismData = coverageData[selectedOrganism];
+                const organismData = coverageData[selectedOrganism]; // Access the correct data
 
-                // Build Table Header
-                tableHTML = '<table class="result-table"><thead><tr><th>Antibiotic</th>';
+                if (!organismData) { // Add check if data somehow missing
+                    resultTableContainer.innerHTML = '<p style="color: red; text-align: center;">Error: Coverage data not found for the selected organism.</p>';
+                    resultContainer.classList.remove('hidden');
+                    return;
+                }
+
+                // Build Table Header (Antibiotics as columns)
+                tableHTML = '<table class="result-table"><thead><tr><th>Organism / Group</th>';
                 antibiotics.forEach(abx => {
                     tableHTML += `<th>${abx.replace('/', '/<wbr>')}</th>`;
                 });
@@ -469,10 +529,10 @@
 
                 // Build Table Body Row for the selected organism
                 tableHTML += '<tr>';
-                tableHTML += `<td>${selectedOrganism.replace(/_/g, ' ')}</td>`;
+                tableHTML += `<td>${selectedOrganism.replace(/_/g, ' ')}</td>`; // First cell is organism name
 
                 antibiotics.forEach(abx => {
-                    const activity = organismData?.[abx] || 'unknown';
+                    const activity = organismData[abx] || 'unknown'; // Use data for the selected organism
                     const { activityClass, activityText } = getActivityStyling(activity);
                     tableHTML += `<td class="activity-cell ${activityClass}">${activityText}</td>`;
                 });
@@ -493,12 +553,12 @@
                  // Build Table Body Rows (one per organism)
                  allOrganisms.forEach(orgKey => {
                     const organismData = coverageData[orgKey];
-                    const activity = organismData?.[selectedAntibiotic] || 'unknown';
-                     const { activityClass, activityText } = getActivityStyling(activity);
+                    const activity = organismData?.[selectedAntibiotic] || 'unknown'; // Get activity for THIS antibiotic
+                    const { activityClass, activityText } = getActivityStyling(activity);
 
                      tableHTML += '<tr>';
-                     tableHTML += `<td>${orgKey.replace(/_/g, ' ')}</td>`;
-                     tableHTML += `<td class="activity-cell ${activityClass}">${activityText}</td>`;
+                     tableHTML += `<td>${orgKey.replace(/_/g, ' ')}</td>`; // First cell is organism name
+                     tableHTML += `<td class="activity-cell ${activityClass}">${activityText}</td>`; // Second cell is activity vs selected antibiotic
                      tableHTML += '</tr>';
                  });
 
@@ -534,7 +594,6 @@
              return { activityClass, activityText };
          }
 
-
         // --- Form Reset Logic ---
         function resetForm() {
             form.reset();
@@ -560,7 +619,7 @@
         antibioticSelect.addEventListener('change', () => resultContainer.classList.add('hidden'));
 
         // --- Initial Setup ---
-        populateDropdowns();
+        populateDropdowns(); // Populate the dropdowns on load
         resetForm(); // Initialize form state on load
 
     </script>
