@@ -1,15 +1,207 @@
-<script>
-    // Helper function to check if a value is not a number or null/empty
-    function isNaNOrNull(value) {
-        if (value === "" || value === null || typeof value === 'undefined') return true;
-        const num = parseInt(value);
-        return isNaN(num);
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFrEF GDMT Selection Helper</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h2 { margin-top: 30px; }
+        h3 { margin-top: 20px; color: #555; }
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        .form-section legend {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        form input[type="number"], form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        form input[type="number"]::placeholder {
+            color: #aaa;
+        }
+        .checkbox-group label {
+            display: inline-block; /* Align label next to checkbox */
+            margin-left: 5px;
+            margin-right: 15px;
+            font-weight: normal; /* Normal weight for checkbox labels */
+            margin-bottom: 10px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+        form button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #ddd;
+        }
+        .result-item strong {
+            color: #0056b3;
+        }
+        .reason {
+             font-style: italic;
+             color: #5a5a5a;
+             display: block; /* Ensure reason appears on its own line */
+             margin-top: 3px;
+        }
+        .indication { color: #28a745; } /* Green */
+        .contraindication { color: #dc3545; } /* Red */
+        .disclaimer {
+            margin-top: 20px;
+            font-style: italic;
+            color: #dc3545;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #dc3545;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+        }
+         #results p:first-child { /* Style the summary sentence */
+             font-weight: bold;
+             background-color: #eef;
+             padding: 10px;
+             border-radius: 4px;
+             border: 1px solid #dde;
+         }
+    </style>
+</head>
+<body>
 
-    // --- GDMT Data (Therapies and Rules) ---
-    // (Keep the gdmtOptions array exactly as it was in the previous version)
-    const gdmtOptions = [
-         // --- Foundational Pillars ---
+    <h1>HFrEF GDMT Selection Helper</h1>
+    <p>Enter patient details and select relevant conditions to see potentially relevant Guideline-Directed Medical Therapies based on simplified criteria.</p>
+
+    <form id="gdmtForm">
+        <fieldset class="form-section">
+            <legend>Core Patient Data</legend>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="lvef">LVEF (%):</label>
+            <input type="number" id="lvef" name="lvef" placeholder="e.g., 35" required>
+
+            <label for="nyha">NYHA Class:</label>
+            <select id="nyha" name="nyha" required>
+                <option value="">Select NYHA Class</option>
+                <option value="1">I (Asymptomatic)</option>
+                <option value="2">II (Slight limitation)</option>
+                <option value="3">III (Marked limitation)</option>
+                <option value="4">IV (Symptoms at rest)</option>
+            </select>
+
+            <label for="hr">Heart Rate (bpm) in Sinus Rhythm:</label>
+            <input type="number" id="hr" name="hr" placeholder="Optional, needed for Ivabradine">
+
+            <label for="qrs">QRS Duration (ms) in Sinus Rhythm:</label>
+            <input type="number" id="qrs" name="qrs" placeholder="Optional, needed for CRT">
+        </fieldset>
+
+        <fieldset class="form-section checkbox-group">
+            <legend>Select Applicable Special Conditions / History</legend>
+            <div>
+                 <input type="checkbox" id="hasAfib" name="hasAfib">
+                 <label for="hasAfib">Atrial Fibrillation (AF)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasIronDeficiency" name="hasIronDeficiency">
+                 <label for="hasIronDeficiency">Known/Suspected Iron Deficiency</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasFuncMR" name="hasFuncMR">
+                 <label for="hasFuncMR">Significant Functional Mitral Regurgitation (MR)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="isBlack" name="isBlack">
+                 <label for="isBlack">Self-Identified Black Race</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasAngioedemaHx" name="hasAngioedemaHx">
+                 <label for="hasAngioedemaHx">History of Angioedema (to ACEi/ARB)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasSecondaryIcdIndication" name="hasSecondaryIcdIndication">
+                 <label for="hasSecondaryIcdIndication">History of Sustained VT/VF or Resuscitated Cardiac Arrest</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasRecentWorsening" name="hasRecentWorsening">
+                 <label for="hasRecentWorsening">Recent Worsening HF Event (Hospitalization or need for IV Diuretics)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="isLbbb" name="isLbbb">
+                 <label for="isLbbb">LBBB Morphology (on ECG, relevant for CRT)</label>
+             </div>
+        </fieldset>
+
+
+        <button type="submit">Analyze GDMT Options</button>
+    </form>
+
+    <div id="results">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This tool is for informational and educational purposes only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for any medical conditions or treatment decisions. Therapy selection requires comprehensive clinical evaluation, including labs and imaging.
+    </div>
+
+    <script>
+        // Helper function to check if a value is not a number or null/empty
+        function isNaNOrNull(value) {
+            if (value === "" || value === null || typeof value === 'undefined') return true;
+            const num = parseInt(value);
+            return isNaN(num);
+        }
+
+        // --- GDMT Data (Therapies and Rules) ---
+        const gdmtOptions = [
+             // --- Foundational Pillars ---
             {
                 name: "ARNI (Sacubitril/Valsartan)",
                 category: "Foundational",
@@ -207,211 +399,221 @@
                 indications: "NSAIDs (inc. COX-2 inhibitors), TZDs (pioglitazone), Non-dihydropyridine CCBs (Verapamil, Diltiazem in HFrEF), Cilostazol, Class I antiarrhythmics, Dronedarone.",
                 contraindications: "N/A"
             }
-    ];
+        ];
 
 
-    // --- Function to generate the initial summary sentence ---
-    function generateSummarySentence(inputs) {
-        let sentence = "";
-        const isHFrEF = inputs.lvef <= 40;
-        const isHFpEF = inputs.lvef >= 50;
-        const medicationsToAvoid = "NSAIDs, TZDs, Non-DHP CCBs (in HFrEF)"; // Basic list
+        // --- Function to generate the initial summary sentence ---
+        function generateSummarySentence(inputs) {
+            let sentence = "";
+            const isHFrEF = inputs.lvef <= 40;
+            const isHFpEF = inputs.lvef >= 50;
+            const medicationsToAvoid = "NSAIDs, TZDs, Non-DHP CCBs (in HFrEF)"; // Basic list
 
-        if (isHFpEF && !inputs.hasSecondaryIcdIndication) {
-            // HFpEF Summary
-            sentence = `<strong>Summary:</strong> For HFpEF (LVEF ≥ 50%), prioritize managing congestion (<strong>Diuretics</strong> prn), treating underlying causes, and initiating an <strong>SGLT2 Inhibitor</strong>. Consider MRAs based on phenotype. Avoid HFrEF-specific GDMT without other indications. Key medications to avoid include ${medicationsToAvoid}. See details below.`;
-        } else if (isHFrEF) {
-            // HFrEF Summary
-            let foundational = [];
-            // RAAS Inhibitor
-            if (inputs.nyha >= 2) {
-                if (inputs.hasAngioedemaHx) {
-                    foundational.push("Consider ARB cautiously if only ACEi angioedema");
+            if (isHFpEF && !inputs.hasSecondaryIcdIndication) {
+                // HFpEF Summary
+                sentence = `<strong>Summary:</strong> For HFpEF (LVEF ≥ 50%), prioritize managing congestion (<strong>Diuretics</strong> prn), treating underlying causes, and initiating an <strong>SGLT2 Inhibitor</strong>. Consider MRAs based on phenotype. Avoid HFrEF-specific GDMT without other indications. Key medications to avoid include ${medicationsToAvoid}. See details below.`;
+            } else if (isHFrEF) {
+                // HFrEF Summary
+                let foundational = [];
+                // RAAS Inhibitor
+                if (inputs.nyha >= 2) {
+                    if (inputs.hasAngioedemaHx) {
+                        foundational.push("Consider ARB cautiously if only ACEi angioedema");
+                    } else {
+                        foundational.push("ARNI (preferred) or ACEi/ARB");
+                    }
                 } else {
-                    foundational.push("ARNI (preferred) or ACEi/ARB");
+                    foundational.push("ARNI/ACEi/ARB (if NYHA II-IV)"); // Note class requirement
                 }
+                // Beta-Blocker
+                foundational.push("Beta-Blocker");
+                // MRA
+                if (inputs.lvef <= 35 && inputs.nyha >= 2) {
+                    foundational.push("MRA");
+                } else {
+                    foundational.push("MRA (if LVEF ≤ 35% & NYHA II-IV)"); // Note requirements
+                }
+                // SGLT2i
+                foundational.push("SGLT2 Inhibitor");
+
+                let foundationalText = foundational.filter(f => !f.includes("(")).join(", "); // Basic list
+                let conditionalText = foundational.filter(f => f.includes("(")).join("; "); // More specific criteria list
+
+
+                sentence = `<strong>Summary:</strong> For HFrEF (LVEF ≤ 40%), prioritize initiating/titrating foundational GDMT: <strong>${foundationalText}</strong>. ${conditionalText ? `Ensure criteria met for: ${conditionalText}. ` : ''}Always avoid: <strong>${medicationsToAvoid}</strong>. `;
+
+                // Add notes based on checkboxes if applicable
+                if (inputs.hasAfib) sentence += "Anticoagulation indicated for AFib. ";
+                if (inputs.hasAngioedemaHx) sentence += "ARNI/ACEi contraindicated. ";
+                if (inputs.hasAfib && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 3)) sentence += "Ivabradine likely not indicated (AFib). ";
+                if (inputs.hasIronDeficiency) sentence += "Consider IV Iron. ";
+                 if (inputs.hasRecentWorsening && inputs.lvef < 45) sentence += "Consider Vericiguat. ";
+
+
+                sentence += "Review specific indications for add-on therapies and devices below.";
+
             } else {
-                 foundational.push("ARNI/ACEi/ARB (if NYHA II-IV)"); // Note class requirement
+                // HFmrEF or unclear LVEF
+                sentence = `<strong>Summary:</strong> For LVEF between 41-49% (HFmrEF), management often mirrors HFrEF but evidence varies. Consider <strong>SGLT2 Inhibitors</strong> and manage symptoms/comorbidities. Always avoid: <strong>${medicationsToAvoid}</strong>. Review specific therapy details below.`;
             }
-            // Beta-Blocker
-            foundational.push("Beta-Blocker");
-             // MRA
-            if (inputs.lvef <= 35 && inputs.nyha >= 2) {
-                 foundational.push("MRA");
-            } else {
-                 foundational.push("MRA (if LVEF ≤ 35% & NYHA II-IV)"); // Note requirements
-            }
-            // SGLT2i
-            foundational.push("SGLT2 Inhibitor");
 
-            let foundationalText = foundational.filter(f => !f.includes("(")).join(", "); // Basic list
-            let conditionalText = foundational.filter(f => f.includes("(")).join("; "); // More specific criteria list
-
-
-            sentence = `<strong>Summary:</strong> For HFrEF (LVEF ≤ 40%), prioritize initiating/titrating foundational GDMT: <strong>${foundationalText}</strong>. ${conditionalText ? `Ensure criteria met for: ${conditionalText}. ` : ''}Always avoid: <strong>${medicationsToAvoid}</strong>. `;
-
-             // Add notes based on checkboxes if applicable
-             if (inputs.hasAfib) sentence += "Anticoagulation indicated for AFib. ";
-             if (inputs.hasAngioedemaHx) sentence += "ARNI/ACEi contraindicated. ";
-             if (inputs.hasAfib && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && inputs.lvef <= 35) sentence += "Ivabradine likely not indicated (AFib). ";
-             if (inputs.hasIronDeficiency) sentence += "Consider IV Iron. ";
-
-             sentence += "Review specific indications for add-on therapies and devices below.";
-
-        } else {
-             // HFmrEF or unclear LVEF
-             sentence = `<strong>Summary:</strong> For LVEF between 41-49% (HFmrEF), management often mirrors HFrEF but evidence varies. Consider <strong>SGLT2 Inhibitors</strong> and manage symptoms/comorbidities. Always avoid: <strong>${medicationsToAvoid}</strong>. Review specific therapy details below.`;
+            return `<p>${sentence}</p>`; // Removed inline style, using CSS rule now
         }
 
-        return `<p style="font-weight: bold; background-color: #eef; padding: 10px; border-radius: 4px;">${sentence}</p>`;
-    }
 
+        // --- Form Submission Logic ---
+        document.getElementById('gdmtForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page reload
 
-    // --- Form Submission Logic ---
-    document.getElementById('gdmtForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent page reload
+            // Collect core inputs
+            const inputs = {
+                age: parseInt(document.getElementById('age').value),
+                lvef: parseInt(document.getElementById('lvef').value),
+                nyha: parseInt(document.getElementById('nyha').value),
+                hr: parseInt(document.getElementById('hr').value), // Will be NaN if empty
+                qrs: parseInt(document.getElementById('qrs').value), // Will be NaN if empty
+                // Collect checkbox inputs
+                hasAfib: document.getElementById('hasAfib').checked,
+                hasIronDeficiency: document.getElementById('hasIronDeficiency').checked,
+                hasFuncMR: document.getElementById('hasFuncMR').checked,
+                isBlack: document.getElementById('isBlack').checked,
+                hasAngioedemaHx: document.getElementById('hasAngioedemaHx').checked,
+                hasSecondaryIcdIndication: document.getElementById('hasSecondaryIcdIndication').checked,
+                hasRecentWorsening: document.getElementById('hasRecentWorsening').checked,
+                isLbbb: document.getElementById('isLbbb').checked
+            };
 
-        // Collect core inputs
-        const inputs = {
-            age: parseInt(document.getElementById('age').value),
-            lvef: parseInt(document.getElementById('lvef').value),
-            nyha: parseInt(document.getElementById('nyha').value),
-            hr: parseInt(document.getElementById('hr').value), // Will be NaN if empty
-            qrs: parseInt(document.getElementById('qrs').value), // Will be NaN if empty
-            // Collect checkbox inputs
-            hasAfib: document.getElementById('hasAfib').checked,
-            hasIronDeficiency: document.getElementById('hasIronDeficiency').checked,
-            hasFuncMR: document.getElementById('hasFuncMR').checked,
-            isBlack: document.getElementById('isBlack').checked,
-            hasAngioedemaHx: document.getElementById('hasAngioedemaHx').checked,
-            hasSecondaryIcdIndication: document.getElementById('hasSecondaryIcdIndication').checked,
-            hasRecentWorsening: document.getElementById('hasRecentWorsening').checked,
-            isLbbb: document.getElementById('isLbbb').checked
-        };
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results completely
 
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = ''; // Clear previous results completely
+            // Generate and add the summary sentence FIRST
+            resultsDiv.innerHTML += generateSummarySentence(inputs);
 
-        // Generate and add the summary sentence FIRST
-        resultsDiv.innerHTML += generateSummarySentence(inputs);
-
-        // Basic HFpEF check (for filtering subsequent results)
-        if (inputs.lvef >= 50 && !inputs.hasSecondaryIcdIndication) {
-            // Display filtered results for HFpEF
-            displayResults(inputs, resultsDiv, gdmtOptions.filter(opt =>
-                 ['General', 'Avoid', 'Symptom Management'].includes(opt.category) ||
-                 opt.name.includes('SGLT2') ||
-                 opt.name.includes('MRA') || // MRA might be considered in specific HFpEF phenotypes
-                 (opt.name.includes('Anticoagulation') && inputs.hasAfib) // Anticoag if AFib present
-             ));
-        } else {
-            // Display full results for HFrEF/HFmrEF
-             displayResults(inputs, resultsDiv, gdmtOptions);
-        }
-    });
-
-    // Function to display results (Mostly unchanged from previous version)
-    function displayResults(inputs, resultsDiv, optionsToDisplay) {
-         // Group results by category
-        const categories = {
-            "Foundational": [],
-            "Symptom Management": [],
-            "Add-on": [],
-            "Device": [],
-            "Advanced": [],
-            "General": [],
-            "Avoid": []
-        };
-
-         // Use a Set to avoid duplicate entries
-         const addedTherapies = new Set();
-
-        optionsToDisplay.forEach(option => {
-             if ((option.indicationRule(inputs) || ['General', 'Avoid'].includes(option.category)) && !addedTherapies.has(option.name)) {
-
-                let contraNotes = "";
-                if (option.category === 'Foundational' && inputs.hasAngioedemaHx && (option.name.includes('ARNI') || option.name.includes('ACEi'))) {
-                     // Skip adding standard ARNI/ACEi if angioedema Hx - handled by specific rule/summary now
-                     return;
-                }
-                 if (option.name.includes('Ivabradine') && inputs.hasAfib) {
-                    contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Generally contraindicated in AFib.</span> ";
-                     // Don't return; let it display with the note if rule otherwise matches
-                 }
-                 if (option.name.includes('CRT') && inputs.hasAfib) {
-                     contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Benefit less established/more complex in AFib.</span> ";
-                 }
-
-
-                let reasoningText = option.reasoning ? option.reasoning(inputs) : "";
-                let displayItem = `
-                    <div class="result-item">
-                        <h3>${option.name}</h3>
-                        ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
-                         ${contraNotes ? `<span class="reason">${contraNotes}</span>` : ''}
-                         <p><strong class="indication">Indications:</strong> ${option.indications}</p>
-                        <p><strong class="contraindication">Contraindications/Cautions:</strong> ${option.contraindications}</p>
-                    </div>
-                `;
-
-                // Special handling for Avoid category
-                 if (option.category === 'Avoid') {
-                     displayItem = `
-                         <div class="result-item">
-                            <h3>${option.name}</h3>
-                            <p><strong class="contraindication">Details:</strong> ${option.indications}</p>
-                         </div>
-                     `;
-                 }
-                 // Special handling for General category
-                 else if (option.category === 'General') {
-                      displayItem = `
-                         <div class="result-item">
-                             <h3>${option.name}</h3>
-                              ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
-                             <p><strong class="indication">Details:</strong> ${option.indications}</p>
-                         </div>
-                     `;
-                 }
-
-                // Filter out foundational therapies not matching criteria even if rule technically passes (e.g. MRA if LVEF > 35)
-                 if (option.category === 'Foundational') {
-                    let clearlyIndicated = false;
-                    if(option.name.includes('Beta-Blocker') && inputs.lvef <= 40) clearlyIndicated = true;
-                    if(option.name.includes('SGLT2') && inputs.lvef <= 40) clearlyIndicated = true;
-                    if((option.name.includes('ARNI') || option.name.includes('ACEi') || option.name.includes('ARB')) && inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx) clearlyIndicated = true;
-                    if(option.name.includes('Consider ARB if ACEi Angioedema') && inputs.lvef <= 40 && inputs.nyha >= 2 && inputs.hasAngioedemaHx) clearlyIndicated = true;
-                    if(option.name.includes('MRA') && inputs.lvef <= 35 && inputs.nyha >= 2) clearlyIndicated = true;
-
-                    if(!clearlyIndicated && !(option.name.includes('Consider ARB'))) return; // Skip if foundational criteria not met clearly
-                 }
-
-
-                categories[option.category].push(displayItem);
-                addedTherapies.add(option.name); // Mark as added
-             }
+            // Basic HFpEF check (for filtering subsequent results)
+            if (inputs.lvef >= 50 && !inputs.hasSecondaryIcdIndication) {
+                // Display filtered results for HFpEF
+                displayResults(inputs, resultsDiv, gdmtOptions.filter(opt =>
+                    ['General', 'Avoid', 'Symptom Management'].includes(opt.category) ||
+                    opt.name.includes('SGLT2') ||
+                    opt.name.includes('MRA') || // MRA might be considered in specific HFpEF phenotypes
+                    (opt.name.includes('Anticoagulation') && inputs.hasAfib) // Anticoag if AFib present
+                 ));
+            } else {
+                // Display full results for HFrEF/HFmrEF
+                displayResults(inputs, resultsDiv, gdmtOptions);
+            }
         });
 
-        // Display grouped results
-        let sectionAdded = false; // Track if any sections are added after the summary
-        for (const category in categories) {
-            if (categories[category].length > 0) {
-                // Only add the H2 if it wasn't added before (for this category)
-                 if (!document.getElementById(`category-header-${category}`)) {
-                     resultsDiv.innerHTML += `<h2 id="category-header-${category}">${category.replace(/([A-Z])/g, ' $1').trim()} Therapies</h2>`;
-                 }
-                 resultsDiv.innerHTML += categories[category].join('');
-                 sectionAdded = true;
+        // Function to display results
+        function displayResults(inputs, resultsDiv, optionsToDisplay) {
+            // Group results by category
+            const categories = {
+                "Foundational": [],
+                "Symptom Management": [],
+                "Add-on": [],
+                "Device": [],
+                "Advanced": [],
+                "General": [],
+                "Avoid": []
+            };
+
+            // Use a Set to avoid duplicate entries
+            const addedTherapies = new Set();
+
+            optionsToDisplay.forEach(option => {
+                if ((option.indicationRule(inputs) || ['General', 'Avoid'].includes(option.category)) && !addedTherapies.has(option.name)) {
+
+                    let contraNotes = "";
+                     if (option.category === 'Foundational' && inputs.hasAngioedemaHx && (option.name.includes('ARNI') || option.name.includes('ACEi'))) {
+                         // Skip adding standard ARNI/ACEi if angioedema Hx - handled by specific rule/summary now
+                         return;
+                     }
+                    if (option.name.includes('Ivabradine') && inputs.hasAfib) {
+                        contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Generally contraindicated in AFib.</span> ";
+                        // Don't return if rule matches; display with note unless explicitly excluded by rule
+                        if (!option.indicationRule(inputs)) return; // Ensure rule still holds without AFib check
+                    }
+                    if (option.name.includes('CRT') && inputs.hasAfib) {
+                        contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Benefit less established/more complex in AFib.</span> ";
+                         // Don't return if rule matches; display with note unless explicitly excluded by rule
+                        if (!option.indicationRule(inputs)) return; // Ensure rule still holds without AFib check
+                    }
+
+
+                    let reasoningText = option.reasoning ? option.reasoning(inputs) : "";
+                    let displayItem = `
+                        <div class="result-item">
+                            <h3>${option.name}</h3>
+                            ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
+                            ${contraNotes ? `<span class="reason">${contraNotes}</span>` : ''}
+                            <p><strong class="indication">Indications:</strong> ${option.indications}</p>
+                            <p><strong class="contraindication">Contraindications/Cautions:</strong> ${option.contraindications}</p>
+                        </div>
+                    `;
+
+                    // Special handling for Avoid category
+                    if (option.category === 'Avoid') {
+                        displayItem = `
+                            <div class="result-item">
+                                <h3>${option.name}</h3>
+                                <p><strong class="contraindication">Details:</strong> ${option.indications}</p>
+                            </div>
+                        `;
+                    }
+                    // Special handling for General category
+                    else if (option.category === 'General') {
+                         displayItem = `
+                            <div class="result-item">
+                                <h3>${option.name}</h3>
+                                ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
+                                <p><strong class="indication">Details:</strong> ${option.indications}</p>
+                            </div>
+                        `;
+                    }
+
+                    // Filter out foundational therapies not matching criteria explicitly
+                    if (option.category === 'Foundational') {
+                        let clearlyIndicated = false;
+                        if(option.name.includes('Beta-Blocker') && inputs.lvef <= 40) clearlyIndicated = true;
+                        if(option.name.includes('SGLT2') && inputs.lvef <= 40) clearlyIndicated = true;
+                        if((option.name.includes('ARNI') || option.name.includes('ACEi') || option.name.includes('ARB')) && inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx) clearlyIndicated = true;
+                        if(option.name.includes('Consider ARB if ACEi Angioedema') && inputs.lvef <= 40 && inputs.nyha >= 2 && inputs.hasAngioedemaHx) clearlyIndicated = true;
+                        if(option.name.includes('MRA') && inputs.lvef <= 35 && inputs.nyha >= 2) clearlyIndicated = true;
+
+                        if(!clearlyIndicated && !(option.name.includes('Consider ARB'))) return; // Skip foundational if not clearly indicated by core criteria
+                    }
+
+                    categories[option.category].push(displayItem);
+                    addedTherapies.add(option.name); // Mark as added
+                }
+            });
+
+            // Display grouped results
+            let sectionAdded = false; // Track if any sections are added after the summary
+            for (const category in categories) {
+                if (categories[category].length > 0) {
+                    // Use a unique ID for the header to check if it exists
+                    const headerId = `category-header-${category.replace(/\s+/g, '-')}`; // Create a simple ID
+                    if (!document.getElementById(headerId)) {
+                        resultsDiv.innerHTML += `<h2 id="${headerId}">${category.replace(/([A-Z])/g, ' $1').trim()} Therapies</h2>`;
+                    }
+                    resultsDiv.innerHTML += categories[category].join('');
+                    sectionAdded = true;
+                }
+            }
+
+            // Handle case where only summary + avoid/general categories show up or nothing matched
+            const essentialCategoriesDisplayed = categories['Foundational']?.length > 0 || categories['Symptom Management']?.length > 0 || categories['Add-on']?.length > 0 || categories['Device']?.length > 0 || categories['Advanced']?.length > 0;
+
+            if (!essentialCategoriesDisplayed && (categories['General']?.length > 0 || categories['Avoid']?.length > 0)) {
+                // Only summary + General/Avoid displayed
+                // No extra message needed, as the summary covers the basics.
+            } else if (!essentialCategoriesDisplayed && !categories['General']?.length && !categories['Avoid']?.length) {
+                // Truly nothing matched beyond summary (e.g., invalid inputs leading to no rules matching)
+                 resultsDiv.innerHTML += '<p>No specific therapies strongly matched the selected criteria based on these simplified rules beyond the initial summary. Review guidelines or check inputs.</p>';
             }
         }
+    </script>
 
-        // Handle case where only summary + avoid/general categories show up
-         if (!sectionAdded && (categories['General'].length > 0 || categories['Avoid'].length > 0) ) {
-            // Already displayed general/avoid, maybe add a note?
-             // resultsDiv.innerHTML += '<p>No specific additional therapies matched the criteria beyond foundational principles and medications to avoid.</p>';
-         } else if (!sectionAdded && categories['General'].length === 0 && categories['Avoid'].length === 0) {
-            // Truly nothing matched beyond summary
-             resultsDiv.innerHTML += '<p>No specific therapies strongly matched the selected criteria based on these simplified rules beyond the initial summary. Review guidelines.</p>';
-         }
-    }
-</script>
+</body>
+</html>
