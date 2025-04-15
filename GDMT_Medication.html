@@ -21,6 +21,17 @@
         }
         h2 { margin-top: 30px; }
         h3 { margin-top: 20px; color: #555; }
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        .form-section legend {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
         form label {
             display: block;
             margin-bottom: 5px;
@@ -32,10 +43,21 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Prevents padding from increasing width */
+            box-sizing: border-box;
         }
         form input[type="number"]::placeholder {
             color: #aaa;
+        }
+        .checkbox-group label {
+            display: inline-block; /* Align label next to checkbox */
+            margin-left: 5px;
+            margin-right: 15px;
+            font-weight: normal; /* Normal weight for checkbox labels */
+            margin-bottom: 10px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 3px;
+            vertical-align: middle;
         }
         form button {
             background-color: #007bff;
@@ -63,6 +85,12 @@
         .result-item strong {
             color: #0056b3;
         }
+        .reason {
+             font-style: italic;
+             color: #5a5a5a;
+             display: block; /* Ensure reason appears on its own line */
+             margin-top: 3px;
+        }
         .indication { color: #28a745; } /* Green */
         .contraindication { color: #dc3545; } /* Red */
         .disclaimer {
@@ -81,29 +109,69 @@
 <body>
 
     <h1>HFrEF GDMT Selection Helper</h1>
-    <p>Enter patient details to see potentially relevant Guideline-Directed Medical Therapies based on simplified criteria.</p>
+    <p>Enter patient details and select relevant conditions to see potentially relevant Guideline-Directed Medical Therapies based on simplified criteria.</p>
 
     <form id="gdmtForm">
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required>
+        <fieldset class="form-section">
+            <legend>Core Patient Data</legend>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
 
-        <label for="lvef">LVEF (%):</label>
-        <input type="number" id="lvef" name="lvef" placeholder="e.g., 35" required>
+            <label for="lvef">LVEF (%):</label>
+            <input type="number" id="lvef" name="lvef" placeholder="e.g., 35" required>
 
-        <label for="nyha">NYHA Class:</label>
-        <select id="nyha" name="nyha" required>
-            <option value="">Select NYHA Class</option>
-            <option value="1">I (Asymptomatic)</option>
-            <option value="2">II (Slight limitation)</option>
-            <option value="3">III (Marked limitation)</option>
-            <option value="4">IV (Symptoms at rest)</option>
-        </select>
+            <label for="nyha">NYHA Class:</label>
+            <select id="nyha" name="nyha" required>
+                <option value="">Select NYHA Class</option>
+                <option value="1">I (Asymptomatic)</option>
+                <option value="2">II (Slight limitation)</option>
+                <option value="3">III (Marked limitation)</option>
+                <option value="4">IV (Symptoms at rest)</option>
+            </select>
 
-        <label for="hr">Heart Rate (bpm):</label>
-        <input type="number" id="hr" name="hr" placeholder="Optional, needed for Ivabradine">
+            <label for="hr">Heart Rate (bpm) in Sinus Rhythm:</label>
+            <input type="number" id="hr" name="hr" placeholder="Optional, needed for Ivabradine">
 
-        <label for="qrs">QRS Duration (ms):</label>
-        <input type="number" id="qrs" name="qrs" placeholder="Optional, needed for CRT/devices">
+            <label for="qrs">QRS Duration (ms) in Sinus Rhythm:</label>
+            <input type="number" id="qrs" name="qrs" placeholder="Optional, needed for CRT">
+        </fieldset>
+
+        <fieldset class="form-section checkbox-group">
+            <legend>Select Applicable Special Conditions / History</legend>
+            <div>
+                 <input type="checkbox" id="hasAfib" name="hasAfib">
+                 <label for="hasAfib">Atrial Fibrillation (AF)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasIronDeficiency" name="hasIronDeficiency">
+                 <label for="hasIronDeficiency">Known/Suspected Iron Deficiency</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasFuncMR" name="hasFuncMR">
+                 <label for="hasFuncMR">Significant Functional Mitral Regurgitation (MR)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="isBlack" name="isBlack">
+                 <label for="isBlack">Self-Identified Black Race</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasAngioedemaHx" name="hasAngioedemaHx">
+                 <label for="hasAngioedemaHx">History of Angioedema (to ACEi/ARB)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasSecondaryIcdIndication" name="hasSecondaryIcdIndication">
+                 <label for="hasSecondaryIcdIndication">History of Sustained VT/VF or Resuscitated Cardiac Arrest</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="hasRecentWorsening" name="hasRecentWorsening">
+                 <label for="hasRecentWorsening">Recent Worsening HF Event (Hospitalization or need for IV Diuretics)</label>
+            </div>
+             <div>
+                 <input type="checkbox" id="isLbbb" name="isLbbb">
+                 <label for="isLbbb">LBBB Morphology (on ECG, relevant for CRT)</label>
+             </div>
+        </fieldset>
+
 
         <button type="submit">Analyze GDMT Options</button>
     </form>
@@ -113,177 +181,261 @@
     </div>
 
     <div class="disclaimer">
-        <strong>Disclaimer:</strong> This tool is for informational and educational purposes only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for any medical conditions or treatment decisions. Therapy selection requires comprehensive clinical evaluation.
+        <strong>Disclaimer:</strong> This tool is for informational and educational purposes only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for any medical conditions or treatment decisions. Therapy selection requires comprehensive clinical evaluation, including labs and imaging.
     </div>
 
     <script>
         // Helper function to check if a value is not a number or null/empty
         function isNaNOrNull(value) {
-            // Check if empty string, null, or truly NaN after conversion attempt
-            if (value === "" || value === null) return true;
-            const num = parseInt(value); // Use parseInt as HR/QRS are usually integers
+            if (value === "" || value === null || typeof value === 'undefined') return true;
+            const num = parseInt(value);
             return isNaN(num);
         }
 
-        // --- GDMT Data ---
+        // --- GDMT Data (Therapies and Rules) ---
         const gdmtOptions = [
-            // --- Foundational Pillars (Generally for HFrEF NYHA II-IV, LVEF <= 40%) ---
+            // --- Foundational Pillars ---
             {
                 name: "ARNI (Sacubitril/Valsartan)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2,
-                indications: "Preferred first-line over ACEi/ARB for HFrEF NYHA II-IV. Can be started de novo or switched from ACEi/ARB.",
-                contraindications: "History of angioedema (especially with ACEi), concurrent ACEi use (needs 36hr washout), pregnancy. Use with caution in severe renal impairment, hypotension. Cannot be used if prior angioedema to ACEi."
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
+                indications: "Preferred first-line over ACEi/ARB for HFrEF NYHA II-IV. Can be started de novo or switched from ACEi/ARB (requires 36hr washout).",
+                contraindications: "History of angioedema (ABSOLUTE C/I if prior angioedema to ACEi/ARNI/ARB), concurrent ACEi use, pregnancy. Caution: severe renal impairment, hypotension.",
+                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
             },
             {
                 name: "ACE Inhibitor (ACEi)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2,
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
                 indications: "Alternative if ARNI not tolerated or feasible. HFrEF NYHA II-IV.",
-                contraindications: "History of angioedema, bilateral renal artery stenosis, pregnancy, hyperkalemia. Caution in renal impairment, hypotension. Preferred over ARNI in breastfeeding."
+                contraindications: "History of angioedema, bilateral renal artery stenosis, pregnancy, hyperkalemia. Caution: renal impairment, hypotension. Preferred over ARNI in breastfeeding.",
+                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
             },
             {
                 name: "Angiotensin Receptor Blocker (ARB)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2,
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
                 indications: "Alternative if intolerant to ACEi (e.g., cough) and ARNI not feasible. HFrEF NYHA II-IV.",
-                contraindications: "Pregnancy, bilateral renal artery stenosis, hyperkalemia. Caution in renal impairment, hypotension. Cannot be used if prior angioedema to ACEi/ARB for ARNI consideration."
+                contraindications: "Pregnancy, bilateral renal artery stenosis, hyperkalemia. Caution: renal impairment, hypotension. Prior angioedema to ACEi/ARB is generally a contraindication for ARNI as well.",
+                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
             },
+             {
+                name: "Consider ARB if ACEi Angioedema", // Special case if ACEi angioedema but ARB naive
+                category: "Foundational",
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && inputs.hasAngioedemaHx,
+                indications: "If angioedema occurred ONLY with an ACEi, an ARB *might* be cautiously considered under specialist supervision, but ARNI remains contraindicated. Discuss risks thoroughly.",
+                contraindications: "Prior angioedema to ARB or idiopathic angioedema. Pregnancy, bilateral RAS, hyperkalemia.",
+                reasoning: (inputs) => "<span class='indication'>Potentially consider ARB (not ARNI) only if angioedema was specific to ACEi and benefits outweigh risks.</span>"
+             },
             {
                 name: "Beta-Blocker (Evidence-based: Metoprolol Succinate, Carvedilol, Bisoprolol)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40, // Indicated for all HFrEF patients unless contraindicated
+                indicationRule: (inputs) => inputs.lvef <= 40,
                 indications: "All patients with HFrEF (LVEF ≤40%), regardless of NYHA class (start once stable/euvolemic). Shown to improve survival.",
-                contraindications: "Acute decompensated HF (initiate cautiously once stable), severe bradycardia, high-degree AV block (without pacemaker), severe asthma/reactive airway disease (use cardioselective like Bisoprolol/Metoprolol cautiously). Titrate slowly."
+                contraindications: "Acute decompensated HF (initiate cautiously once stable), severe bradycardia (<50 bpm), high-degree AV block (without pacemaker), severe asthma/reactive airway disease (use cardioselective like Bisoprolol/Metoprolol cautiously). Titrate slowly."
             },
             {
                 name: "Mineralocorticoid Receptor Antagonist (MRA - Spironolactone, Eplerenone)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 2, // Common threshold, some use <=40% post-MI w/ HF/DM
-                indications: "HFrEF NYHA II-IV with LVEF ≤35%. Also post-MI with LVEF ≤40% and HF symptoms or diabetes. Monitor K+ and renal function closely.",
-                contraindications: "Hyperkalemia (K+ > 5.0 mEq/L), severe renal impairment (e.g., eGFR < 30 mL/min/1.73m² - check specific drug), anuria, Addison's disease. Eplerenone is more selective (less gynecomastia)."
+                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 2,
+                indications: "HFrEF NYHA II-IV with LVEF ≤35%. Also post-MI with LVEF ≤40% and HF symptoms or diabetes. Monitor K+ and renal function (eGFR) closely.",
+                contraindications: "Hyperkalemia (K+ > 5.0 mEq/L at baseline), severe renal impairment (e.g., eGFR < 30 mL/min/1.73m² - check specific drug), anuria, Addison's disease. Eplerenone is more selective (less gynecomastia)."
             },
-             {
+            {
                 name: "SGLT2 Inhibitor (-gliflozin, e.g., Dapagliflozin, Empagliflozin)",
                 category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40, // Broadly indicated across NYHA classes for HFrEF benefit
-                indications: "HFrEF (LVEF ≤40%) across NYHA classes (II-IV often studied) regardless of diabetes status. Reduces HF hospitalizations and CV death. Also provides renal protection.",
-                contraindications: "Type 1 Diabetes, history of DKA, severe renal impairment (check specific eGFR cutoffs for initiation/continuation, though often used *for* CKD). Risk of genital mycotic infections, volume depletion. Monitor for DKA (can be euglycemic)."
+                indicationRule: (inputs) => inputs.lvef <= 40, // Broad HFrEF benefit
+                indications: "HFrEF (LVEF ≤40%) across NYHA classes (II-IV often studied) regardless of diabetes status. Reduces HF hospitalizations and CV death. Renal protection benefits.",
+                contraindications: "Type 1 Diabetes, history of DKA, severe renal impairment (check specific eGFR cutoffs for initiation/continuation). Risk of genital mycotic infections, volume depletion. Monitor for DKA (can be euglycemic)."
             },
             // --- Symptom Management ---
             {
                 name: "Diuretics (Loop: Furosemide, Bumetanide, Torsemide)",
                 category: "Symptom Management",
-                indicationRule: (inputs) => inputs.nyha >= 2, // Used for congestion symptoms
+                indicationRule: (inputs) => inputs.nyha >= 2, // Driven by symptoms of congestion
                 indications: "Management of fluid retention (congestion) in symptomatic HF (NYHA II-IV). Dose adjusted based on symptoms and volume status. IV for acute decompensation.",
-                contraindications: "Anuria. Caution in electrolyte imbalances (hypokalemia, hypomagnesemia), hypotension, severe renal impairment. Can cause ototoxicity at high doses/rapid infusion."
+                contraindications: "Anuria. Caution: electrolyte imbalances (hypokalemia, hypomagnesemia), hypotension, severe renal impairment. Can cause ototoxicity at high doses/rapid infusion."
             },
-            // --- Add-on Therapies for Specific Conditions ---
-             {
+             // --- Add-on / Specific Situation Therapies ---
+            {
                 name: "Ivabradine",
                 category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 35 && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && inputs.nyha >= 2, // Requires HR input
-                indications: "HFrEF (LVEF ≤35%) in Sinus Rhythm with resting HR ≥70 bpm despite maximally tolerated beta-blocker dose (or C/I to BB). NYHA II-III. Reduces HF hospitalizations.",
-                contraindications: "Acute decompensated HF, BP <90/50, sick sinus syndrome, SA block, AV block (2nd/3rd degree unless paced), severe hepatic impairment, pacemaker dependence, concurrent strong CYP3A4 inhibitors. Risk of phosphenes, bradycardia."
+                // Rule: LVEF<=35, NYHA II-III, Sinus Rhythm, HR>=70 on max BB
+                indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 3) && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && !inputs.hasAfib,
+                indications: "HFrEF (LVEF ≤35%) in **Sinus Rhythm** with resting HR ≥70 bpm despite maximally tolerated beta-blocker dose (or C/I to BB). NYHA II-III. Reduces HF hospitalizations.",
+                contraindications: "AFib, Acute decompensated HF, BP <90/50, sick sinus syndrome, SA block, AV block (2nd/3rd degree unless paced), severe hepatic impairment, pacemaker dependence, strong CYP3A4 inhibitors.",
+                reasoning: (inputs) => isNaNOrNull(inputs.hr) ? "<span class='contraindication'>(Requires Heart Rate Input)</span>" : (inputs.hasAfib ? "<span class='contraindication'>(Contraindicated in AFib)</span>" : "")
             },
-             {
+            {
                 name: "Hydralazine + Isosorbide Dinitrate (Hy/ISDN)",
                 category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 3, // Primarily NYHA III-IV
-                indications: "Recommended in self-identified Black patients with NYHA Class III-IV HFrEF on optimal therapy (ARNI/ACEi/ARB, BB, MRA). Can also be used in non-Black patients intolerant to ACEi/ARB/ARNI or as add-on if persistently symptomatic despite optimal GDMT.",
-                contraindications: "Hypersensitivity. Hydralazine: Caution in CAD (can cause reflex tachycardia), lupus-like syndrome. ISDN: Concurrent PDE5 inhibitors (e.g., sildenafil), severe anemia, increased ICP. Both can cause headache, dizziness, hypotension."
+                 // Rule: LVEF<=40, NYHA III-IV, Self-identified Black
+                 indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 3 && inputs.isBlack,
+                indications: "Recommended add-on therapy for self-identified Black patients with NYHA Class III-IV HFrEF on optimal foundational therapy (ARNI/ACEi/ARB, BB, MRA).",
+                contraindications: "Hypersensitivity. Hydralazine: Caution in CAD, lupus-like syndrome. ISDN: Concurrent PDE5 inhibitors, severe anemia, increased ICP. Both: headache, dizziness, hypotension.",
+                 reasoning: (inputs) => inputs.isBlack ? "<span class='indication'>Specific indication for self-identified Black patients with NYHA III-IV.</span>" : ""
+            },
+            {
+                name: "Hydralazine + Isosorbide Dinitrate (Hy/ISDN) - Alternative",
+                category: "Add-on",
+                // Rule: LVEF<=40, NYHA III-IV, Intolerant to ACEi/ARB/ARNI
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 3 && inputs.hasAngioedemaHx, // Use angioedema Hx as proxy for intolerance
+                indications: "Can also be considered as an alternative or add-on in patients (regardless of race) with NYHA Class III-IV HFrEF who cannot tolerate ACEi/ARB/ARNI, or remain symptomatic despite other optimal GDMT.",
+                contraindications: "Hypersensitivity. Hydralazine: Caution in CAD, lupus-like syndrome. ISDN: Concurrent PDE5 inhibitors, severe anemia, increased ICP. Both: headache, dizziness, hypotension.",
+                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='indication'>Consider if intolerant to ACEi/ARB/ARNI.</span>" : ""
             },
              {
                 name: "Digoxin",
                 category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2, // For persistent symptoms
-                indications: "May be considered to reduce HF hospitalizations in patients with HFrEF (LVEF ≤40%) who remain symptomatic (NYHA II-IV) despite optimal foundational GDMT. Can also be used for rate control in AFib (less common now). No mortality benefit.",
-                contraindications: "Ventricular fibrillation, high-degree AV block (unless paced). Narrow therapeutic window - monitor levels. Risk of toxicity increased by hypokalemia, hypomagnesemia, renal impairment. Many drug interactions."
+                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2, // Consider if still symptomatic or AF rate control
+                indications: "May be considered to reduce HF hospitalizations (no mortality benefit) in HFrEF patients who remain symptomatic (NYHA II-IV) despite optimal GDMT. Can also aid rate control in AFib (use cautiously).",
+                contraindications: "VFib, high-degree AV block (unless paced). Narrow therapeutic window - monitor levels, K+, Mg++, renal function. Many drug interactions.",
+                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>(Also potential option for AF rate control)</span>" : ""
             },
-             {
-                name: "Iron (IV Ferric Carboxymaltose)",
+            {
+                name: "Iron (IV Ferric Carboxymaltose / Derisomaltose)",
                 category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 45 && inputs.nyha >= 2, // Based on trials, need lab confirmation
-                indications: "Symptomatic HFrEF (LVEF ≤45%) and Iron Deficiency (Ferritin <100 ng/mL, OR Ferritin 100-299 ng/mL with TSAT <20%). Improves symptoms, functional capacity, QOL. Requires lab confirmation (not asked in form).",
-                contraindications: "Known hypersensitivity, iron overload. Monitor for hypersensitivity reactions during/after infusion."
+                indicationRule: (inputs) => inputs.lvef <= 45 && inputs.nyha >= 2 && inputs.hasIronDeficiency,
+                indications: "Symptomatic HFrEF (LVEF ≤45%, some trials up to 50%) and confirmed Iron Deficiency (Ferritin <100 ng/mL, OR Ferritin 100-299 ng/mL with TSAT <20%). Improves symptoms, QOL, reduces HF hospitalizations.",
+                contraindications: "Known hypersensitivity, iron overload. Requires lab confirmation. Monitor for hypersensitivity reactions.",
+                reasoning: (inputs) => inputs.hasIronDeficiency ? "<span class='indication'>Indicated due to suspected/known Iron Deficiency (confirm with labs).</span>" : ""
             },
-             {
+            {
                 name: "Vericiguat",
                 category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef < 45 && inputs.nyha >= 2, // For worsening HF despite GDMT
-                indications: "Soluble guanylate cyclase stimulator. To reduce risk of CV death and HF hospitalization following a recent worsening HF event (hospitalization or need for outpatient IV diuretics) in symptomatic chronic HFrEF (LVEF <45%) on GDMT.",
-                contraindications: "Concurrent use of other sGC stimulators (e.g., riociguat) or PDE5 inhibitors. Pregnancy. Caution with hypotension."
+                indicationRule: (inputs) => inputs.lvef < 45 && inputs.nyha >= 2 && inputs.hasRecentWorsening,
+                indications: "Soluble guanylate cyclase stimulator. Consider for patients with symptomatic chronic HFrEF (LVEF <45%) on GDMT who experience a recent worsening HF event (hospitalization or need for outpatient IV diuretics).",
+                contraindications: "Concurrent use of other sGC stimulators or PDE5 inhibitors. Pregnancy. Caution with hypotension.",
+                reasoning: (inputs) => inputs.hasRecentWorsening ? "<span class='indication'>Considered due to recent worsening HF event.</span>" : ""
+             },
+             {
+                name: "Anticoagulation",
+                category: "Add-on",
+                indicationRule: (inputs) => inputs.hasAfib,
+                indications: "Indicated for stroke prevention in patients with Atrial Fibrillation (AF) based on CHA₂DS₂-VASc score. Choice between DOAC or warfarin.",
+                contraindications: "Active major bleeding, severe thrombocytopenia, high bleeding risk outweighing stroke risk.",
+                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>Indicated for stroke prevention due to AF (assess CHA₂DS₂-VASc).</span>" : ""
             },
              // --- Devices ---
-            {
-                name: "Implantable Cardioverter-Defibrillator (ICD)",
+             {
+                name: "Implantable Cardioverter-Defibrillator (ICD) - Secondary Prevention",
                 category: "Device",
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 1 && inputs.nyha <= 3, // Primary prevention criteria focus
-                indications: "Primary Prevention: LVEF ≤35% due to prior MI (at least 40 days post-MI) or non-ischemic CM (at least 3 months on optimal GDMT), and NYHA Class II-III. OR LVEF ≤30% NYHA Class I (post-MI or NICM). Expected meaningful survival >1 year. Secondary Prevention: Survivors of cardiac arrest due to VT/VF, or spontaneous sustained VT.",
-                contraindications: "Terminal illness with life expectancy <1 year, incessant VT/VF, significant psychiatric illness. Procedure risks (infection, lead issues, inappropriate shocks)."
+                indicationRule: (inputs) => inputs.hasSecondaryIcdIndication,
+                indications: "Strongly indicated for survivors of cardiac arrest due to VT/VF, or those with spontaneous sustained VT not due to reversible causes.",
+                contraindications: "Terminal illness (<1 year survival), incessant VT/VF, significant psychiatric illness. Procedure risks.",
+                reasoning: (inputs) => inputs.hasSecondaryIcdIndication ? "<span class='indication'>Strong indication due to history of life-threatening arrhythmia.</span>" : ""
+            },
+            {
+                name: "Implantable Cardioverter-Defibrillator (ICD) - Primary Prevention",
+                category: "Device",
+                 // Rule: LVEF<=35, NYHA II-III (or NYHA I LVEF<=30), on GDMT >3mo (NICM) or >40d (post-MI), expected survival >1yr
+                 indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 1 && inputs.nyha <= 3) && !inputs.hasSecondaryIcdIndication && ( (inputs.nyha >=2 && inputs.lvef <= 35) || (inputs.nyha == 1 && inputs.lvef <= 30) ),
+                indications: "Consider for Primary Prevention if LVEF ≤35% (NYHA II-III) or LVEF ≤30% (NYHA I) due to prior MI (≥40 days post) or non-ischemic CM (≥3 months on optimal GDMT). Must have reasonable expectation of meaningful survival >1 year.",
+                contraindications: "Terminal illness (<1 year survival), recent MI (<40d) or revascularization (<3mo), incessant VT/VF, significant psychiatric illness. Procedure risks.",
+                 reasoning: (inputs) => (!inputs.hasSecondaryIcdIndication && inputs.lvef <= 35) ? "<span class='indication'>Consider for primary prevention based on LVEF/NYHA class.</span>" : ""
             },
             {
                 name: "Cardiac Resynchronization Therapy (CRT / CRT-D)",
                 category: "Device",
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 2 && inputs.nyha <= 4 && !isNaNOrNull(inputs.qrs) && inputs.qrs >= 130, // Simplified QRS, needs LBBB ideally
-                indications: "LVEF ≤35%, Sinus Rhythm, NYHA Class II, III, or ambulatory IV, on optimal GDMT. Strongest indication with LBBB morphology and QRS ≥150 ms. Consider for LBBB QRS 130-149 ms, or non-LBBB QRS ≥150 ms. Improves symptoms, functional capacity, and survival (CRT-D combines CRT + ICD).",
-                contraindications: "Life expectancy <1 year. Anatomic limitations to lead placement. Patient preference."
+                // Rule: LVEF<=35, NYHA II-IV ambulatory, Sinus Rhythm, QRS >= 130ms (Ideally LBBB >= 150ms)
+                indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 4) && !isNaNOrNull(inputs.qrs) && inputs.qrs >= 130 && !inputs.hasAfib,
+                indications: "LVEF ≤35%, Sinus Rhythm, NYHA Class II, III, or ambulatory IV, on optimal GDMT. Strongest indication with LBBB morphology (check box) and QRS ≥150 ms. Consider for LBBB QRS 130-149 ms, or non-LBBB QRS ≥150 ms (less benefit). Improves symptoms, function, survival (CRT-D includes ICD).",
+                contraindications: "AFib (relative - can be done but benefit less clear/needs rate control), life expectancy <1 year. Anatomic limitations. Patient preference.",
+                reasoning: (inputs) => isNaNOrNull(inputs.qrs) ? "<span class='contraindication'>(Requires QRS Duration Input)</span>" : (inputs.hasAfib ? "<span class='contraindication'>(Benefit less established/more complex in AFib)</span>" : (inputs.qrs >= 150 && inputs.isLbbb ? "<span class='indication'>(Strongest indication: LBBB & QRS≥150ms)</span>" : (inputs.qrs >= 130 && inputs.isLbbb ? "<span class='indication'>(Indicated: LBBB & QRS 130-149ms)</span>" : (inputs.qrs >= 150 ? "<span class='indication'>(Considered: Non-LBBB & QRS≥150ms)</span>" : ""))))
             },
-             // --- Advanced Therapies / Specific Situations ---
+            // --- Advanced Therapies / Referrals ---
             {
                 name: "Mitral Transcatheter Edge-to-Edge Repair (TEER)",
                 category: "Advanced",
-                indicationRule: (inputs) => inputs.lvef >= 20 && inputs.lvef <= 50 && inputs.nyha >= 2, // Broad criteria, needs echo confirmation
-                indications: "Selected patients with chronic moderate-to-severe or severe secondary (functional) Mitral Regurgitation (MR) who remain symptomatic (NYHA II-IV) despite optimal GDMT, and have suitable valve anatomy. Requires heart team evaluation.",
-                contraindications: "Unsuitable anatomy, severe LV dysfunction prohibitive for procedure, life expectancy <1 year."
+                // Rule: LVEF 20-50%, NYHA II-IV, Significant Func MR, on GDMT
+                indicationRule: (inputs) => inputs.lvef >= 20 && inputs.lvef <= 50 && inputs.nyha >= 2 && inputs.hasFuncMR,
+                indications: "Selected patients with chronic moderate-to-severe or severe secondary (functional) Mitral Regurgitation (MR) who remain symptomatic (NYHA II-IV) despite optimal GDMT, and have suitable valve anatomy + favorable LV size. Requires heart team evaluation.",
+                contraindications: "Unsuitable anatomy, prohibitive LV dilation/dysfunction, life expectancy <1 year, primary MR.",
+                reasoning: (inputs) => inputs.hasFuncMR ? "<span class='indication'>Consider referral for TEER evaluation due to functional MR.</span>" : ""
+            },
+            {
+                name: "Pulmonary Vein Isolation (PVI) Referral",
+                category: "Advanced",
+                indicationRule: (inputs) => inputs.hasAfib && inputs.lvef <= 40, // AF + HFrEF
+                indications: "Catheter ablation (PVI) may be considered for selected HFrEF patients with symptomatic AFib to improve symptoms and potentially reduce HF hospitalizations/mortality, especially if refractory to rate/rhythm control drugs.",
+                contraindications: "Prohibitive procedural risk, very enlarged LA, patient preference.",
+                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>Consider referral for PVI evaluation due to AFib in HFrEF.</span>" : ""
             },
             {
                 name: "LVAD / Heart Transplant Referral",
                 category: "Advanced",
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 3, // Generally advanced HF
-                indications: "Patients with advanced, refractory HFrEF (Stage D) despite optimal medical/device therapy. Consider for NYHA III-IV symptoms, recurrent hospitalizations, end-organ dysfunction due to hypoperfusion, low cardiac output, high filling pressures. Needs evaluation at specialized center.",
-                contraindications: "Significant comorbidities precluding surgery (severe irreversible PHTN, active malignancy, severe renal/hepatic disease, psychosocial issues, non-adherence)."
+                // Rule: Advanced HF (NYHA III-IV refractory), LVEF<=35
+                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 3 && (inputs.hasRecentWorsening || inputs.nyha == 4), // Proxy for advanced/refractory
+                indications: "Patients with advanced, refractory HFrEF (Stage D) despite optimal medical/device therapy (e.g., NYHA III-IV symptoms, recurrent hospitalizations, end-organ dysfunction due to low output). Needs evaluation at specialized center.",
+                contraindications: "Irreversible end-organ damage (renal, hepatic), severe irreversible PHTN, active malignancy, prohibitive comorbidities, psychosocial issues, non-adherence."
             },
             // --- General & Avoid ---
             {
+                name: "Multi-Professional Disease Management",
+                category: "General",
+                indicationRule: (inputs) => inputs.nyha >= 2, // Especially important for symptomatic patients
+                indications: "Essential for all HF patients, particularly those with higher symptom burden (NYHA II-IV) or recent hospitalizations. Includes patient education, self-care support, medication optimization, coordination of care, addressing psychosocial factors. Improves QOL and reduces readmissions.",
+                contraindications: "N/A",
+                reasoning: (inputs) => inputs.nyha >= 3 ? "<span class='indication'>(Particularly crucial for NYHA III/IV)</span>" : ""
+            },
+            {
                 name: "Lifestyle & General Measures",
                 category: "General",
-                indicationRule: () => true, // Always relevant
-                indications: "Sodium restriction (controversial, but generally avoid excess), fluid restriction (if hyponatremic/congested), regular exercise/cardiac rehab, weight management, smoking cessation, influenza/pneumococcal vaccination, manage comorbidities (HTN, DM, Afib, Sleep Apnea).",
+                indicationRule: () => true,
+                indications: "Sodium restriction (~<2-3g/day), fluid restriction (~1.5-2L/day if congested/hyponatremic), regular exercise/cardiac rehab, weight management, smoking cessation, influenza/pneumococcal vaccination, manage comorbidities (HTN, DM, Afib, Sleep Apnea).",
                 contraindications: "N/A"
             },
-             {
+            {
                 name: "Medications to AVOID",
                 category: "Avoid",
-                indicationRule: () => true, // Always relevant
-                indications: "NSAIDs (inc. COX-2 inhibitors - cause Na/water retention, worsen HF), TZDs (Thiazolidinediones like pioglitazone - fluid retention), most non-dihydropyridine CCBs (Verapamil, Diltiazem - negative inotropes, worsen outcomes in HFrEF), Cilostazol, potentially some antiarrhythmics (Class I, Dronedarone).",
-                contraindications: "N/A (These are the contraindications themselves)"
+                indicationRule: () => true,
+                indications: "NSAIDs (inc. COX-2 inhibitors), TZDs (pioglitazone), Non-dihydropyridine CCBs (Verapamil, Diltiazem in HFrEF), Cilostazol, Class I antiarrhythmics, Dronedarone.",
+                contraindications: "N/A"
             }
         ];
+
 
         // --- Form Submission Logic ---
         document.getElementById('gdmtForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent page reload
 
+            // Collect core inputs
             const inputs = {
                 age: parseInt(document.getElementById('age').value),
                 lvef: parseInt(document.getElementById('lvef').value),
                 nyha: parseInt(document.getElementById('nyha').value),
                 hr: parseInt(document.getElementById('hr').value), // Will be NaN if empty
-                qrs: parseInt(document.getElementById('qrs').value) // Will be NaN if empty
+                qrs: parseInt(document.getElementById('qrs').value), // Will be NaN if empty
+                // Collect checkbox inputs
+                hasAfib: document.getElementById('hasAfib').checked,
+                hasIronDeficiency: document.getElementById('hasIronDeficiency').checked,
+                hasFuncMR: document.getElementById('hasFuncMR').checked,
+                isBlack: document.getElementById('isBlack').checked,
+                hasAngioedemaHx: document.getElementById('hasAngioedemaHx').checked,
+                hasSecondaryIcdIndication: document.getElementById('hasSecondaryIcdIndication').checked,
+                hasRecentWorsening: document.getElementById('hasRecentWorsening').checked,
+                isLbbb: document.getElementById('isLbbb').checked
             };
 
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<h2>Potential GDMT Options:</h2>'; // Clear previous results and add title
+            resultsDiv.innerHTML = '<h2>Potential GDMT Options:</h2>'; // Clear previous results
 
-            // Check for HFpEF - very basic mention
-            if (inputs.lvef >= 50) {
-                 resultsDiv.innerHTML += `<p><strong>Note:</strong> LVEF ≥ 50% suggests Heart Failure with Preserved Ejection Fraction (HFpEF). Management focuses on treating underlying causes (HTN, AFib, Obesity), managing congestion (diuretics), and considering SGLT2i and potentially MRAs based on recent trials. Detailed HFpEF management is beyond this tool's primary scope.</p>`;
-                 // Optionally, could add specific HFpEF rules here based on the text.
+            // Basic HFpEF check
+            if (inputs.lvef >= 50 && !inputs.hasSecondaryIcdIndication) { // Allow ICD secondary prev even if EF > 50
+                 resultsDiv.innerHTML += `<p><strong>Note:</strong> LVEF ≥ 50% suggests Heart Failure with Preserved Ejection Fraction (HFpEF). Foundational HFrEF therapies (ARNI/ACEi/ARB, BB, MRA) generally lack mortality benefit here. Focus on: managing congestion (Diuretics), treating underlying causes (HTN, AFib, Obesity), SGLT2 Inhibitors (proven benefit), consider MRAs. Detailed HFpEF management is distinct.</p>`;
+                 // Filter out most HFrEF specific therapies for HFpEF display
+                 displayResults(inputs, resultsDiv, gdmtOptions.filter(opt => ['General', 'Avoid', 'Symptom Management'].includes(opt.category) || opt.name.includes('SGLT2') || opt.name.includes('MRA') || opt.name.includes('Anticoagulation') || opt.name.includes('Secondary Prevention') ));
+            } else {
+                // Display results for HFrEF (LVEF < 50)
+                 displayResults(inputs, resultsDiv, gdmtOptions);
             }
 
 
-            // Group results by category
+        });
+
+        // Function to display results
+         function displayResults(inputs, resultsDiv, optionsToDisplay) {
+             // Group results by category
             const categories = {
                 "Foundational": [],
                 "Symptom Management": [],
@@ -294,63 +446,82 @@
                 "Avoid": []
             };
 
-            gdmtOptions.forEach(option => {
-                // Check if the basic rule applies OR if it's a general/avoid category
-                 if (option.indicationRule(inputs) || ['General', 'Avoid'].includes(option.category)) {
-                    // Special check for optional inputs required by the rule
-                    let meetsOptionalCriteria = true;
-                    if (option.name === "Ivabradine" && isNaNOrNull(inputs.hr)) {
-                         meetsOptionalCriteria = false; // Skip if HR needed but not provided
-                         option.indications += " <strong>(Requires Heart Rate input)</strong>";
+             // Use a Set to avoid duplicate entries (e.g., Hy/ISDN showing for race and intolerance)
+             const addedTherapies = new Set();
+
+            optionsToDisplay.forEach(option => {
+                 // Check if the basic rule applies OR if it's a general/avoid category
+                 if ((option.indicationRule(inputs) || ['General', 'Avoid'].includes(option.category)) && !addedTherapies.has(option.name)) {
+
+                    // Add specific contraindication notes based on checkboxes
+                    let contraNotes = "";
+                    if ((option.name.includes('ARNI') || option.name.includes('ACEi')) && inputs.hasAngioedemaHx) {
+                        // The rule already filters these out, but could add extra note if needed
+                        // contraNotes = "<span class='contraindication'>Note: Contraindicated due to angioedema history.</span> ";
+                        return; // Skip adding if explicitly contraindicated by checkbox rule
                     }
-                    if (option.name === "Cardiac Resynchronization Therapy (CRT / CRT-D)" && isNaNOrNull(inputs.qrs)) {
-                         meetsOptionalCriteria = false; // Skip if QRS needed but not provided
-                         option.indications += " <strong>(Requires QRS Duration input)</strong>";
+                     if (option.name.includes('Ivabradine') && inputs.hasAfib) {
+                        contraNotes = "<span class='contraindication'>Note: Generally contraindicated in AFib.</span> ";
+                        return; // Skip adding if explicitly contraindicated by checkbox
                     }
-                     // Add specific check for LVEF < 40% for most HFrEF therapies if not already covered by rule
-                    if (!['General', 'Avoid'].includes(option.category) && inputs.lvef >= 40 && option.name !== 'Iron (IV Ferric Carboxymaltose)' && option.name !== 'Vericiguat' && option.name !== "Mitral Transcatheter Edge-to-Edge Repair (TEER)") {
-                         // Add exceptions like Iron, Vericiguat, TEER which may have slightly higher EF cutoffs in some trials/indications
-                         if (inputs.lvef < 50) { // Handle mildly reduced EF case minimally
-                             // Allow therapies potentially considered in HFmrEF or specific higher EF cutoffs
-                         } else {
-                            meetsOptionalCriteria = false; // Skip most HFrEF drugs if EF is normal/preserved
-                         }
-                    }
+                     if (option.name.includes('CRT') && inputs.hasAfib) {
+                         contraNotes = "<span class='contraindication'>Note: Benefit less established/more complex in AFib.</span> ";
+                         // Don't return, just note it, as CRT in AFib is sometimes done
+                     }
 
 
-                    if (meetsOptionalCriteria) {
-                        categories[option.category].push(`
-                            <div class="result-item">
+                    let reasoningText = option.reasoning ? option.reasoning(inputs) : "";
+                    let displayItem = `
+                        <div class="result-item">
+                            <h3>${option.name}</h3>
+                            ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
+                             ${contraNotes ? `<span class="reason">${contraNotes}</span>` : ''}
+                             <p><strong class="indication">Indications:</strong> ${option.indications}</p>
+                            <p><strong class="contraindication">Contraindications/Cautions:</strong> ${option.contraindications}</p>
+                        </div>
+                    `;
+
+                    // Special handling for Avoid category
+                     if (option.category === 'Avoid') {
+                         displayItem = `
+                             <div class="result-item">
                                 <h3>${option.name}</h3>
-                                <p><strong class="indication">Indications:</strong> ${option.indications}</p>
-                                <p><strong class="contraindication">Contraindications/Cautions:</strong> ${option.contraindications}</p>
-                            </div>
-                        `);
-                    } else if (['General', 'Avoid'].includes(option.category)) {
-                         // Always show General/Avoid categories
-                         categories[option.category].push(`
-                            <div class="result-item">
-                                <h3>${option.name}</h3>
-                                <p><strong class="indication">Details:</strong> ${option.indications}</p>
-                            </div>
-                        `);
-                    }
+                                <p><strong class="contraindication">Details:</strong> ${option.indications}</p>
+                             </div>
+                         `;
+                     }
+                     // Special handling for General category
+                     else if (option.category === 'General') {
+                          displayItem = `
+                             <div class="result-item">
+                                 <h3>${option.name}</h3>
+                                  ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
+                                 <p><strong class="indication">Details:</strong> ${option.indications}</p>
+                             </div>
+                         `;
+                     }
 
+
+                    categories[option.category].push(displayItem);
+                    addedTherapies.add(option.name); // Mark as added
                  }
             });
 
             // Display grouped results
+            let resultsFound = false;
             for (const category in categories) {
                 if (categories[category].length > 0) {
+                    resultsFound = true;
                     resultsDiv.innerHTML += `<h2>${category.replace(/([A-Z])/g, ' $1').trim()} Therapies</h2>`; // Add spaces before caps
                     resultsDiv.innerHTML += categories[category].join('');
                 }
             }
 
-             if (resultsDiv.innerHTML === '<h2>Potential GDMT Options:</h2>') {
-                 resultsDiv.innerHTML += '<p>No specific therapies matched the core criteria based on the inputs provided, or LVEF suggests HFpEF (see note above if applicable). Ensure foundational GDMT principles and lifestyle measures are considered. Consult guidelines for detailed criteria.</p>';
+            if (!resultsFound && resultsDiv.innerHTML === '<h2>Potential GDMT Options:</h2>') { // Check if only the title is present
+                 resultsDiv.innerHTML += '<p>No specific therapies strongly matched the selected criteria based on these simplified rules, or LVEF suggests HFpEF (see note above if applicable). Ensure foundational GDMT principles and lifestyle measures are reviewed. Consult guidelines for detailed criteria.</p>';
             }
-        });
+         }
+
     </script>
 
 </body>
