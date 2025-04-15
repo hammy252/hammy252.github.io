@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFrEF GDMT Suggestion Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; @apply bg-slate-100; }
+        label { @apply block text-sm font-medium text-slate-700 mb-1; }
+        input[type="number"], input[type="text"], select {
+            @apply mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900;
+        }
+        input[type="checkbox"] {
+            @apply h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 focus:ring-offset-0 focus:ring-2;
+        }
+        .checkbox-container { @apply flex items-center; }
+        .checkbox-label { @apply ml-2 text-sm text-slate-800 cursor-pointer; }
+        fieldset { @apply border border-slate-200 p-5 rounded-lg shadow-sm bg-white; }
+        legend { @apply text-lg font-semibold text-slate-800 px-2 -ml-2; }
+        .input-group { @apply flex flex-col justify-end; }
+        .fieldset-grid { @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 mt-3; } /* Use 3 columns */
+        .fieldset-grid > div { @apply flex flex-col; }
+
+        .result-box { @apply mt-8 p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-md space-y-5; }
+        .result-section-title { @apply text-base font-semibold text-blue-900 border-b border-blue-200 pb-1 mb-2; }
+        .result-list { @apply list-disc list-inside pl-1 space-y-1 text-sm text-slate-700; }
+        .result-list li strong { @apply font-medium text-slate-800; }
+        .result-list li span.caveat { @apply text-xs text-red-700 italic ml-1; }
+         .result-list li span.note { @apply text-xs text-gray-600 italic ml-1; }
+
+        .disclaimer { @apply mt-5 text-xs text-slate-500 border-t border-slate-200 pt-3; }
+        button { @apply px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed; }
+        button#suggest-btn { @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500; }
+        button#reset-btn { @apply bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400; }
+        .button-container-box { @apply mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm; }
+        .main-container { @apply max-w-5xl mx-auto bg-gradient-to-b from-white to-slate-50 p-6 md:p-8 rounded-xl shadow-xl border border-slate-200; } /* Wider container */
+        .main-title { @apply text-3xl font-bold text-slate-800 mb-2 text-center; }
+        .sub-title { @apply text-base text-slate-600 mb-8 text-center; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="main-container">
+        <h1 class="main-title">HFrEF GDMT Suggestion Tool</h1>
+        <p class="sub-title">Enter patient details to see potential guideline-directed therapies *in addition* to foundational GDMT (ARNI/ACEi/ARB, Beta-Blocker, MRA, SGLT2i).</p>
+
+        <form id="hfref-form" class="space-y-6">
+
+            <fieldset>
+                <legend>Patient Status & Vitals</legend>
+                <div class="fieldset-grid">
+                    <div class="input-group">
+                        <label for="lvef">LVEF (%):</label>
+                        <input type="number" id="lvef" name="lvef" placeholder="e.g., 30">
+                    </div>
+                    <div class="input-group">
+                        <label for="nyha_class">NYHA Class:</label>
+                        <select id="nyha_class" name="nyha_class">
+                            <option value="">Select...</option>
+                            <option value="I">I</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                            <option value="IV">IV</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="heart_rate">Heart Rate (bpm):</label>
+                        <input type="number" id="heart_rate" name="heart_rate" placeholder="e.g., 75">
+                    </div>
+                    <div class="input-group">
+                        <label for="qrs_duration">QRS Duration (ms):</label>
+                        <input type="number" id="qrs_duration" name="qrs_duration" placeholder="e.g., 160">
+                    </div>
+                     <div class="checkbox-container pt-6"> 
+                        <input type="checkbox" id="sinus_rhythm" name="sinus_rhythm" checked>
+                        <label for="sinus_rhythm" class="checkbox-label">Sinus Rhythm?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="lbbb" name="lbbb">
+                        <label for="lbbb" class="checkbox-label">LBBB Present?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="afib" name="afib">
+                        <label for="afib" class="checkbox-label">Atrial Fibrillation Present?</label>
+                    </div>
+                    <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="congestion" name="congestion">
+                        <label for="congestion" class="checkbox-label">Currently Congested / Symptomatic?</label>
+                    </div>
+                    <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="on_max_bb" name="on_max_bb">
+                        <label for="on_max_bb" class="checkbox-label">On Maximally Tolerated Beta-Blocker?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="on_optimal_gdmt" name="on_optimal_gdmt">
+                        <label for="on_optimal_gdmt" class="checkbox-label">On Optimal Foundational GDMT?</label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Specific Conditions & Demographics</legend>
+                 <div class="fieldset-grid">
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="black_race" name="black_race">
+                        <label for="black_race" class="checkbox-label">Black Race (Self-identified)?</label>
+                    </div>
+                    <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="iron_deficiency" name="iron_deficiency">
+                        <label for="iron_deficiency" class="checkbox-label">Iron Deficient (Ferritin <100 or TSAT <20%)?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="diabetes_t2dm" name="diabetes_t2dm">
+                        <label for="diabetes_t2dm" class="checkbox-label">Type 2 Diabetes Mellitus?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="ckd" name="ckd">
+                        <label for="ckd" class="checkbox-label">CKD Present?</label>
+                    </div>
+                    <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="angioedema_acei" name="angioedema_acei">
+                        <label for="angioedema_acei" class="checkbox-label">History of Angioedema w/ ACEi?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="severe_mr" name="severe_mr">
+                        <label for="severe_mr" class="checkbox-label">Chronic Severe Functional MR?</label>
+                    </div>
+                     <div class="checkbox-container pt-6">
+                        <input type="checkbox" id="recurrent_decomp" name="recurrent_decomp">
+                        <label for="recurrent_decomp" class="checkbox-label">Recurrent Decompensation / Advanced HF?</label>
+                    </div>
+                 </div>
+            </fieldset>
+
+             <!-- Button Container Box -->
+            <div class="button-container-box">
+                <div class="flex justify-center space-x-4">
+                    <button type="button" id="suggest-btn">Suggest Therapies</button>
+                    <button type="reset" id="reset-btn">Reset Form</button>
+                </div>
+            </div>
+            <!-- End Button Container Box -->
+
+        </form>
+
+        <div id="result" class="result-box" style="display: none;">
+
+             <div>
+                <p class="result-section-title">Foundational GDMT Pillars (Assume Initiated/Titrating)</p>
+                <ul id="gdmt-pillars" class="result-list">
+                   <!-- JS will populate -->
+                </ul>
+            </div>
+
+             <div id="symptom-mgmt-section" style="display: none;">
+                <p class="result-section-title">Symptom Management</p>
+                <ul id="symptom-mgmt" class="result-list">
+                   <!-- JS will populate -->
+                </ul>
+            </div>
+
+            <div id="additional-meds-section" style="display: none;">
+                <p class="result-section-title">Consider Adding / Specific Indications</p>
+                <ul id="additional-meds" class="result-list">
+                    <!-- JS will populate -->
+                </ul>
+            </div>
+
+             <div id="device-therapy-section" style="display: none;">
+                 <p class="result-section-title">Consider Device Therapy Evaluation</p>
+                 <ul id="device-therapy" class="result-list">
+                     <!-- JS will populate -->
+                 </ul>
+            </div>
+
+            <div id="advanced-therapy-section" style="display: none;">
+                 <p class="result-section-title">Consider Advanced Therapies / Procedures</p>
+                 <ul id="advanced-therapy" class="result-list">
+                      <!-- JS will populate -->
+                 </ul>
+            </div>
+
+             <div>
+                 <p class="result-section-title">Lifestyle & General Measures</p>
+                 <ul id="lifestyle" class="result-list">
+                     <li><strong>General Measures:</strong> Weight loss (if appropriate), smoking cessation, guideline-recommended vaccinations, exercise training program.</li>
+                      <li><strong>Blood Pressure Control:</strong> Target guideline goals.</li>
+                 </ul>
+            </div>
+
+             <div>
+                 <p class="result-section-title">Medications Generally Contraindicated/Cautioned</p>
+                 <ul id="contraindications" class="result-list">
+                     <li><strong>NSAIDs:</strong> Avoid.</li>
+                     <li><strong>TZDs (Thiazolidinediones):</strong> Avoid.</li>
+                      <li><strong>Non-dihydropyridine Calcium Channel Blockers:</strong> Use with caution or avoid (Diltiazem, Verapamil).</li>
+                       <li><strong>Cilostazol:</strong> Contraindicated.</li>
+                 </ul>
+            </div>
+
+
+             <p class="disclaimer">
+                <strong>Disclaimer:</strong> This tool provides suggestions based on common HFrEF guidelines and the inputs provided. It is intended for educational purposes ONLY and DOES NOT replace clinical judgment, patient-specific factors, contraindications, drug interactions, or tolerance. Always consult full, current clinical practice guidelines and manage patients individually. Optimal GDMT involves careful initiation and titration.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('hfref-form');
+        const suggestBtn = document.getElementById('suggest-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const resultDiv = document.getElementById('result');
+
+        // Output sections
+        const gdmtPillarsList = document.getElementById('gdmt-pillars');
+        const symptomMgmtSection = document.getElementById('symptom-mgmt-section');
+        const symptomMgmtList = document.getElementById('symptom-mgmt');
+        const additionalMedsSection = document.getElementById('additional-meds-section');
+        const additionalMedsList = document.getElementById('additional-meds');
+        const deviceTherapySection = document.getElementById('device-therapy-section');
+        const deviceTherapyList = document.getElementById('device-therapy');
+        const advancedTherapySection = document.getElementById('advanced-therapy-section');
+        const advancedTherapyList = document.getElementById('advanced-therapy');
+
+
+        function suggestTherapies() {
+            // Clear previous results
+            gdmtPillarsList.innerHTML = '';
+            symptomMgmtList.innerHTML = '';
+            additionalMedsList.innerHTML = '';
+            deviceTherapyList.innerHTML = '';
+            advancedTherapyList.innerHTML = '';
+            symptomMgmtSection.style.display = 'none';
+            additionalMedsSection.style.display = 'none';
+            deviceTherapySection.style.display = 'none';
+            advancedTherapySection.style.display = 'none';
+
+
+            // Read input values
+            const lvef = parseInt(form.lvef.value) || null;
+            const nyhaClass = form.nyha_class.value;
+            const heartRate = parseInt(form.heart_rate.value) || null;
+            const qrsDuration = parseInt(form.qrs_duration.value) || null;
+            const isSinus = form.sinus_rhythm.checked;
+            const hasLbbb = form.lbbb.checked;
+            const hasAfib = form.afib.checked;
+            const isCongested = form.congestion.checked;
+            const onMaxBB = form.on_max_bb.checked;
+            const onOptimalGDMT = form.on_optimal_gdmt.checked;
+            const isBlackRace = form.black_race.checked;
+            const isIronDeficient = form.iron_deficiency.checked;
+            const hasT2DM = form.diabetes_t2dm.checked;
+            const hasCKD = form.ckd.checked;
+            const hasAngioedemaHx = form.angioedema_acei.checked;
+            const hasSevereMR = form.severe_mr.checked;
+            const isRecurrentDecomp = form.recurrent_decomp.checked;
+
+            let showAdditional = false;
+            let showDevice = false;
+            let showAdvanced = false;
+            let showSymptom = false;
+
+            // --- 1. Foundational GDMT Pillars ---
+            let gdmtHtml = '';
+            if (hasAngioedemaHx) {
+                 gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> <span class="caveat">Contraindicated due to Angioedema Hx.</span> Consider Hydralazine/Nitrate if alternative needed.</li>`;
+                 gdmtHtml += `<li><strong>ACEi/ARB:</strong> <span class="caveat">Contraindicated due to Angioedema Hx.</span></li>`;
+            } else {
+                gdmtHtml += `<li><strong>ARNI (Sacubitril/Valsartan):</strong> Preferred over ACEi/ARB for NYHA II-IV.</li>`;
+                gdmtHtml += `<li><strong>ACEi/ARB:</strong> Alternative if ARNI intolerant (but not if angioedema with ACEi).</li>`;
+            }
+             gdmtHtml += `<li><strong>Beta-Blocker (Evidence-based):</strong> Metoprolol Succinate, Carvedilol, or Bisoprolol. <span class="caveat">Titrate carefully, avoid in acute decompensation.</span></li>`;
+             gdmtHtml += `<li><strong>MRA (Spironolactone/Eplerenone):</strong> Indicated for NYHA II-IV. <span class="caveat">Monitor K+ and Renal function. Specific timing post-MI applies.</span></li>`;
+             gdmtHtml += `<li><strong>SGLT2 Inhibitor (-gliflozin):</strong> Broad indication for HFrEF. <span class="caveat">Monitor renal function, C/I in T1DM/DKA hx.</span>`;
+             if(hasT2DM) gdmtHtml += ` <span class="note">Also benefits ASCVD risk. GLP-1 Agonist (-glutide) alternative for T2DM/Weight loss but no specific HF benefit.</span>`;
+             gdmtHtml += `</li>`;
+             gdmtPillarsList.innerHTML = gdmtHtml;
+
+
+             // --- 2. Symptom Management ---
+            if (isCongested) {
+                showSymptom = true;
+                symptomMgmtList.innerHTML += `<li><strong>Diuretics (Loop):</strong> For congestion relief (PO or IV). <span class="note">Adjust dose based on volume status. IV dose often 1-2.5x home PO dose if admitted.</span></li>`;
+            }
+
+             // --- 3. Additional Medications ---
+             if (onMaxBB && isSinus && heartRate && heartRate > 70 && lvef && lvef < 35) {
+                 showAdditional = true;
+                 additionalMedsList.innerHTML += `<li><strong>Ivabradine:</strong> Consider to lower HR if meeting criteria (On max BB, Sinus, HR>70, EF<35%).</li>`;
+             }
+             if (isIronDeficient) {
+                  showAdditional = true;
+                  additionalMedsList.innerHTML += `<li><strong>IV Iron (Ferric Carboxymaltose):</strong> Consider for iron deficiency (Ferritin <100 or TSAT <20%).</li>`;
+             }
+             if ((isBlackRace && (nyhaClass === 'III' || nyhaClass === 'IV')) || (nyhaClass === 'III' || nyhaClass === 'IV' /* Add logic here if ARNI/ACEi/ARB intolerant/maxed */ )) {
+                  showAdditional = true;
+                  additionalMedsList.innerHTML += `<li><strong>Hydralazine + Isosorbide Dinitrate (Hy/ISDN):</strong> Consider if Black NYHA III-IV, or if intolerant/maxed on ARNI/ACEi/ARB.</li>`;
+             }
+            if (hasAfib) {
+                showAdditional = true;
+                 additionalMedsList.innerHTML += `<li><strong>Anticoagulation:</strong> Assess need based on stroke risk (e.g., CHA2DS2-VASc).</li>`;
+                 additionalMedsList.innerHTML += `<li><strong>Rate Control:</strong> Beta-blocker is first-line. <span class="note">Digoxin may be adjunct if needed, careful monitoring required.</span></li>`;
+                  additionalMedsList.innerHTML += `<li><strong>Rhythm Control:</strong> Consider PVI referral based on symptoms/patient preference.</li>`;
+            }
+            // Last resort digitalis - simplified trigger
+            if (isCongested && (nyhaClass === 'III' || nyhaClass === 'IV')) { // Simplified trigger
+                 // Check if NOT already added via AFib
+                 if (!additionalMedsList.innerHTML.includes('Digoxin')) {
+                     //showAdditional = true; // Decide if it fits better here or advanced
+                    // additionalMedsList.innerHTML += `<li><strong>Digitalis (Digoxin):</strong> Consider for symptom control in specific cases (e.g., persistent symptoms despite optimal GDMT, sometimes adjunct for AF rate control). <span class="caveat">Narrow therapeutic window, monitor levels/toxicity.</span></li>`;
+                 }
+            }
+
+
+            // --- 4. Device Therapy ---
+             if (onOptimalGDMT && lvef) {
+                // Primary Prevention ICD
+                if ((lvef <= 35 && (nyhaClass === 'II' || nyhaClass === 'III')) || (lvef <= 30 && nyhaClass === 'I')) {
+                     showDevice = true;
+                     deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation:</strong> Consider for primary prevention. <span class="note">Specific timing applies post-MI (>40d) or revascularization (>3mo). Check for reversible causes.</span></li>`;
+                }
+                 // CRT
+                if (isSinus && hasLbbb && qrsDuration && lvef <= 35 && (nyhaClass === 'II' || nyhaClass === 'III' || nyhaClass === 'IV')) {
+                     if (qrsDuration >= 150) {
+                          showDevice = true;
+                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Strong indication (LBBB, QRS ≥ 150ms). <span class="note">Improves symptoms and survival.</span></li>`;
+                     } else if (qrsDuration >= 120) {
+                           showDevice = true;
+                          deviceTherapyList.innerHTML += `<li><strong>CRT Evaluation:</strong> Consider (LBBB, QRS 120-149ms). <span class="note">Benefit less pronounced than QRS≥150 but still present, primarily functional capacity.</span></li>`;
+                     }
+                 }
+             }
+             // Secondary Prevention ICD (simplified input - assumes user knows if prior SCD/sustained VT occurred)
+             // You could add a checkbox: "History of Sudden Cardiac Death / Sustained VT?"
+             // if (historyOfSCD_VT) {
+             //    showDevice = true;
+             //    deviceTherapyList.innerHTML += `<li><strong>ICD Evaluation:</strong> Indicated for secondary prevention.</li>`;
+             // }
+
+             // --- 5. Advanced Therapies / Procedures ---
+              if (isRecurrentDecomp) {
+                  showAdvanced = true;
+                  advancedTherapyList.innerHTML += `<li><strong>Advanced HF Therapies:</strong> Consider Vericiguat, Omecamtiv Mecarbil, or Digoxin if not already used/contraindicated. <span class="note">Often managed by HF specialists.</span></li>`;
+                  advancedTherapyList.innerHTML += `<li><strong>LVAD / Heart Transplant Evaluation:</strong> Refer if eligible candidate with advanced/refractory symptoms.</li>`;
+              }
+               if (hasSevereMR && onOptimalGDMT) {
+                    showAdvanced = true;
+                    advancedTherapyList.innerHTML += `<li><strong>Mitral TEER (e.g., MitraClip):</strong> Consider evaluation for severe functional MR persistent despite optimal GDMT.</li>`;
+               }
+                // BAT/CCM - From flowchart, less common, often advanced HF
+                if (qrsDuration && qrsDuration < 120 && isRecurrentDecomp) { // Associating with advanced HF
+                    showAdvanced = true; // Fits better here than device usually
+                    advancedTherapyList.innerHTML += `<li><strong>Consider Referral for Novel Therapies:</strong> Options like BAT/CCM may be considered in specialized centers for select patients with advanced HF and narrow QRS.</li>`;
+                }
+
+
+            // Show/hide sections based on whether content was added
+            if (showSymptom) symptomMgmtSection.style.display = 'block';
+            if (showAdditional) additionalMedsSection.style.display = 'block';
+            if (showDevice) deviceTherapySection.style.display = 'block';
+            if (showAdvanced) advancedTherapySection.style.display = 'block';
+
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetForm() {
+            form.reset();
+            // Manually check the default sinus rhythm box after reset
+            form.sinus_rhythm.checked = true;
+            resultDiv.style.display = 'none';
+             gdmtPillarsList.innerHTML = '';
+            symptomMgmtList.innerHTML = '';
+            additionalMedsList.innerHTML = '';
+            deviceTherapyList.innerHTML = '';
+            advancedTherapyList.innerHTML = '';
+            symptomMgmtSection.style.display = 'none';
+            additionalMedsSection.style.display = 'none';
+            deviceTherapySection.style.display = 'none';
+            advancedTherapySection.style.display = 'none';
+            try {
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) { /* ignore */ }
+        }
+
+        // --- Event Listeners ---
+        suggestBtn.addEventListener('click', suggestTherapies);
+        resetBtn.addEventListener('click', resetForm);
+        form.addEventListener('change', () => { // Hide result if form changes
+            if (resultDiv.style.display !== 'none') resultDiv.style.display = 'none';
+        });
+
+        // --- Initial Setup ---
+        resetForm();
+
+    </script>
+
+</body>
+</html>
