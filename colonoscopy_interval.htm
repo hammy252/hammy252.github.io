@@ -78,7 +78,8 @@
             @apply text-md font-semibold text-blue-900; /* Darker blue title */
         }
         .result-interval {
-            @apply text-4xl font-bold text-blue-700 mt-1; /* Larger, bolder interval text */
+            /* Adjusted size for potentially longer text like "Repeat Colonoscopy..." */
+            @apply text-3xl font-bold text-blue-700 mt-1; /* Slightly smaller than 4xl */
         }
         .result-rationale {
              @apply text-sm text-blue-800 mt-3 leading-relaxed; /* Slightly more line spacing */
@@ -116,7 +117,8 @@
 
          /* --- Normal Colonoscopy Checkbox Specific Styling --- */
          .normal-colo-section {
-            @apply mt-6 p-4 bg-slate-50 border border-slate-200 rounded-md flex items-center shadow-sm;
+            /* Added mb-0 because button box now has mt-8 */
+            @apply mt-6 p-4 bg-slate-50 border border-slate-200 rounded-md flex items-center shadow-sm mb-0;
          }
          .normal-colo-label {
             @apply ml-3 text-sm font-medium text-slate-800 cursor-pointer;
@@ -129,7 +131,7 @@
         <h1 class="main-title">Colonoscopy Interval Calculator</h1>
         <p class="sub-title">Determine the recommended surveillance interval based on findings from a high-quality colonoscopy.</p>
 
-        <form id="colonoscopy-form" class="space-y-6">
+        <form id="colonoscopy-form" class="space-y-6"> {/* This controls spacing between fieldsets/sections */}
 
             <fieldset>
                 <legend>Adenomas</legend>
@@ -206,18 +208,23 @@
                 </div>
             </fieldset>
 
-             <div class="normal-colo-section">
+             <div class="normal-colo-section"> {/* Spacing after this is handled by button box's mt-8 */}
                 <input type="checkbox" id="normal_colo" name="normal_colo">
                 <label for="normal_colo" class="normal-colo-label">Was the colonoscopy completely normal (no polyps found)?</label>
              </div>
 
-            <div class="flex justify-center space-x-4 pt-4">
-                 <button type="button" id="calculate-btn">Calculate Interval</button>
-                 <button type="reset" id="reset-btn">Reset Form</button>
+             <!-- New Button Container Box -->
+            <div class="mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
+                <div class="flex justify-center space-x-4">
+                    <button type="button" id="calculate-btn">Calculate Interval</button>
+                    <button type="reset" id="reset-btn">Reset Form</button>
+                </div>
             </div>
+            <!-- End New Button Container Box -->
+
         </form>
 
-        <div id="result" class="result-box" style="display: none;">
+        <div id="result" class="result-box" style="display: none;"> {/* Spacing before this is handled by its own mt-8 */}
             <p class="result-title">Recommended Surveillance Interval:</p>
             <p id="interval" class="result-interval"></p>
             <p id="rationale" class="result-rationale"></p>
@@ -245,7 +252,7 @@
         const intervalDisplay = document.getElementById('interval');
         const rationaleDisplay = document.getElementById('rationale');
 
-        // --- Calculation Logic ---
+        // --- Calculation Logic (Updated for clearer 6 month text) ---
         function calculateInterval() {
             // Read input values
             const numAdenomas = numAdenomasSelect.value;
@@ -275,7 +282,7 @@
 
              // 0. Piecemeal EMR > 20mm (Highest Priority Short-term Follow-up)
              if (piecemealEmrLarge) {
-                 interval = '6 Months';
+                 interval = 'Repeat Colonoscopy in 6 Months'; // Clearer Text
                  reason = 'Based on piecemeal EMR resection of a polyp > 20mm, requiring short-term follow-up to assess for residual/recurrent polyp.';
              }
              // 1. Normal Colonoscopy (Overrides everything if checked)
