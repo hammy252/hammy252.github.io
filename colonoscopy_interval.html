@@ -4,134 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colonoscopy Interval Calculator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> REMOVED Tailwind CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Apply Inter font globally */
+        /* --- Basic Reset & Global Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            @apply bg-slate-100; /* Lighter gray background */
-        }
-
-        /* --- General Form Styling --- */
-        label:not(.checkbox-label):not(.normal-colo-label) { /* Exclude specific checkbox labels */
-            @apply block text-sm font-medium text-slate-700 mb-1; /* Slightly darker label text */
-        }
-        select {
-             /* Consistent input styling */
-            @apply mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900; /* Increased padding slightly */
-        }
-        input[type="checkbox"] {
-             /* Checkbox specific styling */
-            @apply h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 focus:ring-offset-0 focus:ring-2; /* Added focus ring offset 0 */
-        }
-        .checkbox-container {
-            /* Container for checkbox and label for better alignment */
-            @apply flex items-center h-full; /* Use h-full to align with taller elements */
-        }
-         .checkbox-label {
-            /* Styling for labels next to checkboxes */
-            @apply ml-2 text-sm text-slate-800 cursor-pointer; /* Slightly darker label text, pointer cursor */
-        }
-
-        /* --- Fieldset Styling --- */
-        fieldset {
-            @apply border border-slate-200 p-5 rounded-lg shadow-sm bg-white; /* Use slightly rounded lg, white background for contrast */
-        }
-        legend {
-            @apply text-lg font-semibold text-slate-800 px-2 -ml-2; /* Bolder, slightly larger legend, adjust margin */
-        }
-
-        /* --- Input Group Alignment --- */
-        .input-group {
-             /* Wrapper for label + input/select */
-             @apply flex flex-col justify-end; /* Align label top, input bottom */
-        }
-         .fieldset-grid {
-            /* Updated grid to handle potentially 3 items */
-            @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3; /* Consistent gap */
-         }
-         .fieldset-grid-other {
-             /* Specific grid for 'Other Findings' fieldset */
-             @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3;
-         }
-         .fieldset-grid > div, .fieldset-grid-other > div {
-             @apply flex flex-col; /* Ensure children stack vertically */
-         }
-         /* Specific alignment for checkbox containers in the grid */
-         .fieldset-grid .checkbox-container-wrapper, .fieldset-grid-other .checkbox-container-wrapper {
-             @apply flex items-end h-full pb-1; /* Align checkbox groups to the bottom matching input fields */
-         }
-         /* Allow specific items to span columns */
-          .md-col-span-2 {
-            @apply md:col-span-2;
-          }
-
-
-        /* --- Result Box Styling --- */
-        .result-box {
-            @apply mt-8 p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-md; /* Softer blue, slightly stronger border */
-        }
-        .result-title {
-            @apply text-md font-semibold text-blue-900; /* Darker blue title */
-        }
-        .result-interval {
-            /* Adjusted size for potentially longer text like "Repeat Colonoscopy..." */
-            @apply text-3xl font-bold text-blue-700 mt-1; /* Slightly smaller than 4xl */
-        }
-        .result-rationale {
-             @apply text-sm text-blue-800 mt-3 leading-relaxed; /* Slightly more line spacing */
-        }
-        .disclaimer {
-            @apply mt-5 text-xs text-slate-500 border-t border-slate-200 pt-3; /* Lighter disclaimer text, top border separator */
-        }
-
-        /* --- Button Styling --- */
-        button {
-             /* Base button style */
-            @apply px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed; /* Added disabled styles */
-        }
-        button#calculate-btn {
-             /* Calculate button specific style */
-            @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
-        }
-        button#reset-btn {
-             /* Reset button specific style */
-             @apply bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400;
+            line-height: 1.6;
+            background-color: #f1f5f9; /* bg-slate-100 */
+            padding: 1rem; /* p-4 */
         }
 
         /* --- Main Container --- */
         .main-container {
-             @apply max-w-2xl mx-auto bg-gradient-to-b from-white to-slate-50 p-6 md:p-8 rounded-xl shadow-xl border border-slate-200; /* Subtle gradient, larger radius, border */
+            max-width: 672px; /* max-w-2xl */
+            margin: 20px auto;
+            background: linear-gradient(to bottom, white, #f8fafc); /* bg-gradient-to-b from-white to-slate-50 */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 12px; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl approximation */
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
         }
 
-         /* --- Title Styling --- */
-         .main-title {
-            @apply text-3xl font-bold text-slate-800 mb-2 text-center;
-         }
-         .sub-title {
-             @apply text-base text-slate-600 mb-8 text-center; /* Slightly larger subtitle */
+        /* --- Title Styling --- */
+        .main-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sub-title {
+            font-size: 1rem; /* text-base */
+            color: #475569; /* text-slate-600 */
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+        }
+
+        /* --- Form Styling --- */
+        form {
+            /* space-y-6 handled by fieldset margin */
+        }
+
+        fieldset {
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
+            padding: 1.25rem; /* p-5 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            background-color: white; /* bg-white */
+            margin-bottom: 1.5rem; /* Replacement for form space-y-6 */
+        }
+
+        legend {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            padding: 0 0.5rem; /* px-2 */
+            margin-left: -0.5rem; /* -ml-2 */
+            margin-bottom: 1rem; /* Added spacing below legend */
+        }
+
+        /* Grid Layout for Inputs */
+        .fieldset-grid, .fieldset-grid-other {
+            display: grid;
+            grid-template-columns: 1fr; /* grid-cols-1 */
+            gap: 1.25rem 1.5rem; /* gap-y-5 gap-x-6 */
+            margin-top: 0.75rem; /* mt-3 */
+        }
+
+        .fieldset-grid > div, .fieldset-grid-other > div {
+            display: flex;
+            flex-direction: column; /* Ensure children stack vertically */
+        }
+
+        /* Input Group Alignment */
+        .input-group {
+             display: flex;
+             flex-direction: column;
+             justify-content: flex-end; /* Align label top, input bottom */
+        }
+
+        /* Checkbox Alignment Wrapper */
+        .checkbox-container-wrapper {
+            display: flex;
+            align-items: flex-end; /* Align checkbox groups to the bottom */
+            height: 100%;
+            padding-bottom: 0.25rem; /* pb-1 (adjust to align with select padding) */
+        }
+
+        /* --- General Form Element Styling --- */
+        label:not(.checkbox-label):not(.normal-colo-label) { /* Exclude specific labels */
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #334155; /* text-slate-700 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+
+        select {
+            margin-top: 0.25rem; /* mt-1 */
+            display: block;
+            width: 100%;
+            border-radius: 6px; /* rounded-md */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            padding: 0.625rem; /* p-2.5 */
+            background-color: white; /* bg-white */
+            color: #0f172a; /* text-slate-900 */
+            font-size: 0.875rem; /* sm:text-sm */
+            appearance: none; /* Add standard appearance reset */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem; /* Make space for arrow */
+        }
+
+        select:focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring approximation */
+        }
+
+        input[type="checkbox"] {
+            height: 1rem; /* h-4 */
+            width: 1rem; /* w-4 */
+            color: #2563eb; /* text-blue-600 (styles checkmark) */
+            border: 1px solid #cbd5e1; /* border-slate-300 (explicit border) */
+            border-radius: 4px; /* rounded */
+            vertical-align: middle; /* Align better with text */
+        }
+
+        input[type="checkbox"]:focus {
+             outline: 2px solid transparent;
+             outline-offset: 0px; /* focus:ring-offset-0 */
+             box-shadow: 0 0 0 2px #3b82f6; /* focus:ring-blue-500 focus:ring-2 */
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .checkbox-label {
+            margin-left: 0.5rem; /* ml-2 */
+            font-size: 0.875rem; /* text-sm */
+            color: #1e293b; /* text-slate-800 */
+            cursor: pointer;
+        }
+
+        /* --- Normal Colonoscopy Section Styling --- */
+         .normal-colo-section {
+            margin-top: 1.5rem; /* mt-6 */
+            padding: 1rem; /* p-4 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
+            border-radius: 6px; /* rounded-md */
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            margin-bottom: 0; /* mb-0 */
          }
 
-         /* --- Normal Colonoscopy Checkbox Specific Styling --- */
-         .normal-colo-section {
-            /* Added mb-0 because button box now has mt-8 */
-            @apply mt-6 p-4 bg-slate-50 border border-slate-200 rounded-md flex items-center shadow-sm mb-0;
-         }
          .normal-colo-label {
-            @apply ml-3 text-sm font-medium text-slate-800 cursor-pointer;
+            margin-left: 0.75rem; /* ml-3 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #1e293b; /* text-slate-800 */
+            cursor: pointer;
          }
+
+        /* --- Button Container & Buttons --- */
+        .button-container {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem 1rem 1rem 1rem; /* pt-6 pb-4 px-4 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* space-x-4 */
+        }
+
+        button {
+            padding: 0.625rem 1.5rem; /* py-2.5 px-6 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            border-radius: 6px; /* rounded-md */
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        button:focus {
+            outline: 2px solid transparent; /* focus:outline-none */
+            outline-offset: 2px; /* focus:ring-offset-2 */
+        }
+
+        button:disabled {
+            opacity: 0.6; /* disabled:opacity-60 */
+            cursor: not-allowed; /* disabled:cursor-not-allowed */
+        }
+
+        button#calculate-btn {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white; /* text-white */
+        }
+        button#calculate-btn:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        button#calculate-btn:focus {
+            box-shadow: 0 0 0 2px #f8fafc, 0 0 0 4px #3b82f6; /* focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 */
+        }
+
+        button#reset-btn {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            color: #1e293b; /* text-slate-800 */
+        }
+        button#reset-btn:hover {
+            background-color: #cbd5e1; /* hover:bg-slate-300 */
+        }
+         button#reset-btn:focus {
+             box-shadow: 0 0 0 2px #f8fafc, 0 0 0 4px #94a3b8; /* focus:ring-slate-400 */
+         }
+
+
+        /* --- Result Box Styling --- */
+        .result-box {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem; /* p-6 */
+            background-color: #eff6ff; /* bg-blue-50 */
+            border: 1px solid #93c5fd; /* border-blue-300 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            display: none; /* Initially hidden */
+        }
+
+        .result-title {
+            font-size: 1rem; /* text-md (assuming 1rem) */
+            font-weight: 600; /* font-semibold */
+            color: #1e3a8a; /* text-blue-900 */
+        }
+
+        .result-interval {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1d4ed8; /* text-blue-700 */
+            margin-top: 0.25rem; /* mt-1 */
+        }
+
+        .result-rationale {
+            font-size: 0.875rem; /* text-sm */
+            color: #1e40af; /* text-blue-800 */
+            margin-top: 0.75rem; /* mt-3 */
+            line-height: 1.625; /* leading-relaxed */
+        }
+
+        .disclaimer {
+            margin-top: 1.25rem; /* mt-5 */
+            font-size: 0.75rem; /* text-xs */
+            color: #64748b; /* text-slate-500 */
+            border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+            padding-top: 0.75rem; /* pt-3 */
+            font-style: italic;
+        }
+         .disclaimer strong {
+             font-style: normal;
+             font-weight: bold; /* Ensure bold stands out */
+         }
+
+         /* --- Utility Classes for Grid Spanning --- */
+         .md-col-span-2 { /* Class to apply directly in HTML */
+             /* No style needed for mobile */
+         }
+
+        /* --- Responsive Adjustments --- */
+        @media (min-width: 768px) { /* md breakpoint */
+            body {
+                padding: 2rem; /* md:p-8 */
+            }
+            .main-container {
+                 padding: 2rem; /* md:p-8 */
+            }
+             .fieldset-grid, .fieldset-grid-other {
+                grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+            }
+            .md-col-span-2 {
+                grid-column: span 2 / span 2; /* md:col-span-2 */
+            }
+        }
+
+        /* Disabled State Styling */
+        select:disabled, input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f8fafc; /* Lighter background for disabled inputs */
+        }
+        label.disabled-label { /* Apply this class via JS if needed */
+             opacity: 0.5;
+             cursor: not-allowed;
+        }
+
 
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body> <!-- Removed classes -->
     <div class="main-container">
         <h1 class="main-title">Colonoscopy Interval Calculator</h1>
         <p class="sub-title">Determine the recommended surveillance interval based on findings from a high-quality colonoscopy.</p>
 
-        <form id="colonoscopy-form" class="space-y-6"> 
+        <form id="colonoscopy-form"> <!-- Removed classes -->
 
             <fieldset>
                 <legend>Adenomas</legend>
@@ -146,7 +348,7 @@
                             <option value=">10">>10</option>
                         </select>
                     </div>
-                    <div class="checkbox-container-wrapper">
+                    <div class="checkbox-container-wrapper"> <!-- Wrapper for alignment -->
                         <div class="checkbox-container">
                              <input type="checkbox" id="adenoma_high_risk" name="adenoma_high_risk">
                              <label for="adenoma_high_risk" class="checkbox-label">Any ≥ 10mm OR Villous/Tubulovillous/HGD?</label>
@@ -167,7 +369,7 @@
                             <option value="5-10">5-10</option>
                         </select>
                     </div>
-                     <div class="checkbox-container-wrapper">
+                     <div class="checkbox-container-wrapper"> <!-- Wrapper for alignment -->
                          <div class="checkbox-container">
                              <input type="checkbox" id="ssp_high_risk" name="ssp_high_risk">
                              <label for="ssp_high_risk" class="checkbox-label">Any ≥ 10mm OR with Dysplasia?</label>
@@ -179,24 +381,26 @@
             <fieldset>
                 <legend>Other Findings & Circumstances</legend>
                 <div class="fieldset-grid-other">
+                     <!-- Added md-col-span-2 class directly -->
                     <div class="checkbox-container-wrapper md-col-span-2">
                         <div class="checkbox-container">
                             <input type="checkbox" id="piecemeal_emr_large" name="piecemeal_emr_large">
-                            <label for="piecemeal_emr_large" class="checkbox-label font-medium text-red-700">Piecemeal EMR for Polyp > 20mm?</label>
+                            <label for="piecemeal_emr_large" class="checkbox-label" style="font-weight: 500; color: #c2410c;">Piecemeal EMR for Polyp > 20mm?</label> <!-- Inline style for emphasis color -->
                         </div>
                     </div>
-                    <div class="checkbox-container-wrapper">
+                    <div class="checkbox-container-wrapper"> <!-- Wrapper for alignment -->
                         <div class="checkbox-container">
                             <input type="checkbox" id="tsa_present" name="tsa_present">
                             <label for="tsa_present" class="checkbox-label">Traditional Serrated Adenoma (TSA) Present?</label>
                         </div>
                     </div>
-                     <div class="checkbox-container-wrapper">
+                     <div class="checkbox-container-wrapper"> <!-- Wrapper for alignment -->
                         <div class="checkbox-container">
                              <input type="checkbox" id="hp_large" name="hp_large">
                              <label for="hp_large" class="checkbox-label">Hyperplastic Polyp (HP) ≥ 10mm Present?</label>
                         </div>
                     </div>
+                    <!-- Added md-col-span-2 class directly -->
                     <div class="input-group md-col-span-2">
                         <label for="num_hp_small">Number of HPs < 10mm:</label>
                          <select id="num_hp_small" name="num_hp_small">
@@ -213,18 +417,16 @@
                 <label for="normal_colo" class="normal-colo-label">Was the colonoscopy completely normal (no polyps found)?</label>
              </div>
 
-             <!-- New Button Container Box -->
-            <div class="mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
-                <div class="flex justify-center space-x-4">
+            <div class="button-container">
+                <div class="button-wrapper">
                     <button type="button" id="calculate-btn">Calculate Interval</button>
                     <button type="reset" id="reset-btn">Reset Form</button>
                 </div>
             </div>
-            <!-- End New Button Container Box -->
 
         </form>
 
-        <div id="result" class="result-box" style="display: none;"> 
+        <div id="result" class="result-box"> <!-- Removed style -->
             <p class="result-title">Recommended Surveillance Interval:</p>
             <p id="interval" class="result-interval"></p>
             <p id="rationale" class="result-rationale"></p>
@@ -235,13 +437,13 @@
     </div>
 
     <script>
-        // Get references to form elements
+        // Get references to form elements (NO CHANGES NEEDED HERE)
         const form = document.getElementById('colonoscopy-form');
         const numAdenomasSelect = document.getElementById('num_adenomas');
         const adenomaHighRiskCheckbox = document.getElementById('adenoma_high_risk');
         const numSspsSelect = document.getElementById('num_ssps');
         const sspHighRiskCheckbox = document.getElementById('ssp_high_risk');
-        const piecemealEmrLargeCheckbox = document.getElementById('piecemeal_emr_large'); // New element
+        const piecemealEmrLargeCheckbox = document.getElementById('piecemeal_emr_large');
         const tsaCheckbox = document.getElementById('tsa_present');
         const hpLargeCheckbox = document.getElementById('hp_large');
         const numHpSmallSelect = document.getElementById('num_hp_small');
@@ -252,7 +454,7 @@
         const intervalDisplay = document.getElementById('interval');
         const rationaleDisplay = document.getElementById('rationale');
 
-        // --- Calculation Logic (Updated for clearer 6 month text) ---
+        // --- Calculation Logic (NO CHANGES NEEDED HERE) ---
         function calculateInterval() {
             // Read input values
             const numAdenomas = numAdenomasSelect.value;
@@ -268,27 +470,22 @@
             let interval = '';
             let reason = '';
 
-            // Define if any significant finding exists (including the new checkbox)
             const anyPolypFinding = numAdenomas !== '0' ||
                                     adenomaHighRisk ||
                                     numSsps !== '0' ||
                                     sspHighRisk ||
-                                    piecemealEmrLarge || // Include new check
+                                    piecemealEmrLarge ||
                                     tsaPresent ||
                                     hpLarge ||
                                     numHpSmall !== '0';
 
              // --- Logic based on risk hierarchy (highest risk/priority first) ---
-
-             // 0. Piecemeal EMR > 20mm (Highest Priority Short-term Follow-up)
              if (piecemealEmrLarge) {
-                 interval = 'Repeat Colonoscopy in 6 Months'; // Clearer Text
+                 interval = 'Repeat Colonoscopy in 6 Months';
                  reason = 'Based on piecemeal EMR resection of a polyp > 20mm, requiring short-term follow-up to assess for residual/recurrent polyp.';
              }
-             // 1. Normal Colonoscopy (Overrides everything if checked)
              else if (isNormal) {
-                 // Check for conflict: Normal checked AND other findings selected
-                 if (anyPolypFinding && !piecemealEmrLarge) { // Don't show conflict if only piecemeal EMR was checked (handled above)
+                 if (anyPolypFinding && !piecemealEmrLarge) {
                      interval = 'Review Inputs';
                      reason = 'Conflicting input: "Normal Colonoscopy" was checked, but other polyp findings were also entered. Please uncheck "Normal" or clear the other findings.';
                  } else {
@@ -296,128 +493,123 @@
                      reason = 'Based on a normal colonoscopy finding (no polyps).';
                  }
              }
-             // 2. Highest Risk (>10 Adenomas)
              else if (numAdenomas === '>10') {
                 interval = '1 Year';
                 reason = 'Based on finding > 10 adenomas.';
             }
-             // 3. High Risk (Large polyps, advanced histology, 5-10 polyps, TSA)
-            else if (tsaPresent || sspHighRisk || adenomaHighRisk || numAdenomas === '5-10' || numSsps === '5-10') {
+             else if (tsaPresent || sspHighRisk || adenomaHighRisk || numAdenomas === '5-10' || numSsps === '5-10') {
                  interval = '3 Years';
                  if (tsaPresent) reason = 'Based on finding a Traditional Serrated Adenoma (TSA).';
                  else if (sspHighRisk) reason = 'Based on finding SSP(s) ≥ 10mm or with dysplasia.';
                  else if (adenomaHighRisk) reason = 'Based on finding adenoma(s) ≥ 10mm or with villous/tubulovillous histology or high-grade dysplasia.';
                  else if (numAdenomas === '5-10') reason = `Based on finding ${numAdenomas} adenomas.`;
                  else if (numSsps === '5-10') reason = `Based on finding ${numSsps} SSPs.`;
-                 else reason = 'Based on high-risk findings.'; // Fallback for this category
+                 else reason = 'Based on high-risk findings.';
             }
-             // 4. Moderate Risk (Large HP, 3-4 Adenomas/SSPs)
              else if (hpLarge || numAdenomas === '3-4' || numSsps === '3-4') {
                 interval = '3-5 Years';
                  if (hpLarge) reason = 'Based on finding Hyperplastic Polyp(s) ≥ 10mm.';
                  else if (numAdenomas === '3-4') reason = `Based on finding ${numAdenomas} adenomas (<10mm, no high-risk features).`;
                  else if (numSsps === '3-4') reason = `Based on finding ${numSsps} SSPs (<10mm, no high-risk features).`;
-                 else reason = 'Based on moderate-risk findings.'; // Fallback reason
+                 else reason = 'Based on moderate-risk findings.';
             }
-             // 5. Low-Risk Serrated (1-2 small SSPs)
-            else if (numSsps === '1-2') {
+             else if (numSsps === '1-2') {
                  interval = '5-10 Years';
                  reason = 'Based on finding 1-2 SSPs < 10mm (without dysplasia).';
             }
-             // 6. Low-Risk Adenomas (1-2 small adenomas)
             else if (numAdenomas === '1-2') {
                 interval = '7-10 Years';
                 reason = 'Based on finding 1-2 adenomas < 10mm (without high-risk features).';
             }
-             // 7. Low-Risk Hyperplastic Polyps or No Polyps (if 'Normal' wasn't checked but no other findings)
              else if (!anyPolypFinding || (numHpSmall === '1-20' && numAdenomas === '0' && numSsps === '0' && !tsaPresent && !hpLarge && !adenomaHighRisk && !sspHighRisk && !piecemealEmrLarge)) {
                 interval = '10 Years';
                 if (numHpSmall === '1-20') reason = 'Based on finding only 1-20 hyperplastic polyps < 10mm.';
                 else reason = 'Based on no significant findings (equivalent to normal or only minimal, small HPs).';
             }
-             // 8. Unclear Guideline (>20 small HPs only)
              else if (numHpSmall === '>20' && numAdenomas === '0' && numSsps === '0' && !tsaPresent && !hpLarge && !adenomaHighRisk && !sspHighRisk && !piecemealEmrLarge) {
                  interval = 'Consult Physician';
                  reason = 'Guideline recommendations may vary for >20 small hyperplastic polyps as the only finding. Clinical correlation and discussion with a physician are recommended.';
             }
-             // 9. Catch-all / Error State
             else {
                  interval = 'Review Inputs / Consult Physician';
                  reason = 'Could not determine a clear interval. Please ensure inputs are accurate and not conflicting, or consult guidelines/physician.';
             }
 
-            // Display the result
             intervalDisplay.textContent = interval;
             rationaleDisplay.textContent = reason;
-            resultDiv.style.display = 'block'; // Show the result box
-
-            // Scroll to the result smoothly
+            resultDiv.style.display = 'block';
             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // --- Form Handling Logic ---
+        // --- Form Handling Logic (Updated to use direct disabling, no classes) ---
         function handleNormalColoCheck() {
             const isChecked = normalColoCheckbox.checked;
-            // Select all relevant form inputs *except* the normal checkbox itself
             const formElements = form.querySelectorAll('select, input[type="checkbox"]:not(#normal_colo)');
+             // Get associated labels too
+             const labels = form.querySelectorAll('label:not(.normal-colo-label)');
 
             formElements.forEach(el => {
-                el.disabled = isChecked; // Disable if normal is checked
+                el.disabled = isChecked;
                 if (isChecked) {
-                    // Visually indicate disabled state and reset values
-                    el.classList.add('opacity-50', 'cursor-not-allowed');
                     if (el.type === 'checkbox') {
                         el.checked = false;
                     } else if (el.tagName === 'SELECT') {
-                        el.selectedIndex = 0; // Reset dropdowns
+                        el.selectedIndex = 0;
                     }
-                } else {
-                    // Re-enable if unchecked
-                     el.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
             });
-             calculateBtn.disabled = false; // Keep calculate button enabled always for now
-             // If normal is checked, hide the result box immediately if it was showing
+
+            // Optionally visually grey out labels (using direct style or dedicated class)
+            labels.forEach(lbl => {
+                if (isChecked) {
+                     lbl.style.opacity = '0.5'; // Directly style or addClass 'disabled-label'
+                     lbl.style.cursor = 'not-allowed';
+                } else {
+                     lbl.style.opacity = '1';
+                     lbl.style.cursor = 'default';
+                }
+            });
+
+
              if (isChecked) {
                  resultDiv.style.display = 'none';
              }
         }
 
         function resetForm() {
-            form.reset(); // Use native form reset
-            // Re-enable all elements and remove disabled styling
+            form.reset();
             const formElements = form.querySelectorAll('select, input[type="checkbox"]');
+             const labels = form.querySelectorAll('label:not(.normal-colo-label)');
+
             formElements.forEach(el => {
                 el.disabled = false;
-                el.classList.remove('opacity-50', 'cursor-not-allowed');
              });
-            // Hide result box
+             // Reset label styles
+            labels.forEach(lbl => {
+                 lbl.style.opacity = '1';
+                 lbl.style.cursor = 'default';
+            });
+
             resultDiv.style.display = 'none';
             intervalDisplay.textContent = '';
             rationaleDisplay.textContent = '';
-            calculateBtn.disabled = false; // Ensure calculate button is enabled
-            // Scroll back to top smoothly
-            // Use try/catch in case element isn't visible/available yet
+            calculateBtn.disabled = false;
             try {
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (e) { /* ignore scroll error on initial load */ }
+            } catch (e) { /* ignore scroll error */ }
         }
 
-        // --- Event Listeners ---
+        // --- Event Listeners (NO CHANGES NEEDED HERE) ---
         calculateBtn.addEventListener('click', calculateInterval);
         resetBtn.addEventListener('click', resetForm);
         normalColoCheckbox.addEventListener('change', handleNormalColoCheck);
 
-        // Add listeners to clear results if form changes after calculation
         form.addEventListener('change', (event) => {
-             // Don't hide if the change was checking/unchecking the 'normal' box (handled separately)
              if (event.target !== normalColoCheckbox) {
-                  // Hide result box only if it is currently displayed
                   if (resultDiv.style.display !== 'none') {
                      resultDiv.style.display = 'none';
                   }
              }
-             // Basic enable/disable logic - keep enabled for now
              calculateBtn.disabled = false;
         });
 
