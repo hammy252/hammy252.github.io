@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Cirrhosis Assessment Tool</title>
+    <style>
+        /* --- Basic Reset & Global Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 15px;
+        }
+
+        /* --- Main Container --- */
+        .main-container {
+            max-width: 900px; /* Wider for more inputs */
+            margin: 20px auto;
+            padding: 25px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* --- Headings & Text --- */
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        h1 { font-size: 1.8em; text-align: center; border-bottom-width: 2px; margin-bottom: 20px; }
+        h2 { font-size: 1.4em; margin-top: 30px; color: #0056b3; border-bottom-style: dashed;}
+        h3 { font-size: 1.1em; margin-top: 20px; color: #555; border-bottom: none; margin-bottom: 10px;}
+        .subtitle { text-align: center; color: #666; margin-bottom: 25px; }
+
+        /* --- Form Styling --- */
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #eee;
+        }
+        .form-section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        legend { /* Using h3 for fieldset titles */
+            font-weight: bold;
+            font-size: 1.2em; /* Match h3 */
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        form input[type="number"], form select {
+            width: 100%;
+            padding: 9px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.95em;
+        }
+        form input[type="number"]::placeholder { color: #aaa; }
+
+        /* Grid for Inputs */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Default single column */
+            gap: 15px 20px; /* Row gap, Column gap */
+        }
+
+        /* --- Button Styling --- */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.05em;
+            margin: 0 10px;
+            transition: background-color 0.2s ease;
+        }
+        form button:hover { background-color: #0056b3; }
+        form button[type="reset"] { background-color: #6c757d; }
+        form button[type="reset"]:hover { background-color: #5a6268; }
+
+        /* --- Results Area --- */
+        #results {
+            margin-top: 30px;
+            background-color: #f0f8ff; /* Light blue background */
+            padding: 20px;
+            border: 1px solid #b3d7ff; /* Blue border */
+            border-radius: 8px;
+        }
+
+        .result-section { margin-bottom: 25px; }
+        .result-section h3 { color: #004a99; border-bottom: 1px dotted #99c2ff; margin-bottom: 12px; padding-bottom: 3px;}
+
+        .score-item, .risk-item, .recommendation-item {
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        .score-item span:first-child, .risk-item span:first-child { font-weight: bold; color: #333; }
+        .score-item span:last-child, .risk-item span:last-child { font-weight: bold; color: #0056b3; float: right; }
+        .score-item::after, .risk-item::after { /* Clear float */
+            content: ""; display: table; clear: both;
+        }
+
+        /* Recommendations List */
+        .recommendations-list { list-style: none; padding: 0; }
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start; /* Align icon top */
+            padding: 8px 0;
+            border-bottom: 1px dotted #cce5ff;
+        }
+         .recommendation-item:last-child { border-bottom: none; }
+
+        .result-icon {
+            font-size: 1.3em;
+            margin-right: 12px;
+            min-width: 25px; /* Ensure alignment */
+            text-align: center;
+        }
+        .status-yes { color: #28a745; } /* Green */
+        .status-no { color: #dc3545; } /* Red */
+        .status-consider { color: #ffc107; } /* Yellow */
+        .status-info { color: #17a2b8; } /* Teal */
+        .status-always { color: #007bff;} /* Blue */
+
+        .recommendation-content strong { display: block; font-size: 1em; color: #004a99; margin-bottom: 3px;}
+        .recommendation-content p { font-size: 0.85em; color: #555; line-height: 1.4; margin: 0;}
+
+        /* Optional Section Styling */
+        .optional-section {
+             border-top: 1px dashed #ccc;
+             margin-top: 15px;
+             padding-top: 15px;
+             font-size: 0.9em;
+             background-color: #fafafa;
+             padding: 10px;
+             border-radius: 4px;
+        }
+         .optional-section p.optional-title { font-weight: bold; color: #666; margin-bottom: 5px; font-size: 0.95em; }
+         .optional-section .score-item span:last-child { color: #555; }
+
+
+        /* --- Disclaimer --- */
+        .disclaimer {
+            margin-top: 25px;
+            font-style: italic;
+            color: #dc3545;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+        }
+         .disclaimer strong { color: #721c24; }
+
+        /* --- Responsive Adjustments --- */
+        @media (min-width: 768px) {
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
+            }
+        }
+         @media (min-width: 992px) {
+            .input-grid {
+                 grid-template-columns: repeat(3, 1fr); /* Three columns on larger screens */
+            }
+             h1 { font-size: 2em; }
+             h2 { font-size: 1.5em; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Comprehensive Cirrhosis Assessment Tool</h1>
+        <p class="subtitle">Enter patient data to calculate scores, estimate risk, and review key management considerations for cirrhosis.</p>
+
+        <form id="cirrhosisForm">
+
+            <!-- Section 1: Patient Demographics & Etiology -->
+            <fieldset class="form-section">
+                <h3>Patient Demographics & Etiology</h3>
+                <div class="input-grid">
+                    <div>
+                        <label for="age">Age (Years):</label>
+                        <input type="number" id="age" name="age" required min="1">
+                    </div>
+                    <div>
+                        <label for="etiology">Primary Etiology of Cirrhosis:</label>
+                        <select id="etiology" name="etiology" required>
+                            <option value="">Select Etiology...</option>
+                            <option value="alcohol">Alcohol-Related</option>
+                            <option value="hcv">Hepatitis C (HCV)</option>
+                            <option value="hbv">Hepatitis B (HBV)</option>
+                            <option value="nafld">NAFLD/NASH</option>
+                            <option value="autoimmune">Autoimmune Hepatitis</option>
+                            <option value="pbc">PBC</option>
+                            <option value="psc">PSC</option>
+                            <option value="hemochromatosis">Hemochromatosis</option>
+                            <option value="wilson">Wilson Disease</option>
+                            <option value="a1at">Alpha-1 Antitrypsin Deficiency</option>
+                            <option value="cryptogenic">Cryptogenic</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Core Lab Values -->
+            <fieldset class="form-section">
+                <h3>Core Laboratory Values</h3>
+                 <div class="input-grid">
+                    <div>
+                        <label for="bilirubin">Total Bilirubin (mg/dL):</label>
+                        <input type="number" id="bilirubin" name="bilirubin" step="0.1" required min="0">
+                    </div>
+                    <div>
+                        <label for="inr">INR:</label>
+                        <input type="number" id="inr" name="inr" step="0.1" required min="0">
+                    </div>
+                    <div>
+                        <label for="creatinine">Creatinine (mg/dL):</label>
+                        <input type="number" id="creatinine" name="creatinine" step="0.01" required min="0">
+                    </div>
+                     <div>
+                        <label for="sodium">Sodium (mEq/L):</label>
+                        <input type="number" id="sodium" name="sodium" step="1" required min="100" max="180">
+                    </div>
+                    <div>
+                        <label for="albumin">Albumin (g/dL):</label>
+                        <input type="number" id="albumin" name="albumin" step="0.1" required min="0">
+                    </div>
+                    <div>
+                        <label for="platelets">Platelet Count (x10^3/µL):</label>
+                        <input type="number" id="platelets" name="platelets" step="1" required min="0">
+                    </div>
+                </div>
+            </fieldset>
+
+             <!-- Section 3: Optional Labs for FIB-4/APRI -->
+             <fieldset class="form-section">
+                 <h3>Optional Labs (for FIB-4/APRI)</h3>
+                 <div class="input-grid">
+                     <div>
+                         <label for="ast">AST (IU/L):</label>
+                         <input type="number" id="ast" name="ast" min="0" placeholder="Optional">
+                     </div>
+                     <div>
+                         <label for="alt">ALT (IU/L):</label>
+                         <input type="number" id="alt" name="alt" min="0" placeholder="Optional">
+                     </div>
+                     <div>
+                        <!-- Placeholder for alignment -->
+                     </div>
+                 </div>
+             </fieldset>
+
+            <!-- Section 4: Clinical Findings & History -->
+            <fieldset class="form-section">
+                <h3>Clinical Findings & History</h3>
+                <div class="input-grid">
+                    <div>
+                        <label for="ascites">Ascites Grade:</label>
+                        <select id="ascites" name="ascites" required>
+                            <option value="0">None</option>
+                            <option value="1">Mild (Ultrasound only or slight)</option>
+                            <option value="2">Moderate (Clinically apparent)</option>
+                            <option value="3">Severe/Tense</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="encephalopathy">Hepatic Encephalopathy (HE) Grade:</label>
+                        <select id="encephalopathy" name="encephalopathy" required>
+                            <option value="0">None</option>
+                            <option value="1">Grade 1 (Mild confusion, altered sleep)</option>
+                            <option value="2">Grade 2 (Lethargy, disorientation, asterixis)</option>
+                            <option value="3">Grade 3 (Somnolent but arousable, marked confusion)</option>
+                            <option value="4">Grade 4 (Coma)</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="bleedHx">History of Variceal Bleed:</label>
+                        <select id="bleedHx" name="bleedHx" required>
+                            <option value="">Select...</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="hccStatus">HCC Surveillance Status:</label>
+                         <select id="hccStatus" name="hccStatus" required>
+                            <option value="">Select...</option>
+                            <option value="up_to_date">Up-to-date (within 6-7 months)</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="never_done">Never Performed</option>
+                            <option value="not_indicated">Not Indicated (e.g., palliative)</option>
+                        </select>
+                    </div>
+                     <div>
+                         <label for="dialysis">Patient on Dialysis (current week)?</label>
+                         <select id="dialysis" name="dialysis" required>
+                             <option value="no">No</option>
+                             <option value="yes">Yes (Twice in last week)</option>
+                         </select>
+                     </div>
+                 </div>
+            </fieldset>
+
+            <div class="button-container">
+                <button type="button" id="calculateBtn">Calculate Assessment</button>
+                <button type="reset" id="resetBtn">Reset Form</button>
+            </div>
+        </form>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="results" style="display: none;">
+            <h2>Cirrhosis Assessment Summary</h2>
+
+            <!-- Calculated Scores -->
+            <div class="result-section">
+                <h3>Calculated Scores</h3>
+                <div class="score-item">
+                    <span>MELD-Na Score:</span>
+                    <span id="meld-na-score">[Score]</span>
+                </div>
+                <div class="score-item">
+                    <span>Child-Pugh Score:</span>
+                    <span id="child-pugh-score">[Score] (<span id="child-pugh-class">[Class]</span>)</span>
+                </div>
+
+                <!-- Optional FIB-4 / APRI -->
+                 <div id="fib-apri-section" class="optional-section" style="display: none;">
+                    <p class="optional-title">(Non-invasive Fibrosis Scores - if inputs provided)</p>
+                    <div class="score-item">
+                        <span>FIB-4 Score:</span>
+                        <span id="fib4-score">[Score] (<span id="fib4-interpretation">[Interpretation]</span>)</span>
+                    </div>
+                    <div class="score-item">
+                        <span>APRI Score:</span>
+                        <span id="apri-score">[Score] (<span id="apri-interpretation">[Interpretation]</span>)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="result-section">
+                 <h3>Risk Assessment</h3>
+                 <div class="risk-item">
+                    <span>Estimated 3-Month Mortality Risk:</span>
+                    <span id="mortality-risk-estimate">[Estimate based on scores]</span>
+                </div>
+                 <p style="font-size: 0.8em; text-align: right; color: #666;">Note: Individual outcomes vary. This is a population-based estimate.</p>
+            </div>
+
+            <!-- Management Considerations -->
+            <div class="result-section">
+                 <h3>Key Management Considerations & Reminders</h3>
+                 <ul class="recommendations-list">
+                    <!-- Variceal Screening -->
+                    <li class="recommendation-item">
+                        <span id="varices-icon" class="result-icon"></span>
+                        <div class="recommendation-content">
+                            <strong id="varices-title">Variceal Screening (EGD)</strong>
+                            <p id="varices-detail"></p>
+                        </div>
+                    </li>
+                     <!-- HCC Surveillance -->
+                     <li class="recommendation-item">
+                        <span id="hcc-icon" class="result-icon"></span>
+                        <div class="recommendation-content">
+                            <strong id="hcc-title">HCC Surveillance</strong>
+                            <p id="hcc-detail"></p>
+                        </div>
+                    </li>
+                    <!-- Hepatic Encephalopathy (HE) -->
+                    <li class="recommendation-item">
+                        <span id="he-icon" class="result-icon"></span>
+                        <div class="recommendation-content">
+                            <strong id="he-title">Hepatic Encephalopathy (HE) Management</strong>
+                            <p id="he-detail"></p>
+                        </div>
+                    </li>
+                    <!-- Ascites Management -->
+                    <li class="recommendation-item">
+                        <span id="ascites-icon" class="result-icon"></span>
+                        <div class="recommendation-content">
+                            <strong id="ascites-title">Ascites Management</strong>
+                            <p id="ascites-detail"></p>
+                        </div>
+                    </li>
+                    <!-- Vaccinations -->
+                     <li class="recommendation-item">
+                        <span id="vaccine-icon" class="result-icon"></span>
+                        <div class="recommendation-content">
+                            <strong id="vaccine-title">Vaccinations</strong>
+                            <p id="vaccine-detail"></p>
+                        </div>
+                    </li>
+                 </ul>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides a summary based on input data and common scoring systems/guidelines. It is intended for informational and educational purposes only and is NOT a substitute for professional clinical judgment, comprehensive patient evaluation, or personalized medical advice. Management decisions should always be made by a qualified healthcare provider considering the full clinical context. Scores and risks are estimates. Guidelines may evolve.
+        </div>
+    </div>
+
+    <script>
+        // --- Get DOM Elements ---
+        const form = document.getElementById('cirrhosisForm');
+        const resultsDiv = document.getElementById('results');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Inputs
+        const ageInput = document.getElementById('age');
+        const etiologySelect = document.getElementById('etiology');
+        const bilirubinInput = document.getElementById('bilirubin');
+        const inrInput = document.getElementById('inr');
+        const creatinineInput = document.getElementById('creatinine');
+        const sodiumInput = document.getElementById('sodium');
+        const albuminInput = document.getElementById('albumin');
+        const plateletsInput = document.getElementById('platelets');
+        const astInput = document.getElementById('ast');
+        const altInput = document.getElementById('alt');
+        const ascitesSelect = document.getElementById('ascites');
+        const encephalopathySelect = document.getElementById('encephalopathy');
+        const bleedHxSelect = document.getElementById('bleedHx');
+        const hccStatusSelect = document.getElementById('hccStatus');
+        const dialysisSelect = document.getElementById('dialysis');
+
+        // Outputs
+        const meldNaScoreSpan = document.getElementById('meld-na-score');
+        const childPughScoreSpan = document.getElementById('child-pugh-score');
+        const childPughClassSpan = document.getElementById('child-pugh-class');
+        const fibApriSection = document.getElementById('fib-apri-section');
+        const fib4ScoreSpan = document.getElementById('fib4-score');
+        const fib4InterpretationSpan = document.getElementById('fib4-interpretation');
+        const apriScoreSpan = document.getElementById('apri-score');
+        const apriInterpretationSpan = document.getElementById('apri-interpretation');
+        const mortalityRiskSpan = document.getElementById('mortality-risk-estimate');
+
+        const varicesIcon = document.getElementById('varices-icon');
+        const varicesTitle = document.getElementById('varices-title');
+        const varicesDetail = document.getElementById('varices-detail');
+
+        const hccIcon = document.getElementById('hcc-icon');
+        const hccTitle = document.getElementById('hcc-title');
+        const hccDetail = document.getElementById('hcc-detail');
+
+        const heIcon = document.getElementById('he-icon');
+        const heTitle = document.getElementById('he-title');
+        const heDetail = document.getElementById('he-detail');
+
+        const ascitesIcon = document.getElementById('ascites-icon');
+        const ascitesTitle = document.getElementById('ascites-title');
+        const ascitesDetail = document.getElementById('ascites-detail');
+
+        const vaccineIcon = document.getElementById('vaccine-icon');
+        const vaccineTitle = document.getElementById('vaccine-title');
+        const vaccineDetail = document.getElementById('vaccine-detail');
+
+
+        // --- Helper Function ---
+        function isInvalidInput(value) {
+            return value === "" || value === null || isNaN(value);
+        }
+
+        // --- Update Recommendation Helper ---
+        function updateRecommendation(iconEl, detailEl, titleEl, status, detailText, titleText = null) {
+            iconEl.className = 'result-icon'; // Reset classes
+            iconEl.textContent = '';
+            detailEl.textContent = detailText;
+            if(titleText) titleEl.textContent = titleText; // Update title if provided
+
+            switch(status) {
+                case 'yes':
+                    iconEl.classList.add('status-yes');
+                    iconEl.textContent = '✔'; // Checkmark
+                    break;
+                case 'no':
+                     iconEl.classList.add('status-no');
+                     iconEl.textContent = '✖'; // Cross mark
+                    break;
+                case 'consider':
+                     iconEl.classList.add('status-consider');
+                     iconEl.textContent = '⚠️'; // Warning sign
+                    break;
+                 case 'info':
+                    iconEl.classList.add('status-info');
+                    iconEl.textContent = 'ℹ️'; // Info sign
+                    break;
+                 case 'always':
+                    iconEl.classList.add('status-always');
+                    iconEl.textContent = '⚕️'; // Medical symbol / Check
+                    break;
+                default:
+                     iconEl.textContent = '-';
+            }
+        }
+
+
+        // --- Calculation Logic ---
+        function calculateCirrhosis() {
+            // Get Input Values (with parsing and basic validation)
+            const age = parseFloat(ageInput.value);
+            const bili = parseFloat(bilirubinInput.value);
+            const inr = parseFloat(inrInput.value);
+            let cr = parseFloat(creatinineInput.value);
+            const na = parseFloat(sodiumInput.value);
+            const alb = parseFloat(albuminInput.value);
+            const plt = parseFloat(plateletsInput.value); // in K
+            const ast = parseFloat(astInput.value); // Optional
+            const alt = parseFloat(altInput.value); // Optional
+            const ascitesGrade = parseInt(ascitesSelect.value, 10);
+            const heGrade = parseInt(encephalopathySelect.value, 10);
+            const bleedHx = bleedHxSelect.value;
+            const hccStatus = hccStatusSelect.value;
+            const onDialysis = dialysisSelect.value === 'yes';
+
+            // --- Input Validation (Core fields) ---
+            if (isInvalidInput(age) || isInvalidInput(bili) || isInvalidInput(inr) || isInvalidInput(cr) || isInvalidInput(na) || isInvalidInput(alb) || isInvalidInput(plt) || isInvalidInput(ascitesGrade) || isInvalidInput(heGrade) || !bleedHx || !hccStatus) {
+                 alert('Please fill in all required fields (Age, Labs, Clinical Findings).');
+                 return;
+            }
+
+            // --- MELD-Na Calculation ---
+            // Apply MELD rules: Min value 1 for labs, Cr capped at 4.0 unless on dialysis
+            let meld_bili = Math.max(1.0, bili);
+            let meld_inr = Math.max(1.0, inr);
+            let meld_cr = Math.max(1.0, cr);
+
+            if (onDialysis || cr > 4.0) {
+                meld_cr = 4.0;
+                 // Automatically set Cr to 4.0 if dialysis twice in last week OR Cr > 4.0
+            }
+
+            let meld = 0.957 * Math.log(meld_cr) + 0.378 * Math.log(meld_bili) + 1.120 * Math.log(meld_inr) + 0.643;
+            meld = meld * 10; // Multiply by 10
+
+            // Incorporate Sodium (MELD-Na) - capped between 125 and 137
+            let meld_na_val = na;
+            if (meld_na_val < 125) meld_na_val = 125;
+            if (meld_na_val > 137) meld_na_val = 137;
+
+            let meld_na = meld;
+            if (meld > 11) { // Only adjust if original MELD > 11
+                 meld_na = meld + 1.32 * (137 - meld_na_val) - (0.033 * meld * (137 - meld_na_val));
+            }
+
+            // Final MELD Score Capping (min 6, max 40)
+            meld_na = Math.max(6.0, meld_na); // Apply min score of 6 if calculated lower
+            meld_na = Math.round(Math.min(40.0, meld_na)); // Cap at 40 and round
+
+            meldNaScoreSpan.textContent = meld_na;
+
+
+            // --- Child-Pugh Calculation ---
+            let cp_points = 0;
+            // Bilirubin points
+            if (bili < 2) cp_points += 1;
+            else if (bili >= 2 && bili <= 3) cp_points += 2;
+            else cp_points += 3;
+            // Albumin points
+            if (alb > 3.5) cp_points += 1;
+            else if (alb >= 2.8 && alb <= 3.5) cp_points += 2;
+            else cp_points += 3;
+             // INR points
+            if (inr < 1.7) cp_points += 1;
+            else if (inr >= 1.7 && inr <= 2.3) cp_points += 2; // Note: some use 2.2 - check local std
+            else cp_points += 3;
+            // Ascites points
+            if (ascitesGrade === 0) cp_points += 1;
+            else if (ascitesGrade === 1 || ascitesGrade === 2) cp_points += 2; // Mild/Moderate
+            else cp_points += 3; // Severe
+            // Encephalopathy points
+             if (heGrade === 0) cp_points += 1;
+             else if (heGrade === 1 || heGrade === 2) cp_points += 2; // Grade 1/2
+             else cp_points += 3; // Grade 3/4
+
+            let cp_class = '';
+            if (cp_points >= 5 && cp_points <= 6) cp_class = 'A';
+            else if (cp_points >= 7 && cp_points <= 9) cp_class = 'B';
+            else if (cp_points >= 10 && cp_points <= 15) cp_class = 'C';
+
+            childPughScoreSpan.textContent = cp_points;
+            childPughClassSpan.textContent = `Class ${cp_class}`;
+
+
+            // --- Mortality Risk Estimation (Simplified Example) ---
+             let riskEstimate = 'Unable to estimate';
+             if (meld_na >= 35) riskEstimate = '> 70% (High)';
+             else if (meld_na >= 30) riskEstimate = 'Approx 50-60%';
+             else if (meld_na >= 20) riskEstimate = 'Approx 20-30%';
+             else if (meld_na >= 10) riskEstimate = 'Approx 6-10%';
+             else riskEstimate = '< 5% (Low)'; // MELD < 10
+            mortalityRiskSpan.textContent = riskEstimate;
+
+
+            // --- FIB-4 / APRI Calculation (Optional) ---
+             fibApriSection.style.display = 'none'; // Hide by default
+             if (!isInvalidInput(ast) && !isInvalidInput(alt) && !isInvalidInput(plt) && !isInvalidInput(age) && plt > 0) {
+                 // Assuming ALT upper limit of normal (ULN) is ~40 IU/L for APRI
+                 const altULN = 40;
+                 const apri = (ast / altULN) * 100 / plt;
+                 const fib4 = (age * ast) / (plt * Math.sqrt(alt));
+
+                 fib4ScoreSpan.textContent = fib4.toFixed(2);
+                 apriScoreSpan.textContent = apri.toFixed(2);
+
+                 // Interpretations (Example Cutoffs)
+                 fib4InterpretationSpan.textContent = fib4 < 1.3 ? 'Low Risk Adv. Fibrosis' : (fib4 > 2.67 ? 'High Risk Adv. Fibrosis' : 'Indeterminate');
+                 apriInterpretationSpan.textContent = apri < 0.5 ? 'Low Risk Sign. Fibrosis' : (apri > 1.5 ? 'High Risk Sign. Fibrosis' : 'Indeterminate'); // Example cutoffs may vary
+
+                 fibApriSection.style.display = 'block'; // Show the section
+             }
+
+            // --- Recommendations Logic ---
+             const hasDecompensated = ascitesGrade > 0 || heGrade > 0 || bleedHx === 'yes';
+
+             // Varices
+             if (bleedHx === 'yes') {
+                 updateRecommendation(varicesIcon, varicesDetail, varicesTitle, 'always', 'History of bleed indicates need for secondary prophylaxis (e.g., NSBB +/- EVL). Ensure adherence.', 'Variceal Bleed Secondary Prophylaxis');
+             } else if (hasDecompensated || plt < 150) {
+                 updateRecommendation(varicesIcon, varicesDetail, varicesTitle, 'yes', 'Indicated due to decompensation or thrombocytopenia (platelets < 150k). If negative, repeat EGD interval depends on findings and status.', 'Variceal Screening (EGD)');
+             } else {
+                  updateRecommendation(varicesIcon, varicesDetail, varicesTitle, 'consider', 'Screening may be deferred if platelets > 150k AND LFTs stable AND compensated (no ascites/HE), but discuss risk/benefit or consider non-invasive tests (e.g., elastography).', 'Variceal Screening (EGD)');
+             }
+
+             // HCC Surveillance
+             if (hccStatus === 'not_indicated') {
+                 updateRecommendation(hccIcon, hccDetail, hccTitle, 'no', 'Marked as not indicated (e.g., palliative care). Confirm appropriateness.', 'HCC Surveillance');
+             } else {
+                 let hccDetailText = 'Indicated for all patients with cirrhosis. Recommend abdominal ultrasound (+/- AFP) every 6 months.';
+                 if (hccStatus === 'overdue') hccDetailText += ' Status currently overdue - schedule ASAP.';
+                 if (hccStatus === 'never_done') hccDetailText += ' Status indicates never performed - schedule ASAP.';
+                 updateRecommendation(hccIcon, hccDetail, hccTitle, 'always', hccDetailText, 'HCC Surveillance');
+             }
+
+            // HE Management
+             if (heGrade > 0) {
+                updateRecommendation(heIcon, heDetail, heTitle, 'consider', `Currently Grade ${heGrade} HE. Treat acute episode (e.g., Lactulose +/- Rifaximin). Identify and manage precipitants. Consider secondary prophylaxis after resolution.`, 'Hepatic Encephalopathy (HE) Management');
+             } else if (bleedHx === 'yes') { // History of bleed is a risk factor
+                updateRecommendation(heIcon, heDetail, heTitle, 'consider', 'No current overt HE, but history of variceal bleed increases risk. Monitor closely for subtle signs. Educate patient/family on triggers and symptoms.', 'Hepatic Encephalopathy (HE) Management');
+             } else if (cp_class === 'C' || (cp_class === 'B' && meld_na >= 15)) { // Higher risk patients
+                 updateRecommendation(heIcon, heDetail, heTitle, 'consider', 'No current overt HE, but higher risk based on Child-Pugh/MELD. Monitor closely for subtle signs. Educate patient/family on triggers and symptoms.', 'Hepatic Encephalopathy (HE) Management');
+             } else {
+                 updateRecommendation(heIcon, heDetail, heTitle, 'info', 'No current overt HE reported and lower baseline risk. Continue monitoring. Educate on potential triggers.', 'Hepatic Encephalopathy (HE) Management');
+             }
+
+             // Ascites Management
+             if (ascitesGrade > 0) {
+                 let ascitesDetailText = `Grade ${ascitesGrade} ascites present. Key management: Sodium restriction (<2g/day), initiate/titrate diuretics (Spironolactone +/- Furosemide) based on volume status, renal function, and electrolytes. Monitor weight and urine output.`;
+                 if (ascitesGrade === 3) ascitesDetailText += ' Consider large volume paracentesis (LVP) for tense ascites, followed by diuretics.';
+                 updateRecommendation(ascitesIcon, ascitesDetail, ascitesTitle, 'yes', ascitesDetailText, 'Ascites Management');
+             } else {
+                 updateRecommendation(ascitesIcon, ascitesDetail, ascitesTitle, 'info', 'No clinical ascites reported. Maintain appropriate fluid/sodium balance guidance.', 'Ascites Management');
+             }
+
+             // Vaccinations
+            updateRecommendation(vaccineIcon, vaccineDetail, vaccineTitle, 'always', 'Assess status and administer vaccinations as needed: Hepatitis A, Hepatitis B (if not immune/infected), Pneumococcus (PCV13/PPSV23 per guidelines), and annual Influenza.', 'Vaccinations');
+
+
+            // --- Show Results ---
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // --- Reset Form ---
+        function resetForm() {
+            form.reset();
+            resultsDiv.style.display = 'none'; // Hide results
+            fibApriSection.style.display = 'none'; // Ensure optional section is hidden
+            // Scroll to top is optional, can be disruptive
+            // window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- Event Listeners ---
+        calculateBtn.addEventListener('click', calculateCirrhosis);
+        resetBtn.addEventListener('click', resetForm);
+
+        // Optional: Hide results if form inputs change after calculation
+        form.addEventListener('change', () => {
+            if (resultsDiv.style.display !== 'none') {
+                resultsDiv.style.display = 'none';
+            }
+        });
+
+        // --- Initial Setup ---
+         resetForm(); // Ensure form is clear on load
+
+    </script>
+
+</body>
+</html>
