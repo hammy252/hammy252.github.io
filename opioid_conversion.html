@@ -3,117 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Opioid Conversion Calculator V2</title>
-    <!-- Include Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Interactive Opioid Conversion Calculator</title>
     <style>
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; /* Firefox */ }
-        .result-input { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: background-color 0.2s ease, border-color 0.2s ease; }
-        .result-input:focus { background-color: white; border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4); }
-        .comments-text { font-size: 0.75rem; line-height: 1.2; color: #475569; /* slate-600 */ } /* Style for comments */
-         .result-input:disabled { background-color: #f1f5f9; cursor: not-allowed; color: #94a3b8; } /* Disabled input style */
+        /* --- Basic Reset & Global Styles (Adapted from HepB/Cirrhosis Tool) --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; line-height: 1.6; background-color: #f8f9fa; color: #333; padding: 15px; }
+
+        /* --- Main Container --- */
+        .main-container { max-width: 900px; /* Wider for table */ margin: 20px auto; padding: 25px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* --- Headings & Text --- */
+        h1, h2, h3 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; }
+        h1 { font-size: 1.8em; text-align: center; border-bottom-width: 2px; margin-bottom: 20px; }
+        h2 { font-size: 1.4em; margin-top: 30px; color: #0056b3; border-bottom-style: dashed;}
+        h3 { font-size: 1.2em; margin-top: 20px; color: #555; border-bottom: none; margin-bottom: 10px;}
+        .subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 0.95em; }
+
+        /* --- Form Styling --- */
+        .form-section { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #eee; }
+        .form-section:last-of-type { border-bottom: none; padding-bottom: 0; }
+        legend { font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #555; }
+        form label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
+        form input[type="number"], form select { width: 100%; padding: 9px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.95em; }
+        form input[type="number"]::placeholder { color: #aaa; }
+
+        /* Grid for Inputs */
+        .input-grid { display: grid; grid-template-columns: 1fr; gap: 15px 20px; }
+        @media (min-width: 600px) { .input-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .unit-label { font-size: 0.85em; color: #555; display: inline-block; margin-left: 5px; }
+
+        /* --- Button Styling --- */
+        .button-container { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        form button { background-color: #007bff; color: white; padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; font-size: 1.0em; margin: 0 8px; transition: background-color 0.2s ease; }
+        form button:hover { background-color: #0056b3; }
+        form button[type="reset"] { background-color: #6c757d; }
+        form button[type="reset"]:hover { background-color: #5a6268; }
+
+        /* --- Results Area --- */
+        #results { margin-top: 30px; background-color: #f0f8ff; padding: 20px; border: 1px solid #b3d7ff; border-radius: 8px; }
+        .result-section { margin-bottom: 20px; }
+        .result-section h3 { color: #004a99; border-bottom: 1px dotted #99c2ff; margin-bottom: 12px; padding-bottom: 3px;}
+        .result-basis-note { font-size: 0.9em; color: #555; margin-top: -10px; margin-bottom: 15px;}
+        .warning-box { padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9em; }
+        .warning-box strong, .warning-box span { font-weight: bold; }
+        .warning-box ul { margin-top: 5px; padding-left: 20px; }
+        #methadone_warning { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        #general_warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+
+        /* --- Results Table Styling --- */
+        .results-table-container { overflow-x: auto; border: 1px solid #ccc; border-radius: 4px; margin-top: 10px;}
+        .results-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        .results-table th, .results-table td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; vertical-align: top; /* Align content top */ }
+        .results-table thead th { background-color: #e9ecef; font-weight: bold; color: #495057; position: sticky; top: 0; z-index: 1; }
+        .results-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
+        .results-table tbody tr:hover { background-color: #f1f1f1; }
+        .results-table input[type="number"] { /* Editable fields */
+            width: 70px; /* Fixed width */
+            padding: 4px 6px;
+            font-size: 0.95em;
+            text-align: right;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 3px;
+            background-color: #f9fafb; /* Very light gray */
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .results-table input[type="number"]:focus {
+             background-color: white;
+             border-color: #3b82f6; /* Blue */
+             outline: none;
+             box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+         }
+         .results-table input[type="number"]:disabled {
+             background-color: #e5e7eb; /* Disabled gray */
+             cursor: not-allowed;
+             color: #6b7280;
+             border-color: #d1d5db;
+         }
+        .results-table .unit-suffix { margin-left: 4px; font-size: 0.85em; color: #6b7280; }
+        .comments-text { font-size: 0.85em; line-height: 1.3; color: #4b5563; }
+        .comments-text .factor-note { display: block; margin-top: 4px; font-style: italic; color: #6b7280; } /* Style for factor note */
+
+        /* --- Disclaimer --- */
+        .disclaimer { margin-top: 25px; font-style: italic; color: #dc3545; font-size: 0.85em; font-weight: bold; text-align: center; border: 1px solid #f5c6cb; padding: 10px; background-color: #f8d7da; border-radius: 4px; }
+        .disclaimer strong { color: #721c24; }
     </style>
 </head>
-<body class="bg-slate-100 p-4">
+<body>
 
-    <div class="max-w-6xl mx-auto bg-gradient-to-b from-white to-slate-50 p-6 md:p-8 rounded-xl shadow-xl border border-slate-200"> {/* Increased max-width */}
-        <h1 class="text-3xl font-bold text-slate-800 mb-2 text-center">Interactive Opioid Conversion Calculator</h1>
-        <p class="text-base text-slate-600 mb-8 text-center">Select starting opioid/route and dose to calculate approximate equivalents. Results are editable. (Based on Table 1 / BNF Aug 2020)</p>
+    <div class="main-container">
+        <h1>Interactive Opioid Conversion Calculator</h1>
+        <p class="subtitle">Select starting opioid/route and dose to calculate approximate equivalents. Results are editable. (Based on Table 1 / BNF Aug 2020)</p>
 
         {/* --- INPUT FORM --- */}
-        <form id="opioidForm" class="space-y-6">
-            <fieldset class="border border-slate-200 p-5 rounded-lg shadow-sm bg-white">
-                <legend class="text-lg font-semibold text-slate-800 px-2 -ml-2">Starting Opioid Information</legend>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3">
+        <form id="opioidForm">
+            <fieldset class="form-section">
+                <legend>Starting Opioid Information</legend>
+                <div class="input-grid">
                     <div>
-                        <label for="from_opioid_route" class="block text-sm font-medium text-slate-700 mb-1">Convert From (Drug & Route):</label>
-                        <select id="from_opioid_route" name="from_opioid_route" required class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                        <label for="from_opioid_route">Convert From (Drug & Route):</label>
+                        <select id="from_opioid_route" name="from_opioid_route" required>
                             <option value="">-- Select Opioid & Route --</option>
                             {/* Options populated by JS */}
                         </select>
                     </div>
                     <div>
-                        <label for="from_dose" class="block text-sm font-medium text-slate-700 mb-1">Current Dose:</label>
-                        <div class="flex items-center mt-1">
-                            <input type="number" id="from_dose" name="from_dose" required min="0" step="any" class="block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
-                            <span id="dose_unit_label" class="ml-2 text-sm text-slate-600 whitespace-nowrap">(Unit)</span>
+                        <label for="from_dose">Current Dose:</label>
+                         <div style="display: flex; align-items: center;">
+                            <input type="number" id="from_dose" name="from_dose" required min="0" step="any" style="flex-grow: 1; margin-bottom: 0;"> {/* Adjust style */}
+                            <span id="dose_unit_label" class="unit-label">(Unit)</span>
                         </div>
                     </div>
                 </div>
-                 <p class="text-xs text-slate-500 mt-3">Enter <strong>total dose per 24 hours</strong> for oral/IV/SC/IM, or <strong>patch strength</strong> (mcg/hr).</p>
+                 <p style="font-size: 0.8em; color: #666; margin-top: 5px;">Enter <strong>total dose per 24 hours</strong> for oral/IV/SC/IM, or <strong>patch strength</strong> (mcg/hr).</p>
             </fieldset>
 
             {/* --- BUTTONS --- */}
-            <div class="mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
-                <div class="flex justify-center space-x-4">
-                    <button type="button" id="calculateBtn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
-                        Calculate Equivalents
-                    </button>
-                    <button type="reset" id="resetBtn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400">
-                        Reset
-                    </button>
-                </div>
+            <div class="button-container">
+                <button type="button" id="calculateBtn">Calculate Equivalents</button>
+                <button type="reset" id="resetBtn">Reset</button>
             </div>
         </form>
 
         {/* --- RESULTS AREA --- */}
-        <div id="results" class="mt-8 p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-md space-y-4" style="display: none;">
-            <div>
-                <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Calculated Basis:</p>
-                <p class="text-base text-blue-700">Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value">[OMEDD]</strong> mg</p>
-                <p id="calculation_note" class="text-xs text-slate-600"></p> {/* To show which drug/dose was the basis */}
+        <div id="results" style="display: none;">
+             <div class="result-section">
+                 <h3>Calculated Basis</h3>
+                <p>Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value" style="font-size: 1.1em;">[OMEDD]</strong> mg</p>
+                <p id="calculation_note" class="result-basis-note"></p>
             </div>
 
             {/* --- Warnings --- */}
-            <div id="methadone_warning" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100 border border-red-300" role="alert" style="display: none;">
-              <span class="font-medium">Methadone Conversion Warning!</span> Conversions involving Methadone are complex and variable, requiring specialist knowledge. <strong>This tool cannot provide safe Methadone conversions. Consult specialist advice.</strong> Methadone is excluded below.
-            </div>
-             <div id="general_warning" class="p-4 mb-4 text-sm text-amber-800 rounded-lg bg-amber-50 border border-amber-300" role="alert" style="display: none;">
-                 {/* Warnings about Meperidine, Codeine etc. will appear here */}
-             </div>
+            <div id="methadone_warning" class="warning-box" style="display: none;"></div>
+            <div id="general_warning" class="warning-box" style="display: none;"></div>
 
              {/* --- RESULTS TABLE --- */}
-             <div>
-                 <p class="text-sm font-medium text-blue-800 uppercase tracking-wider mb-2">Approximate Equivalent Doses:</p>
-                 <p class="text-xs text-slate-600 mb-3">Values below are editable. Changing a dose will recalculate others based on that new value.</p>
-                <div class="overflow-x-auto shadow-sm rounded-lg border border-slate-200">
-                    <table class="w-full text-sm text-left text-slate-700 ">
-                         <thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0 z-10"> {/* Sticky header */}
+             <div class="result-section">
+                  <h3>Approximate Equivalent Doses</h3>
+                 <p style="font-size: 0.85em; color: #555; margin-bottom: 10px;">Values below are editable. Changing a dose will recalculate others based on that new value.</p>
+                <div class="results-table-container">
+                    <table class="results-table">
+                         <thead>
                              <tr>
-                                 <th scope="col" class="px-4 py-3 border-b border-slate-300">Opioid</th>
-                                 <th scope="col" class="px-4 py-3 border-b border-slate-300 text-right">Oral Dose</th>
-                                 <th scope="col" class="px-4 py-3 border-b border-slate-300 text-right">IV/SC/IM Dose</th>
-                                 <th scope="col" class="px-4 py-3 border-b border-slate-300">Comments / Notes</th>
+                                 <th scope="col">Opioid</th>
+                                 <th scope="col" style="text-align: right;">Oral Dose</th>
+                                 <th scope="col" style="text-align: right;">IV/SC/IM Dose</th>
+                                 <th scope="col">Comments / Notes</th>
                              </tr>
                          </thead>
-                         <tbody id="results_table_body" class="bg-white">
-                             {/* Results will be populated here */}
-                             {/* Example Row:
-                             <tr class="hover:bg-slate-50 border-t border-slate-200">
-                                 <td class="px-4 py-2 font-medium text-slate-800 align-top">Morphine</td>
-                                 <td class="px-4 py-2 align-top">
-                                     <input type="number" value="25" data-drug-key="morphine" data-route="oral" class="w-24 text-right p-1 rounded result-input"> mg/day
-                                 </td>
-                                 <td class="px-4 py-2 align-top">
-                                     <input type="number" value="10" data-drug-key="morphine" data-route="iv" class="w-24 text-right p-1 rounded result-input"> mg/day
-                                 </td>
-                                 <td class="px-4 py-2 comments-text align-top">Generally first choice. Caution in severe renal impairment.</td>
-                             </tr>
-                             -->
+                         <tbody id="results_table_body">
+                             {/* Results populated here */}
                          </tbody>
                      </table>
                  </div>
              </div>
 
              {/* --- Footer Notes/Disclaimer --- */}
-             <p class="mt-5 text-xs text-slate-600 leading-relaxed">
+             <p style="font-size: 0.8em; color: #555; margin-top: 15px; line-height: 1.4;">
                 <strong>Important:</strong> These are *approximate* calculations based on single-dose studies/BNF/Table 1. Individual response varies significantly. Tolerance develops with chronic use. Due to incomplete cross-tolerance, **always reduce the calculated dose (e.g., by 25-50%) when switching opioids**, especially at high doses or in frail patients, and titrate carefully to clinical response. Refer to current guidelines and consider patient factors (renal/hepatic function, age, pain level, previous exposure).
             </p>
-             <p class="mt-5 text-xs text-red-600 border-t border-slate-200 pt-3 font-semibold">
+             <div class="disclaimer">
                 <strong>Disclaimer:</strong> This tool is for informational/educational purposes ONLY and NOT a substitute for professional clinical judgment. Dosing must be individualized by a qualified healthcare provider. Calculation errors possible. Use with extreme caution.
-            </p>
+            </div>
         </div>
     </div>
 
@@ -121,26 +172,22 @@
         // --- Opioid Data Store (Revised) ---
         // Base: 1mg Oral Morphine = 1 OMEDD
         // omeddFactor: How many mg OMEDD is 1mg of this drug/route equivalent to?
-        //              OMEDD = Dose * omeddFactor
-        //              Dose = OMEDD / omeddFactor
         const opioids = {
-            // Unique key: drugName_route
             'morphine_oral': { drugName: 'Morphine', route: 'oral', unit: 'mg/day', omeddFactor: 1, comments: 'Generally first choice. Caution severe renal impairment.' },
-            'morphine_iv': { drugName: 'Morphine', route: 'iv', unit: 'mg/day', omeddFactor: 2.5, comments: 'IV:PO Ratio ~1:2.5. Use lower end initial dose in elderly/renal/hepatic.' }, // 10mg IV = 25mg Oral equiv
-            'hydromorphone_oral': { drugName: 'Hydromorphone', route: 'oral', unit: 'mg/day', omeddFactor: 5, comments: 'Preferred in renal disease? (Check local guidance)' }, // Based on BNF: 2mg PO = 10mg OM PO
-            'hydromorphone_iv': { drugName: 'Hydromorphone', route: 'iv', unit: 'mg/day', omeddFactor: 16.67, comments: 'IV:PO Ratio ~1:3.3 (based on OMEDD factors 16.67/5). Preferred in renal? Cont. infusion possible.' }, // Based on Table1: 1.5mg IV = 25mg OM equiv
-            'codeine_oral': { drugName: 'Codeine', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Max 240mg/day suggested. Metabolism variable (CYP2D6). Ineffective in ~10% Caucasians. High constipation/nausea.' }, // Based on BNF
+            'morphine_iv': { drugName: 'Morphine', route: 'iv', unit: 'mg/day', omeddFactor: 2.5, comments: 'Use lower end initial dose in elderly/renal/hepatic.' }, // 10mg IV = 25mg Oral equiv
+            'hydromorphone_oral': { drugName: 'Hydromorphone', route: 'oral', unit: 'mg/day', omeddFactor: 5, comments: 'Preferred in renal disease? (Check local guidance)' },
+            'hydromorphone_iv': { drugName: 'Hydromorphone', route: 'iv', unit: 'mg/day', omeddFactor: 16.67, comments: 'Preferred in renal? Cont. infusion possible.' }, // Based on Table1: 1.5mg IV = 25mg OM equiv
+            'codeine_oral': { drugName: 'Codeine', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Max 240mg/day suggested. Metabolism variable (CYP2D6). Ineffective in ~10% Caucasians. High constipation/nausea.' },
             'codeine_iv': { drugName: 'Codeine', route: 'iv', unit: 'mg/day', omeddFactor: 0.208, comments: 'IM/SC ONLY, NOT IV (per Table 1). Max 60mg/dose suggested. Use discouraged. High side effects.' }, // Based on Table1: 120mg IM/SC = 25mg OM equiv
-            'oxycodone_oral': { drugName: 'Oxycodone', route: 'oral', unit: 'mg/day', omeddFactor: 1.5, comments: 'Suitable for mild-mod pain. Check formulary status.' }, // Based on BNF
+            'oxycodone_oral': { drugName: 'Oxycodone', route: 'oral', unit: 'mg/day', omeddFactor: 1.5, comments: 'Suitable for mild-mod pain. Check formulary status.' },
             'oxycodone_iv': { drugName: 'Oxycodone', route: 'iv', unit: 'mg/day', omeddFactor: NaN, comments: 'IV not listed in Table 1. Consult specific product info if available/used.' }, // Not standard
-            'meperidine_oral': { drugName: 'Meperidine', route: 'oral', unit: 'mg/day', omeddFactor: 0.083, comments: 'NOT recommended chronic use. Neurotoxic metabolite (normeperidine) accumulates in renal failure/high dose/elderly. Risk seizures. Max duration 48h / 600mg/day suggested.' }, // Based on Table1: 300mg PO = 25mg OM equiv
-            'meperidine_iv': { drugName: 'Meperidine', route: 'iv', unit: 'mg/day', omeddFactor: 0.333, comments: 'IV:PO Ratio ~1:4. NOT recommended chronic use. Neurotoxicity risk (see Oral).' }, // Based on Table1: 75mg IV = 25mg OM equiv
-            'fentanyl_iv': { drugName: 'Fentanyl', route: 'iv', unit: 'mcg/day', omeddFactor: 0.25, comments: 'Very short acting (IV bolus). Used in procedures, PCA, continuous infusion. Convert mcg/day to mcg/hr for infusion rate (divide by 24).' }, // Based on Table1: 100mcg IV = 25mg OM equiv -> 0.1mg IV = 25mg OM -> factor = 250 for mg input. If input mcg, factor = 0.25
-            'fentanyl_patch': { drugName: 'Fentanyl', route: 'patch', unit: 'mcg/hr', type: 'patch', conversionTable: { 12: 30, 25: 60, 50: 120, 75: 180, 100: 240 }, comments: 'Transdermal. NOT for acute pain. Slow onset/offset (12-24h). Use Table 2 / specific conversion guidance.' },
-            'methadone_oral': { drugName: 'Methadone', route: 'oral', unit: 'mg/day', type: 'special', comments: 'Highly variable potency/kinetics. Specialist advice MANDATORY. Risk QTc prolongation.'},
-            // Tapentadol and Tramadol have different MOA, conversion less reliable
-             'tapentadol_oral': { drugName: 'Tapentadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.4, comments: 'Also NRI activity. Conversion approximate. Max dose typically 500-600mg/day.'}, // Based on BNF
-             'tramadol_oral': { drugName: 'Tramadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Also SNRI activity. Seizure risk. Max dose 400mg/day. Metabolism variable (CYP2D6).'} // Based on BNF
+            'meperidine_oral': { drugName: 'Meperidine', route: 'oral', unit: 'mg/day', omeddFactor: 0.083, comments: 'NOT recommended chronic use. Neurotoxic metabolite (normeperidine) accumulates in renal failure/high dose/elderly. Risk seizures. Max duration 48h / 600mg/day suggested.' },
+            'meperidine_iv': { drugName: 'Meperidine', route: 'iv', unit: 'mg/day', omeddFactor: 0.333, comments: 'NOT recommended chronic use. Neurotoxicity risk (see Oral).' }, // Based on Table1: 75mg IV = 25mg OM equiv
+            'fentanyl_iv': { drugName: 'Fentanyl', route: 'iv', unit: 'mcg/day', omeddFactor: 0.25, comments: 'Very short acting (IV bolus). Used procedures, PCA, infusion. Unit is mcg/day here for calculation; clinical use often mcg/hr.' }, // Based on Table1: 100mcg IV = 25mg OM equiv => 1mcg IV = 0.25mg OMEDD
+            'fentanyl_patch': { drugName: 'Fentanyl', route: 'patch', unit: 'mcg/hr', type: 'patch', conversionTable: { 12: 30, 25: 60, 50: 120, 75: 180, 100: 240 }, comments: 'Transdermal. NOT for acute pain. Slow onset/offset. Use Table 2/conversion guidance.' },
+            'methadone_oral': { drugName: 'Methadone', route: 'oral', unit: 'mg/day', type: 'special', comments: 'Highly variable. Specialist advice MANDATORY. QTc risk.' },
+            'tapentadol_oral': { drugName: 'Tapentadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.4, comments: 'Also NRI activity. Conversion approximate. Max dose typically 500-600mg/day.' },
+            'tramadol_oral': { drugName: 'Tramadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Also SNRI activity. Seizure risk. Max dose 400mg/day. Variable metabolism (CYP2D6).' }
         };
 
         // --- DOM Elements ---
@@ -158,49 +205,15 @@
         const resultsTableBody = document.getElementById('results_table_body');
 
         // --- Populate Dropdown ---
-        function populateDropdown() {
-            fromOpioidRouteSelect.innerHTML = '<option value="">-- Select Opioid & Route --</option>'; // Clear existing
-            Object.keys(opioids).forEach(key => {
-                const data = opioids[key];
-                if (data.type === 'special') return; // Exclude methadone from input dropdown for conversion *from*
-
-                 // Use different display names for clarity
-                 let displayName = `${data.drugName} (${data.route === 'iv' ? 'IV/SC/IM' : data.route.charAt(0).toUpperCase() + data.route.slice(1)})`;
-                 if (data.route === 'patch') {
-                    displayName = `${data.drugName} (Patch)`;
-                 } else if (data.route === 'iv' && data.drugName === 'Codeine'){
-                    displayName = `${data.drugName} (IM/SC ONLY)`; // Special note for Codeine
-                 }
-
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = displayName;
-                fromOpioidRouteSelect.appendChild(option);
-            });
-        }
+        function populateDropdown() { /* ... (keep previous populateDropdown function) ... */ fromOpioidRouteSelect.innerHTML = '<option value="">-- Select Opioid & Route --</option>'; Object.keys(opioids).forEach(key => { const data = opioids[key]; if (data.type === 'special') return; let displayName = `${data.drugName} (${data.route === 'iv' ? 'IV/SC/IM' : data.route.charAt(0).toUpperCase() + data.route.slice(1)})`; if (data.route === 'patch') { displayName = `${data.drugName} (Patch)`; } else if (data.route === 'iv' && data.drugName === 'Codeine'){ displayName = `${data.drugName} (IM/SC ONLY)`; } const option = document.createElement('option'); option.value = key; option.textContent = displayName; fromOpioidRouteSelect.appendChild(option); });}
 
         // --- Helper Functions ---
-        function isInvalidInput(value) { return value === "" || value === null || isNaN(value) || value < 0; }
-        function round(value, decimals = 1) { /* ... (keep previous round function) ... */ if (isNaN(value) || !isFinite(value)) return ""; if (value > 0 && value < Math.pow(10, -decimals)) { return value.toExponential(decimals > 0 ? decimals - 1 : 0); } return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals); }
+        function isInvalidInput(value) { /* ... */ return value === "" || value === null || isNaN(value) || value < 0; }
+        function round(value, decimals = 1) { /* ... */ if (isNaN(value) || !isFinite(value)) return ""; if (value > 0 && value < Math.pow(10, -decimals)) { return value.toExponential(decimals > 0 ? decimals - 1 : 0); } return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals); }
 
         // --- Event Handlers ---
-        function updateUnits() {
-            const selectedKey = fromOpioidRouteSelect.value;
-            if (selectedKey && opioids[selectedKey]) {
-                doseUnitLabel.textContent = `(${opioids[selectedKey].unit})`;
-            } else {
-                doseUnitLabel.textContent = '(Unit)';
-            }
-            if (resultsDiv.style.display !== 'none') {
-                resultsDiv.style.display = 'none';
-            }
-             // Reset warnings
-             methadoneWarningDiv.style.display = 'none';
-             generalWarningDiv.style.display = 'none';
-             generalWarningDiv.innerHTML = '';
-        }
-
-        function resetForm() { /* ... (keep previous resetForm function) ... */ form.reset(); resultsDiv.style.display = 'none'; methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; doseUnitLabel.textContent = '(Unit)'; resultsTableBody.innerHTML = ''; }
+        function updateUnits() { /* ... (keep previous updateUnits function) ... */ const selectedKey = fromOpioidRouteSelect.value; if (selectedKey && opioids[selectedKey]) { doseUnitLabel.textContent = `(${opioids[selectedKey].unit})`; } else { doseUnitLabel.textContent = '(Unit)'; } if (resultsDiv.style.display !== 'none') { resultsDiv.style.display = 'none'; } methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; }
+        function resetForm() { /* ... */ form.reset(); resultsDiv.style.display = 'none'; methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; doseUnitLabel.textContent = '(Unit)'; resultsTableBody.innerHTML = ''; }
 
         // --- Core Calculation and Display Logic ---
         function calculateAndDisplay(triggeringKey = null, triggeringDose = null, triggeringRoute = null) {
@@ -208,96 +221,48 @@
             let baseDose = parseFloat(fromDoseInput.value);
             let isEditTrigger = false;
             let basisNote = '';
-            let warnings = new Set(); // Use a Set to avoid duplicate warnings
+            let warnings = new Set();
 
-            // Handle trigger from edit
-            if (triggeringKey && triggeringRoute && !isInvalidInput(triggeringDose)) {
-                baseKey = triggeringKey;
-                baseDose = triggeringDose;
-                isEditTrigger = true;
-                basisNote = `Recalculated based on ${opioids[baseKey].drugName} (${triggeringRoute}) ${baseDose} ${opioids[baseKey].unit}.`;
-            } else if (!isEditTrigger && baseKey && !isInvalidInput(baseDose)){
-                 basisNote = `Calculated based on ${opioids[baseKey].drugName} (${opioids[baseKey].route === 'iv' ? 'IV/SC/IM' : opioids[baseKey].route}) ${baseDose} ${opioids[baseKey].unit}.`;
-            } else if (!isEditTrigger) {
-                 alert('Please select an opioid/route and enter a valid positive dose.');
-                 resultsDiv.style.display = 'none';
-                 return;
-            }
+            if (triggeringKey && triggeringRoute && !isInvalidInput(triggeringDose)) { /* ... (keep previous trigger handling) ... */ baseKey = triggeringKey; baseDose = triggeringDose; isEditTrigger = true; basisNote = `Recalculated based on ${opioids[baseKey].drugName} (${triggeringRoute}) ${baseDose} ${opioids[baseKey].unit}.`;} else if (!isEditTrigger && baseKey && !isInvalidInput(baseDose)){ basisNote = `Calculated based on ${opioids[baseKey].drugName} (${opioids[baseKey].route === 'iv' ? 'IV/SC/IM' : opioids[baseKey].route}) ${baseDose} ${opioids[baseKey].unit}.`;} else if (!isEditTrigger) { alert('Please select an opioid/route and enter a valid positive dose.'); resultsDiv.style.display = 'none'; return; }
 
             const baseData = opioids[baseKey];
 
-            // Handle Methadone separately (no calculation)
-            if (baseData.type === 'special') {
-                methadoneWarningDiv.style.display = 'block';
-                omeddValueSpan.textContent = ' N/A ';
-                resultsTableBody.innerHTML = `<tr class="text-center text-slate-500"><td colspan="4" class="py-3 px-4">Methadone conversions require specialist advice and cannot be calculated here.</td></tr>`;
-                calculationNoteP.textContent = "Cannot calculate OMEDD for Methadone.";
-                resultsDiv.style.display = 'block';
-                return;
-            } else {
-                methadoneWarningDiv.style.display = 'none';
-            }
+            if (baseData.type === 'special') { /* ... (keep previous methadone handling) ... */ methadoneWarningDiv.innerHTML = `<strong>Methadone Conversion Warning!</strong> Conversions involving Methadone are complex and variable, requiring specialist knowledge. <strong>This tool cannot provide safe Methadone conversions. Consult specialist advice.</strong> Methadone is excluded below.`; methadoneWarningDiv.style.display = 'block'; omeddValueSpan.textContent = ' N/A '; resultsTableBody.innerHTML = `<tr class="text-center" style="color: #666;"><td colspan="4" style="padding: 10px;">Methadone conversions require specialist advice and cannot be calculated here.</td></tr>`; calculationNoteP.textContent = "Cannot calculate OMEDD for Methadone."; resultsDiv.style.display = 'block'; return; } else { methadoneWarningDiv.style.display = 'none'; }
 
-            // Calculate OMEDD
             let omedd = NaN;
-            if (baseData.type === 'patch') { // Fentanyl Patch
-                 if (baseData.conversionTable && baseData.conversionTable[baseDose]) {
-                    omedd = baseData.conversionTable[baseDose];
-                 } else {
-                     // Use factor for non-standard patch dose? Less reliable.
-                     // For simplicity, let's only allow standard doses for patches for now
-                     alert(`Dose ${baseDose} ${baseData.unit} is not a standard ${baseData.drugName} strength in the conversion table. Please use a standard dose (e.g., 12, 25, 50, 75, 100 mcg/hr).`);
-                      resultsDiv.style.display = 'none'; return;
-                 }
-            } else if (baseData.omeddFactor) { // Oral or IV/SC/IM
-                omedd = baseDose * baseData.omeddFactor;
-                 // Special handling for Fentanyl IV units (input mcg/day -> OMEDD)
-                 if (baseKey === 'fentanyl_iv') {
-                    omedd = baseDose * 0.00025; // 1 mcg IV = 0.25mg OM equiv, but dose is per day... let's adjust factor
-                    // Let's standardise Fentanyl IV factor based on 100mcg IV = 25mg OM.
-                    // So 1mcg IV = 0.25mg OM equiv. OMEDD = Dose (mcg) * 0.25
-                     omedd = baseDose * 0.25;
-                     basisNote = `Calculated based on ${baseData.drugName} (IV) ${baseDose} mcg/day. (Note: Check unit, often given mcg/hr)`;
-                 }
-            }
+            if (baseData.type === 'patch') { /* ... (keep previous patch handling) ... */ if (baseData.conversionTable && baseData.conversionTable[baseDose]) { omedd = baseData.conversionTable[baseDose]; } else { alert(`Dose ${baseDose} ${baseData.unit} is not a standard ${baseData.drugName} strength in the conversion table. Please use a standard dose (e.g., 12, 25, 50, 75, 100 mcg/hr).`); resultsDiv.style.display = 'none'; return; } } else if (baseData.omeddFactor) { /* ... (keep previous factor handling, including Fentanyl IV) ... */ omedd = baseDose * baseData.omeddFactor; if (baseKey === 'fentanyl_iv') { omedd = baseDose * 0.25; basisNote = `Calculated based on ${baseData.drugName} (IV) ${baseDose} mcg/day. (Note: Check unit, often given mcg/hr)`; }}
 
-            if (isNaN(omedd) || omedd < 0) { // Check if OMEDD calculation failed
-                 alert('Error calculating Oral Morphine Equivalent Daily Dose (OMEDD). Check input.');
-                 resultsDiv.style.display = 'none'; return;
-            }
+            if (isNaN(omedd) || omedd < 0) { /* ... (keep previous OMEDD validation) ... */ alert('Error calculating Oral Morphine Equivalent Daily Dose (OMEDD). Check input.'); resultsDiv.style.display = 'none'; return; }
 
             omeddValueSpan.textContent = ` ${round(omedd, 1)} `;
             calculationNoteP.textContent = basisNote;
-            resultsTableBody.innerHTML = ''; // Clear previous results
+            resultsTableBody.innerHTML = '';
 
-            // Get unique drug names to group rows
             const uniqueDrugNames = [...new Set(Object.values(opioids).filter(d => d.type !== 'special').map(d => d.drugName))];
-            uniqueDrugNames.sort(); // Sort alphabetically
+            uniqueDrugNames.sort();
 
             uniqueDrugNames.forEach(drugName => {
                 const tr = document.createElement('tr');
-                tr.className = 'border-t border-slate-200 hover:bg-slate-50';
+                // tr.className = 'hover:bg-slate-50'; // Removed Tailwind class
 
-                // Find data for Oral and IV routes for this drug
                 const oralData = Object.values(opioids).find(d => d.drugName === drugName && d.route === 'oral');
-                const ivData = Object.values(opioids).find(d => d.drugName === drugName && (d.route === 'iv' || d.route === 'patch')); // Include patch here for row generation
-                const displayData = oralData || ivData; // Use whichever exists for name/comments
+                const ivData = Object.values(opioids).find(d => d.drugName === drugName && (d.route === 'iv' || d.route === 'patch'));
+                const displayData = oralData || ivData;
 
-                if (!displayData) return; // Should not happen if logic is correct
+                if (!displayData) return;
 
                 // 1. Drug Name Cell
                 const tdName = document.createElement('td');
-                tdName.className = 'px-4 py-2 font-medium text-slate-800 align-top';
+                tdName.style.fontWeight = '500'; // Medium weight
                 tdName.textContent = drugName;
-                 // Add warnings for specific drugs
-                 if (drugName === 'Meperidine') warnings.add('Meperidine: High risk of neurotoxicity (normeperidine) esp. in renal impairment/elderly/high dose/chronic use. Avoid if possible.');
-                 if (drugName === 'Codeine') warnings.add('Codeine: Variable metabolism (CYP2D6), ineffective in some. High nausea/constipation. Max dose limits apply.');
+                if (drugName === 'Meperidine') warnings.add('Meperidine: High risk of neurotoxicity (normeperidine) esp. in renal impairment/elderly/high dose/chronic use. Avoid if possible.');
+                if (drugName === 'Codeine') warnings.add('Codeine: Variable metabolism (CYP2D6), ineffective in some. High nausea/constipation. Max dose limits apply.');
                 tr.appendChild(tdName);
 
                 // --- Helper to create input cell ---
                 const createInputCell = (routeData, routeType) => {
                     const td = document.createElement('td');
-                    td.className = 'px-4 py-2 align-top';
+                    td.style.textAlign = 'right'; // Align cell content right
                     let calculatedDose = NaN;
                     let inputDisabled = true;
                     let placeholder = 'N/A';
@@ -305,98 +270,81 @@
 
                     if (routeData && routeData.omeddFactor && !isNaN(routeData.omeddFactor) && omedd >= 0) {
                          calculatedDose = omedd / routeData.omeddFactor;
-                         // Handle Fentanyl IV mcg display
-                         if (routeData.route === 'iv' && routeData.drugName === 'Fentanyl') {
-                            calculatedDose = omedd / 0.25; // Dose in mcg/day
-                         }
+                         if (routeData.route === 'iv' && routeData.drugName === 'Fentanyl') { calculatedDose = omedd / 0.25; } // mcg/day
                          inputDisabled = false;
                          placeholder = '';
-                         unitSuffix = ` ${routeData.unit}`;
-                    } else if (routeData && routeData.type === 'patch') { // Fentanyl Patch (display only)
-                         calculatedDose = NaN; // No direct calculation TO patch here (use specific tools/guidance)
+                         unitSuffix = routeData.unit;
+                    } else if (routeData && routeData.type === 'patch') {
+                         calculatedDose = NaN;
                          placeholder = 'See Notes';
                          inputDisabled = true;
-                         unitSuffix = ` (${routeData.unit})`;
-                    } else {
-                         calculatedDose = NaN; // Not available or error
-                    }
+                         unitSuffix = `(${routeData.unit})`;
+                    } else { calculatedDose = NaN; }
 
                      const input = document.createElement('input');
                      input.type = 'number';
-                     input.step = 'any';
-                     input.min = '0';
+                     input.step = 'any'; input.min = '0';
                      input.value = round(calculatedDose);
-                     input.dataset.drugKey = `${drugName.toLowerCase().replace(' ','_')}_${routeType}`; // e.g., morphine_oral
-                     input.dataset.route = routeType; // 'oral' or 'iv'
-                     input.className = 'w-24 text-right p-1 rounded result-input';
+                     input.dataset.drugKey = `${drugName.toLowerCase().replace(/\s+/g, '_')}_${routeType}`; // Ensure key format consistency
+                     input.dataset.route = routeType;
+                     input.className = 'result-input'; // Use simple CSS class
                      input.disabled = inputDisabled;
                      input.placeholder = placeholder;
                      input.addEventListener('input', handleResultEdit);
-
                      td.appendChild(input);
-                     // Add unit text after input
+
                      const unitSpan = document.createElement('span');
-                     unitSpan.className = 'ml-1 text-xs text-slate-500';
+                     unitSpan.className = 'unit-suffix'; // Simple class
                      unitSpan.textContent = unitSuffix;
                      td.appendChild(unitSpan);
-
                      return td;
                 };
 
                 // 2. Oral Dose Cell
                 tr.appendChild(createInputCell(oralData, 'oral'));
-
-                // 3. IV/SC/IM Dose Cell (Handle Patch as display only)
+                // 3. IV/SC/IM Dose Cell
                 tr.appendChild(createInputCell(ivData, ivData?.type === 'patch' ? 'patch' : 'iv'));
-
 
                 // 4. Comments Cell
                 const tdComments = document.createElement('td');
-                tdComments.className = 'px-4 py-2 comments-text align-top';
-                tdComments.textContent = displayData.comments || '';
-                tr.appendChild(tdComments);
+                tdComments.className = 'comments-text'; // Use simple class
+                let baseComment = displayData.comments || '';
+                let factorText = '';
 
+                // Build factor text
+                let factors = [];
+                 if(oralData && oralData.omeddFactor && !isNaN(oralData.omeddFactor)) {
+                    factors.push(`Oral: ${oralData.omeddFactor.toFixed(1)}x`); // Add 'x' for clarity
+                 }
+                 if(ivData && ivData.omeddFactor && !isNaN(ivData.omeddFactor)) {
+                    let routeName = (ivData.route === 'iv' ? 'IV/SC/IM' : ''); // Use IV/SC/IM for label
+                    if(routeName) factors.push(`${routeName}: ${ivData.omeddFactor.toFixed(1)}x`);
+                 }
+                  // Handle Fentanyl patch separately for comment - OMEDD comes *from* patch dose
+                  if (ivData && ivData.type === 'patch') {
+                       factors.push("Patch: See Table 2/Notes");
+                  }
+
+                 if (factors.length > 0) {
+                     factorText = `[OMEDD Factor(s) vs Oral Morphine: ${factors.join(', ')}]`;
+                 }
+
+                 // Combine base comment and factor text
+                 tdComments.innerHTML = `${baseComment}<span class="factor-note">${factorText}</span>`; // Use innerHTML to allow span styling
+
+                tr.appendChild(tdComments);
                 resultsTableBody.appendChild(tr);
             });
 
-            // Display accumulated warnings
-            if (warnings.size > 0) {
-                generalWarningDiv.innerHTML = `<span class="font-medium">Important Notes:</span><ul class="list-disc list-inside mt-1">${[...warnings].map(w => `<li>${w}</li>`).join('')}</ul>`;
-                generalWarningDiv.style.display = 'block';
-            } else {
-                 generalWarningDiv.style.display = 'none';
-            }
+            // Display warnings
+            if (warnings.size > 0) { /* ... (keep previous warning display logic) ... */ generalWarningDiv.innerHTML = `<strong>Important Notes:</strong><ul class="list-disc list-inside mt-1">${[...warnings].map(w => `<li>${w}</li>`).join('')}</ul>`; generalWarningDiv.style.display = 'block';} else { generalWarningDiv.style.display = 'none'; }
 
-            // Show results section
             resultsDiv.style.display = 'block';
-            if (!isEditTrigger) {
-                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            if (!isEditTrigger) { resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         }
 
         // --- Handler for Edits ---
-        function handleResultEdit(event) {
-            const editedInput = event.target;
-            const key = editedInput.dataset.drugKey; // e.g., morphine_oral
-            const route = editedInput.dataset.route; // 'oral' or 'iv' or 'patch'
-            const newDose = parseFloat(editedInput.value);
-
-             // Prevent recalculation if patch dose edited (not supported)
-             if (route === 'patch') {
-                 console.warn("Editing patch dose not supported for recalculation.");
-                 // Optionally reset the value or provide feedback
-                 // editedInput.value = round(NaN); // Or get original value if stored
-                 return;
-             }
-
-             if (!isInvalidInput(newDose)) {
-                  calculateAndDisplay(key, newDose, route); // Pass route info
-             } else if (editedInput.value === "") {
-                 console.log("Input cleared.");
-             } else {
-                 console.error("Invalid dose entered:", editedInput.value);
-             }
-        }
+        function handleResultEdit(event) { /* ... (keep previous handleResultEdit function) ... */ const editedInput = event.target; const key = editedInput.dataset.drugKey; const route = editedInput.dataset.route; const newDose = parseFloat(editedInput.value); if (route === 'patch') { console.warn("Editing patch dose not supported for recalculation."); return; } if (!isInvalidInput(newDose)) { calculateAndDisplay(key, newDose, route); } else if (editedInput.value === "") { console.log("Input cleared."); } else { console.error("Invalid dose entered:", editedInput.value); } }
 
         // --- Event Listeners ---
         fromOpioidRouteSelect.addEventListener('change', updateUnits);
