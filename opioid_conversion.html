@@ -243,7 +243,7 @@
         <h1>Interactive Opioid Conversion Calculator</h1>
         <p class="subtitle">Select starting opioid/route and dose to calculate approximate equivalents. Results are editable. (Based on Table 1 / BNF Aug 2020)</p>
 
-        {/* --- INPUT FORM --- */}
+        /* --- INPUT FORM --- */
         <form id="opioidForm">
             <fieldset> {/* Removed form-section class, margin-bottom handles spacing */}
                 <legend>Starting Opioid Information</legend>
@@ -266,7 +266,7 @@
                  <p class="input-note">Enter <strong>total dose per 24 hours</strong> for oral/IV/SC/IM, or <strong>patch strength</strong> (mcg/hr).</p>
             </fieldset>
 
-            {/* --- BUTTONS --- */}
+            /* --- BUTTONS --- */
             <div class="button-container-box"> {/* Specific container */}
                  <div class="button-wrapper">
                     <button type="button" id="calculateBtn">Calculate Equivalents</button>
@@ -275,7 +275,7 @@
             </div>
         </form>
 
-        {/* --- RESULTS AREA --- */}
+        /* --- RESULTS AREA --- */
         <div id="results" style="display: none;">
              <div> {/* Results section wrapper */}
                  <p class="result-title">Calculated Basis</p>
@@ -283,11 +283,11 @@
                 <p id="calculation_note"></p> {/* Removed class, styled directly or via parent */}
             </div>
 
-            {/* --- Warnings --- */}
+            /* --- Warnings --- */
             <div id="methadone_warning" class="warning-box" style="display: none;"></div>
             <div id="general_warning" class="warning-box" style="display: none;"></div>
 
-             {/* --- RESULTS TABLE --- */}
+             /* --- RESULTS TABLE --- */
              <div> {/* Results section wrapper */}
                   <p class="result-title">Approximate Equivalent Doses</p>
                  <p style="font-size: 0.8rem; color: #475569; margin-bottom: 0.75rem;">Values below are editable. Changing a dose will recalculate others.</p>
@@ -308,7 +308,7 @@
                  </div>
              </div>
 
-             {/* --- Footer Notes/Disclaimer --- */}
+             /* --- Footer Notes/Disclaimer --- */
              <p class="footer-note">
                 <strong>Important:</strong> These are *approximate* calculations based on single-dose studies/BNF/Table 1. Individual response varies significantly. Tolerance develops with chronic use. Due to incomplete cross-tolerance, **always reduce the calculated dose (e.g., by 25-50%) when switching opioids**, especially at high doses or in frail patients, and titrate carefully to clinical response. Refer to current guidelines and consider patient factors (renal/hepatic function, age, pain level, previous exposure).
             </p>
@@ -316,9 +316,9 @@
                 <strong>Disclaimer:</strong> This tool is for informational/educational purposes ONLY and NOT a substitute for professional clinical judgment. Dosing must be individualized by a qualified healthcare provider. Calculation errors possible. Use with extreme caution.
             </p>
         </div>
-        {/* --- End Results Area --- */}
+        /* --- End Results Area --- */
 
-    </div> {/* --- End Main Container --- */}
+    </div> /* --- End Main Container --- */
 
     <script>
         // --- Opioid Data Store (Keep as is) ---
