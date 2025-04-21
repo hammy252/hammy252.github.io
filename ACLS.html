@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACLS Algorithm Simulation</title>
+    <style>
+        /* --- Base & Body (From HepB Style) --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            background-color: #f8fafc;
+            color: #334155;
+            padding: 20px;
+        }
+
+        /* --- Main Container --- */
+        .main-container {
+            max-width: 1000px; /* Wider for algorithm table */
+            margin: 20px auto;
+            padding: 30px 35px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Headings & Subtitle --- */
+        h1 { font-size: 1.875rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; text-align: center; border-bottom: none; }
+        p.subtitle { font-size: 1rem; color: #475569; margin-bottom: 2rem; text-align: center; }
+
+        /* --- Form & Fieldset --- */
+        fieldset {
+            border: 1px solid #e2e8f0; padding: 20px 25px; border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); background-color: #ffffff; margin-bottom: 1.5rem;
+        }
+        legend { font-size: 1.125rem; font-weight: 600; color: #1e293b; padding: 0 0.5rem; margin-left: -0.5rem; border: none; margin-bottom: 0.75rem; /* Add some bottom margin */ }
+
+        /* --- Input Grid & Labels --- */
+        .input-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem 1.5rem; margin-top: 0.75rem; }
+        @media (min-width: 768px) { .input-grid { grid-template-columns: repeat(2, 1fr); } } /* Adjust grid if more inputs needed */
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: #334155; margin-bottom: 0.25rem; }
+
+        /* --- Select Field --- */
+        select {
+            margin-top: 0.25rem; display: block; width: 100%; border-radius: 0.375rem; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); padding: 0.625rem; font-size: 0.875rem; background-color: #ffffff; color: #0f172a; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+        /* --- Button Container & Buttons --- */
+        .button-container-box { margin-top: 2rem; padding: 1.5rem 1rem 1rem 1rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); text-align: center; }
+        .button-wrapper { display: inline-flex; gap: 1rem; }
+        button { padding: 0.625rem 1.5rem; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; border: none; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); cursor: pointer; transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease; }
+        button:focus { outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        #startBtn { background-color: #2563eb; color: white; }
+        #startBtn:hover { background-color: #1d4ed8; }
+        #startBtn:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); }
+        #resetBtn { background-color: #e2e8f0; color: #1e293b; }
+        #resetBtn:hover { background-color: #cbd5e1; }
+        #resetBtn:focus { box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.4); }
+
+        /* --- Results Area --- */
+        #results { margin-top: 2rem; padding: 1.5rem; background-color: #f1f5f9; /* Lighter blue/gray */ border: 1px solid #e2e8f0; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); }
+        #results h2 { font-size: 1.25rem; color: #1e293b; border-bottom: 1px solid #cbd5e1; margin-bottom: 1rem; padding-bottom: 0.5rem; }
+
+        /* --- Algorithm Table --- */
+        .algorithm-table-container { overflow-x: auto; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); border-radius: 0.5rem; border: 1px solid #e2e8f0; margin-top: 0.5rem; background-color: #fff; }
+        .algorithm-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left; color: #334155; }
+        .algorithm-table thead { background-color: #e2e8f0; color: #1e293b; font-size: 0.75rem; text-transform: uppercase; }
+        .algorithm-table th { padding: 0.75rem 1rem; border-bottom: 1px solid #cbd5e1; font-weight: 600; text-align: center; }
+        .algorithm-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: middle; /* Center content vertically */ text-align: center; line-height: 1.4; }
+        .algorithm-table tbody tr:last-child td { border-bottom: none; }
+        .algorithm-table td:first-child { font-weight: 600; color: #0f172a; } /* Time column bold */
+        .algorithm-table td ul { list-style: disc; padding-left: 1.5rem; text-align: left; margin-top: 0.25rem; } /* Nicer lists */
+        .algorithm-table .action-cpr { background-color: #f0fdf4; } /* Light green tint for CPR */
+        .algorithm-table .action-meds { background-color: #fefce8; } /* Light yellow tint for Meds */
+        .algorithm-table .action-shock { background-color: #fef2f2; font-weight: 500; } /* Light red tint for Shock */
+        .algorithm-table .action-rhythm-check { background-color: #eff6ff; font-weight: 500; } /* Light blue tint */
+        .algorithm-table .action-consider { font-style: italic; color: #475569; }
+
+        /* Footer notes/disclaimer */
+        .footer-note { font-size: 0.75rem; color: #475569; margin-top: 1.5rem; line-height: 1.4; }
+        .footer-disclaimer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.75rem; color: #dc2626; font-weight: 600; }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>ACLS Algorithm Simulation</h1>
+        <p class="subtitle">Select the initial cardiac arrest rhythm to view a simulated minute-by-minute guide for the team leader.</p>
+
+        <form id="aclsForm">
+            <fieldset>
+                <legend>Initial Rhythm</legend>
+                <div class="input-grid">
+                    <div> <!-- Grid cell for select -->
+                        <label for="initial_rhythm">Select Initial Arrest Rhythm:</label>
+                        <select id="initial_rhythm" name="initial_rhythm" required>
+                            <option value="">-- Select Rhythm --</option>
+                            <option value="vf">VF / Pulseless VT (Shockable)</option>
+                            <option value="pea">Asystole / PEA (Non-Shockable)</option>
+                        </select>
+                    </div>
+                     <div><!-- Empty cell for grid alignment if needed --></div>
+                </div>
+            </fieldset>
+
+            <div class="button-container-box">
+                 <div class="button-wrapper">
+                    <button type="button" id="startBtn">Show Algorithm</button>
+                    <button type="reset" id="resetBtn">Reset</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="results" style="display: none;">
+            <h2 id="algorithm_title">ACLS Algorithm: [Rhythm]</h2>
+
+            <div class="algorithm-table-container">
+                <table class="algorithm-table">
+                     <thead>
+                         <tr>
+                             <th>Time (Approx)</th>
+                             <th>Rhythm Check / Shock</th>
+                             <th>CPR</th>
+                             <th>Medications</th>
+                             <th>Key Considerations</th>
+                         </tr>
+                     </thead>
+                     <tbody id="algorithm_steps">
+                         <!-- Algorithm steps will be populated here by JS -->
+                     </tbody>
+                 </table>
+             </div>
+
+             <p class="footer-note">
+                <strong>Note:</strong> This is a *simplified simulation* based on standard ACLS algorithms. Actual resuscitation is dynamic. Focus on **High-Quality CPR**: Push hard (≥2 inches/5 cm), fast (100-120/min), allow full chest recoil, minimize interruptions, avoid excessive ventilation. Check pulse only if organized rhythm appears. Treat reversible causes (H's & T's) throughout.
+            </p>
+             <p class="footer-disclaimer">
+                <strong>Disclaimer:</strong> For educational and informational purposes ONLY. NOT a substitute for ACLS certification, clinical training, or real-time medical direction. Does not replace clinical judgment. Follow current AHA/ERC guidelines.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const form = document.getElementById('aclsForm');
+        const rhythmSelect = document.getElementById('initial_rhythm');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsDiv = document.getElementById('results');
+        const algorithmTitle = document.getElementById('algorithm_title');
+        const algorithmStepsBody = document.getElementById('algorithm_steps');
+
+        // --- Helper Function ---
+        function createCell(content, className = '') {
+            const cell = document.createElement('td');
+            cell.innerHTML = content; // Use innerHTML to allow lists etc.
+            if (className) {
+                cell.classList.add(className);
+            }
+            return cell;
+        }
+
+        // --- Generate Algorithm Steps ---
+        function generateAlgorithmSteps(initialRhythm) {
+            algorithmStepsBody.innerHTML = ''; // Clear previous steps
+            let algorithmName = '';
+            let shockable = false;
+
+            if (initialRhythm === 'vf') {
+                algorithmName = 'VF / Pulseless VT';
+                shockable = true;
+            } else if (initialRhythm === 'pea') {
+                algorithmName = 'Asystole / PEA';
+                shockable = false;
+            } else {
+                return; // Should not happen
+            }
+
+            algorithmTitle.textContent = `ACLS Algorithm: ${algorithmName}`;
+
+            for (let minute = 0; minute < 30; minute += 2) {
+                const row = document.createElement('tr');
+                let rhythmCheckContent = `Rhythm Check #${(minute / 2) + 1}`;
+                let shockContent = '-';
+                let cprContent = `CPR Cycle ${Math.ceil((minute + 1) / 2)} (2 mins)`; // Start cycle 1
+                let medsContent = '-';
+                let considerationsContent = [];
+
+                // --- Actions based on time and rhythm ---
+
+                // Minute 0: Initial Actions + First Check/Shock
+                if (minute === 0) {
+                     cprContent = `<ul><li>Start High-Quality CPR</li><li>Give Oxygen</li><li>Attach Monitor/Defib</li></ul>`;
+                     if (shockable) {
+                         shockContent = `<b>Shock #${(minute / 2) + 1}</b><br>(Defibrillate)`;
+                     } else {
+                         shockContent = '(No Shock Advised)';
+                     }
+                     considerationsContent.push("Confirm rhythm");
+                     considerationsContent.push("Establish IV/IO access");
+                } else {
+                    // Subsequent Cycles
+                     rhythmCheckContent = `Rhythm Check #${(minute / 2) + 1}`;
+                      if (shockable) {
+                          shockContent = `<b>Shock #${(minute / 2) + 1}</b><br>(If VF/pVT persists)`;
+                      } else {
+                          shockContent = '(No Shock Advised)';
+                      }
+                }
+
+                 // CPR always follows check/shock (except start)
+                 if (minute >= 0) { // Apply CPR styling to all CPR cycles
+                      cprContent = `<b>IMMEDIATELY Resume CPR</b><br>(2 minutes)`;
+                 }
+
+                 // Medications (Approximate Timing)
+                 if (minute >= 2) { // Epi starts after 1st shock/check cycle
+                    if (minute % 4 === 2) { // Give Epi every ~4 mins (Cycle 2, 4, 6...)
+                         medsContent = `<b>Epinephrine 1mg IV/IO</b><br>(Repeat q3-5 min)`;
+                    }
+                 }
+                 if (shockable && minute >= 4) { // Antiarrhythmics after 2 shocks (start of 3rd CPR cycle)
+                    if (minute === 4) { // First dose consideration
+                        medsContent += (medsContent !== '-' ? '<br>' : '') + `<b>Amiodarone 300mg IV/IO</b><br>(OR Lidocaine 1-1.5mg/kg)`;
+                    } else if (minute === 8 || minute === 12) { // Consider second dose later if needed and VF/pVT refractory
+                         medsContent += (medsContent !== '-' ? '<br>' : '') + `<i>Consider 2nd dose Amio 150mg<br>(OR Lido 0.5-0.75mg/kg)</i>`;
+                    }
+                 }
+
+                 // Considerations
+                 if (minute >= 2) considerationsContent.push("Consider advanced airway / capnography");
+                 considerationsContent.push("<b>Treat Reversible Causes (H's & T's)</b>");
+                 if (!shockable) considerationsContent.push("Check for pulse if organized rhythm");
+                 if (minute >= 10) considerationsContent.push("Consider prognosis / termination discussion");
+
+
+                // --- Build Row ---
+                row.appendChild(createCell(`Min ${minute} - ${minute + 2}`));
+                row.appendChild(createCell(shockable ? shockContent : rhythmCheckContent, shockable ? 'action-shock' : 'action-rhythm-check')); // Combine check/shock for shockable
+                row.appendChild(createCell(cprContent, 'action-cpr'));
+                row.appendChild(createCell(medsContent, medsContent !== '-' ? 'action-meds' : ''));
+                row.appendChild(createCell(`<ul>${considerationsContent.map(c => `<li>${c}</li>`).join('')}</ul>`, 'action-consider')); // Display considerations as list
+
+                algorithmStepsBody.appendChild(row);
+            }
+        }
+
+        // --- Event Handlers ---
+        function handleStart() {
+            const selectedRhythm = rhythmSelect.value;
+            if (selectedRhythm) {
+                generateAlgorithmSteps(selectedRhythm);
+                resultsDiv.style.display = 'block';
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                alert('Please select an initial rhythm.');
+            }
+        }
+
+        function handleReset() {
+            form.reset();
+            resultsDiv.style.display = 'none';
+            algorithmStepsBody.innerHTML = '';
+        }
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', handleStart);
+        resetBtn.addEventListener('click', handleReset);
+
+        // Hide results on load or if select changes
+         rhythmSelect.addEventListener('change', () => {
+             if (resultsDiv.style.display !== 'none') {
+                 resultsDiv.style.display = 'none';
+             }
+         });
+
+        // --- Initial Setup ---
+         handleReset(); // Start with a clean slate
+
+    </script>
+
+</body>
+</html>
