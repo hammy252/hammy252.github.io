@@ -5,88 +5,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Opioid Conversion Calculator</title>
     <style>
-        /* --- Basic Reset & Global Styles (Adapted from HepB/Cirrhosis Tool) --- */
+        /* --- Base & Body --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; line-height: 1.6; background-color: #f8f9fa; color: #333; padding: 15px; }
-
-        /* --- Main Container --- */
-        .main-container { max-width: 900px; /* Wider for table */ margin: 20px auto; padding: 25px; background-color: #fff; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        /* --- Headings & Text --- */
-        h1, h2, h3 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; }
-        h1 { font-size: 1.8em; text-align: center; border-bottom-width: 2px; margin-bottom: 20px; }
-        h2 { font-size: 1.4em; margin-top: 30px; color: #0056b3; border-bottom-style: dashed;}
-        h3 { font-size: 1.2em; margin-top: 20px; color: #555; border-bottom: none; margin-bottom: 10px;}
-        .subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 0.95em; }
-
-        /* --- Form Styling --- */
-        .form-section { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #eee; }
-        .form-section:last-of-type { border-bottom: none; padding-bottom: 0; }
-        legend { font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #555; }
-        form label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
-        form input[type="number"], form select { width: 100%; padding: 9px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.95em; }
-        form input[type="number"]::placeholder { color: #aaa; }
-
-        /* Grid for Inputs */
-        .input-grid { display: grid; grid-template-columns: 1fr; gap: 15px 20px; }
-        @media (min-width: 600px) { .input-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        .unit-label { font-size: 0.85em; color: #555; display: inline-block; margin-left: 5px; }
-
-        /* --- Button Styling --- */
-        .button-container { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
-        form button { background-color: #007bff; color: white; padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; font-size: 1.0em; margin: 0 8px; transition: background-color 0.2s ease; }
-        form button:hover { background-color: #0056b3; }
-        form button[type="reset"] { background-color: #6c757d; }
-        form button[type="reset"]:hover { background-color: #5a6268; }
-
-        /* --- Results Area --- */
-        #results { margin-top: 30px; background-color: #f0f8ff; padding: 20px; border: 1px solid #b3d7ff; border-radius: 8px; }
-        .result-section { margin-bottom: 20px; }
-        .result-section h3 { color: #004a99; border-bottom: 1px dotted #99c2ff; margin-bottom: 12px; padding-bottom: 3px;}
-        .result-basis-note { font-size: 0.9em; color: #555; margin-top: -10px; margin-bottom: 15px;}
-        .warning-box { padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9em; }
-        .warning-box strong, .warning-box span { font-weight: bold; }
-        .warning-box ul { margin-top: 5px; padding-left: 20px; }
-        #methadone_warning { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-        #general_warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
-
-        /* --- Results Table Styling --- */
-        .results-table-container { overflow-x: auto; border: 1px solid #ccc; border-radius: 4px; margin-top: 10px;}
-        .results-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
-        .results-table th, .results-table td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; vertical-align: top; /* Align content top */ }
-        .results-table thead th { background-color: #e9ecef; font-weight: bold; color: #495057; position: sticky; top: 0; z-index: 1; }
-        .results-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        .results-table tbody tr:hover { background-color: #f1f1f1; }
-        .results-table input[type="number"] { /* Editable fields */
-            width: 70px; /* Fixed width */
-            padding: 4px 6px;
-            font-size: 0.95em;
-            text-align: right;
-            border: 1px solid #d1d5db; /* Light gray border */
-            border-radius: 3px;
-            background-color: #f9fafb; /* Very light gray */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            background-color: #f8fafc; /* Very light gray background (like slate-50) */
+            color: #334155; /* Darker gray text (like slate-700) */
+            padding: 20px;
         }
-        .results-table input[type="number"]:focus {
-             background-color: white;
-             border-color: #3b82f6; /* Blue */
-             outline: none;
-             box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
-         }
-         .results-table input[type="number"]:disabled {
-             background-color: #e5e7eb; /* Disabled gray */
-             cursor: not-allowed;
-             color: #6b7280;
-             border-color: #d1d5db;
-         }
-        .results-table .unit-suffix { margin-left: 4px; font-size: 0.85em; color: #6b7280; }
-        .comments-text { font-size: 0.85em; line-height: 1.3; color: #4b5563; }
-        .comments-text .factor-note { display: block; margin-top: 4px; font-style: italic; color: #6b7280; } /* Style for factor note */
 
-        /* --- Disclaimer --- */
-        .disclaimer { margin-top: 25px; font-style: italic; color: #dc3545; font-size: 0.85em; font-weight: bold; text-align: center; border: 1px solid #f5c6cb; padding: 10px; background-color: #f8d7da; border-radius: 4px; }
-        .disclaimer strong { color: #721c24; }
+        /* --- Main Container (Inspired by HepB) --- */
+        .main-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px 35px; /* More padding */
+            background-color: #ffffff; /* White background */
+            border: 1px solid #e2e8f0; /* Light border (like slate-200) */
+            border-radius: 0.75rem; /* Larger radius (like rounded-xl) */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
+        }
+
+        /* --- Headings & Subtitle --- */
+        h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* bold */
+            color: #1e293b; /* Darkest gray (like slate-800) */
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+            border-bottom: none; /* Remove default border */
+        }
+        p.subtitle {
+            font-size: 1rem; /* text-base */
+            color: #475569; /* Medium gray (like slate-600) */
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+        }
+
+        /* --- Form & Fieldset (Inspired by HepB) --- */
+        form { space-y: 1.5rem; } /* Replaced with margin-bottom on fieldset */
+        fieldset {
+            border: 1px solid #e2e8f0; /* slate-200 */
+            padding: 20px 25px; /* p-5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* shadow-sm */
+            background-color: #ffffff;
+            margin-bottom: 1.5rem; /* Vertical spacing */
+        }
+        legend {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* semibold */
+            color: #1e293b; /* slate-800 */
+            padding: 0 0.5rem; /* px-2 */
+            margin-left: -0.5rem; /* -ml-2 (slight adjustment might be needed) */
+            border: none; /* Remove default border */
+            margin-bottom: 0; /* Reset margin */
+        }
+
+        /* --- Input Grid & Labels --- */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem 1.5rem; /* gap-y-5 gap-x-6 */
+            margin-top: 0.75rem; /* mt-3 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .input-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        label {
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #334155; /* slate-700 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+
+        /* --- Select & Input Fields (Inspired by HepB) --- */
+        select, input[type="number"] {
+            margin-top: 0.25rem; /* mt-1 */
+            display: block;
+            width: 100%;
+            border-radius: 0.375rem; /* rounded-md */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* shadow-sm */
+            padding: 0.625rem; /* p-2.5 */
+            font-size: 0.875rem; /* sm:text-sm */
+            background-color: #ffffff;
+            color: #0f172a; /* slate-900 */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* focus:ring focus:ring-blue-500 focus:ring-opacity-50 */
+        }
+        /* Remove number spinners */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .input-group { display: flex; align-items: center; gap: 0.5rem; } /* For dose + unit */
+        .input-group input[type="number"] { flex-grow: 1; margin-top: 0; }
+        .unit-label { white-space: nowrap; font-size: 0.875rem; color: #475569; }
+
+        p.input-note { font-size: 0.75rem; color: #64748b; margin-top: 0.75rem; }
+
+        /* --- Button Container & Buttons (Inspired by HepB) --- */
+        .button-container-box {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem 1rem 1rem 1rem; /* pt-6 pb-4 px-4 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* shadow-sm */
+            text-align: center; /* Center buttons */
+        }
+        .button-wrapper { display: inline-flex; /* Allow spacing */ gap: 1rem; /* space-x-4 */}
+        button {
+            padding: 0.625rem 1.5rem; /* px-6 py-2.5 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            border-radius: 0.375rem; /* rounded-md */
+            border: none;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease;
+        }
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Default ring, adjust color per button */
+        }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Primary Button */
+        #calculateBtn {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+        }
+        #calculateBtn:hover { background-color: #1d4ed8; /* hover:bg-blue-700 */ }
+        #calculateBtn:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); /* focus:ring-blue-500 */}
+
+        /* Secondary Button */
+        #resetBtn {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            color: #1e293b; /* text-slate-800 */
+        }
+        #resetBtn:hover { background-color: #cbd5e1; /* hover:bg-slate-300 */ }
+        #resetBtn:focus { box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.4); /* focus:ring-slate-400 */}
+
+        /* --- Results Area (Inspired by HepB) --- */
+        #results {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem; /* p-6 */
+            background-color: #eef2ff; /* bg-blue-50 */
+            border: 1px solid #c7d2fe; /* border-blue-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); /* shadow-md */
+            /* space-y-4 managed by margin on inner elements */
+        }
+        #results > div { margin-bottom: 1.5rem; } /* Space between sections */
+        #results > div:last-child { margin-bottom: 0; }
+
+        .result-title {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #1e3a8a; /* text-blue-800 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* tracking-wider */
+            margin-bottom: 0.5rem;
+        }
+        #omedd_value { font-size: 1.1em; font-weight: 600; color: #1d4ed8; /* text-blue-700 */}
+        #calculation_note { font-size: 0.8rem; color: #475569; margin-top: 0.25rem;}
+
+        /* Warnings */
+        .warning-box { padding: 1rem; margin-bottom: 1rem; border-radius: 0.375rem; font-size: 0.875rem; border: 1px solid transparent;}
+        .warning-box span { font-weight: 500; }
+        .warning-box ul { margin-top: 0.5rem; padding-left: 1.25rem; list-style: disc; }
+        #methadone_warning { background-color: #fee2e2; border-color: #fecaca; color: #991b1b; } /* bg-red-100 border-red-300 text-red-800 */
+        #general_warning { background-color: #fefce8; border-color: #fef08a; color: #854d0e; } /* bg-amber-50 border-amber-300 text-amber-800 */
+
+        /* Results Table */
+        .results-table-container {
+            overflow-x: auto;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* shadow-sm */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            margin-top: 0.5rem;
+        }
+        .results-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left; color: #334155; }
+        .results-table thead { background-color: #f1f5f9; /* bg-slate-100 */ color: #334155; font-size: 0.75rem; text-transform: uppercase; }
+        .results-table th { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; font-weight: 600;}
+        .results-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; background-color: #ffffff;}
+        .results-table tbody tr:last-child td { border-bottom: none; }
+        .results-table tbody tr:hover td { background-color: #f8fafc; } /* hover:bg-slate-50 */
+
+        .results-table input[type="number"] { /* Editable fields */
+            width: 80px; /* Fixed width */
+            padding: 0.375rem 0.5rem; /* p-1.5ish */
+            font-size: 0.875rem;
+            text-align: right;
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            border-radius: 0.25rem; /* rounded */
+            background-color: #f8fafc; /* bg-slate-50 */
+        }
+         .results-table input[type="number"]:focus {
+             background-color: white;
+             border-color: #3b82f6; /* focus:border-blue-500 */
+             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* focus:ring */
+             outline: none;
+         }
+        .results-table input[type="number"]:disabled {
+            background-color: #f1f5f9; /* bg-slate-100 */
+            cursor: not-allowed;
+            color: #64748b; /* slate-500 */
+            border-color: #e2e8f0; /* slate-200 */
+        }
+        .results-table .unit-suffix { margin-left: 0.25rem; font-size: 0.75rem; color: #64748b; }
+        .comments-text { font-size: 0.8rem; line-height: 1.4; color: #475569; }
+        .comments-text .factor-note { display: block; margin-top: 0.25rem; font-style: italic; color: #64748b; }
+
+        /* Footer notes/disclaimer */
+        .footer-note { font-size: 0.75rem; color: #475569; margin-top: 1.5rem; line-height: 1.4; }
+        .footer-disclaimer {
+             margin-top: 1.5rem; /* space */
+             padding-top: 1rem; /* space */
+             border-top: 1px solid #e2e8f0; /* border-slate-200 */
+             font-size: 0.75rem; /* text-xs */
+             color: #dc2626; /* text-red-600 */
+             font-weight: 600; /* semibold */
+        }
+
     </style>
 </head>
 <body>
@@ -97,7 +245,7 @@
 
         {/* --- INPUT FORM --- */}
         <form id="opioidForm">
-            <fieldset class="form-section">
+            <fieldset> {/* Removed form-section class, margin-bottom handles spacing */}
                 <legend>Starting Opioid Information</legend>
                 <div class="input-grid">
                     <div>
@@ -109,28 +257,30 @@
                     </div>
                     <div>
                         <label for="from_dose">Current Dose:</label>
-                         <div style="display: flex; align-items: center;">
-                            <input type="number" id="from_dose" name="from_dose" required min="0" step="any" style="flex-grow: 1; margin-bottom: 0;"> {/* Adjust style */}
+                         <div class="input-group"> {/* Wrap input and label */}
+                            <input type="number" id="from_dose" name="from_dose" required min="0" step="any">
                             <span id="dose_unit_label" class="unit-label">(Unit)</span>
                         </div>
                     </div>
                 </div>
-                 <p style="font-size: 0.8em; color: #666; margin-top: 5px;">Enter <strong>total dose per 24 hours</strong> for oral/IV/SC/IM, or <strong>patch strength</strong> (mcg/hr).</p>
+                 <p class="input-note">Enter <strong>total dose per 24 hours</strong> for oral/IV/SC/IM, or <strong>patch strength</strong> (mcg/hr).</p>
             </fieldset>
 
             {/* --- BUTTONS --- */}
-            <div class="button-container">
-                <button type="button" id="calculateBtn">Calculate Equivalents</button>
-                <button type="reset" id="resetBtn">Reset</button>
+            <div class="button-container-box"> {/* Specific container */}
+                 <div class="button-wrapper">
+                    <button type="button" id="calculateBtn">Calculate Equivalents</button>
+                    <button type="reset" id="resetBtn">Reset</button>
+                </div>
             </div>
         </form>
 
         {/* --- RESULTS AREA --- */}
         <div id="results" style="display: none;">
-             <div class="result-section">
-                 <h3>Calculated Basis</h3>
-                <p>Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value" style="font-size: 1.1em;">[OMEDD]</strong> mg</p>
-                <p id="calculation_note" class="result-basis-note"></p>
+             <div> {/* Results section wrapper */}
+                 <p class="result-title">Calculated Basis</p>
+                <p>Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value">[OMEDD]</strong> mg</p>
+                <p id="calculation_note"></p> {/* Removed class, styled directly or via parent */}
             </div>
 
             {/* --- Warnings --- */}
@@ -138,17 +288,17 @@
             <div id="general_warning" class="warning-box" style="display: none;"></div>
 
              {/* --- RESULTS TABLE --- */}
-             <div class="result-section">
-                  <h3>Approximate Equivalent Doses</h3>
-                 <p style="font-size: 0.85em; color: #555; margin-bottom: 10px;">Values below are editable. Changing a dose will recalculate others based on that new value.</p>
+             <div> {/* Results section wrapper */}
+                  <p class="result-title">Approximate Equivalent Doses</p>
+                 <p style="font-size: 0.8rem; color: #475569; margin-bottom: 0.75rem;">Values below are editable. Changing a dose will recalculate others.</p>
                 <div class="results-table-container">
                     <table class="results-table">
                          <thead>
                              <tr>
-                                 <th scope="col">Opioid</th>
-                                 <th scope="col" style="text-align: right;">Oral Dose</th>
-                                 <th scope="col" style="text-align: right;">IV/SC/IM Dose</th>
-                                 <th scope="col">Comments / Notes</th>
+                                 <th>Opioid</th>
+                                 <th style="text-align: right;">Oral Dose</th>
+                                 <th style="text-align: right;">IV/SC/IM Dose</th>
+                                 <th>Comments / Notes</th>
                              </tr>
                          </thead>
                          <tbody id="results_table_body">
@@ -159,203 +309,100 @@
              </div>
 
              {/* --- Footer Notes/Disclaimer --- */}
-             <p style="font-size: 0.8em; color: #555; margin-top: 15px; line-height: 1.4;">
+             <p class="footer-note">
                 <strong>Important:</strong> These are *approximate* calculations based on single-dose studies/BNF/Table 1. Individual response varies significantly. Tolerance develops with chronic use. Due to incomplete cross-tolerance, **always reduce the calculated dose (e.g., by 25-50%) when switching opioids**, especially at high doses or in frail patients, and titrate carefully to clinical response. Refer to current guidelines and consider patient factors (renal/hepatic function, age, pain level, previous exposure).
             </p>
-             <div class="disclaimer">
+             <p class="footer-disclaimer">
                 <strong>Disclaimer:</strong> This tool is for informational/educational purposes ONLY and NOT a substitute for professional clinical judgment. Dosing must be individualized by a qualified healthcare provider. Calculation errors possible. Use with extreme caution.
-            </div>
+            </p>
         </div>
-    </div>
+        {/* --- End Results Area --- */}
+
+    </div> {/* --- End Main Container --- */}
 
     <script>
-        // --- Opioid Data Store (Revised) ---
-        // Base: 1mg Oral Morphine = 1 OMEDD
-        // omeddFactor: How many mg OMEDD is 1mg of this drug/route equivalent to?
-        const opioids = {
-            'morphine_oral': { drugName: 'Morphine', route: 'oral', unit: 'mg/day', omeddFactor: 1, comments: 'Generally first choice. Caution severe renal impairment.' },
-            'morphine_iv': { drugName: 'Morphine', route: 'iv', unit: 'mg/day', omeddFactor: 2.5, comments: 'Use lower end initial dose in elderly/renal/hepatic.' }, // 10mg IV = 25mg Oral equiv
-            'hydromorphone_oral': { drugName: 'Hydromorphone', route: 'oral', unit: 'mg/day', omeddFactor: 5, comments: 'Preferred in renal disease? (Check local guidance)' },
-            'hydromorphone_iv': { drugName: 'Hydromorphone', route: 'iv', unit: 'mg/day', omeddFactor: 16.67, comments: 'Preferred in renal? Cont. infusion possible.' }, // Based on Table1: 1.5mg IV = 25mg OM equiv
-            'codeine_oral': { drugName: 'Codeine', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Max 240mg/day suggested. Metabolism variable (CYP2D6). Ineffective in ~10% Caucasians. High constipation/nausea.' },
-            'codeine_iv': { drugName: 'Codeine', route: 'iv', unit: 'mg/day', omeddFactor: 0.208, comments: 'IM/SC ONLY, NOT IV (per Table 1). Max 60mg/dose suggested. Use discouraged. High side effects.' }, // Based on Table1: 120mg IM/SC = 25mg OM equiv
-            'oxycodone_oral': { drugName: 'Oxycodone', route: 'oral', unit: 'mg/day', omeddFactor: 1.5, comments: 'Suitable for mild-mod pain. Check formulary status.' },
-            'oxycodone_iv': { drugName: 'Oxycodone', route: 'iv', unit: 'mg/day', omeddFactor: NaN, comments: 'IV not listed in Table 1. Consult specific product info if available/used.' }, // Not standard
-            'meperidine_oral': { drugName: 'Meperidine', route: 'oral', unit: 'mg/day', omeddFactor: 0.083, comments: 'NOT recommended chronic use. Neurotoxic metabolite (normeperidine) accumulates in renal failure/high dose/elderly. Risk seizures. Max duration 48h / 600mg/day suggested.' },
-            'meperidine_iv': { drugName: 'Meperidine', route: 'iv', unit: 'mg/day', omeddFactor: 0.333, comments: 'NOT recommended chronic use. Neurotoxicity risk (see Oral).' }, // Based on Table1: 75mg IV = 25mg OM equiv
-            'fentanyl_iv': { drugName: 'Fentanyl', route: 'iv', unit: 'mcg/day', omeddFactor: 0.25, comments: 'Very short acting (IV bolus). Used procedures, PCA, infusion. Unit is mcg/day here for calculation; clinical use often mcg/hr.' }, // Based on Table1: 100mcg IV = 25mg OM equiv => 1mcg IV = 0.25mg OMEDD
-            'fentanyl_patch': { drugName: 'Fentanyl', route: 'patch', unit: 'mcg/hr', type: 'patch', conversionTable: { 12: 30, 25: 60, 50: 120, 75: 180, 100: 240 }, comments: 'Transdermal. NOT for acute pain. Slow onset/offset. Use Table 2/conversion guidance.' },
-            'methadone_oral': { drugName: 'Methadone', route: 'oral', unit: 'mg/day', type: 'special', comments: 'Highly variable. Specialist advice MANDATORY. QTc risk.' },
-            'tapentadol_oral': { drugName: 'Tapentadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.4, comments: 'Also NRI activity. Conversion approximate. Max dose typically 500-600mg/day.' },
-            'tramadol_oral': { drugName: 'Tramadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Also SNRI activity. Seizure risk. Max dose 400mg/day. Variable metabolism (CYP2D6).' }
-        };
+        // --- Opioid Data Store (Keep as is) ---
+        const opioids = { /* ... OPIOID DATA OBJECT FROM PREVIOUS RESPONSE ... */ 'morphine_oral': { drugName: 'Morphine', route: 'oral', unit: 'mg/day', omeddFactor: 1, comments: 'Generally first choice. Caution severe renal impairment.' }, 'morphine_iv': { drugName: 'Morphine', route: 'iv', unit: 'mg/day', omeddFactor: 2.5, comments: 'Use lower end initial dose in elderly/renal/hepatic.' }, 'hydromorphone_oral': { drugName: 'Hydromorphone', route: 'oral', unit: 'mg/day', omeddFactor: 5, comments: 'Preferred in renal disease? (Check local guidance)' }, 'hydromorphone_iv': { drugName: 'Hydromorphone', route: 'iv', unit: 'mg/day', omeddFactor: 16.67, comments: 'Preferred in renal? Cont. infusion possible.' }, 'codeine_oral': { drugName: 'Codeine', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Max 240mg/day suggested. Metabolism variable (CYP2D6). Ineffective in ~10% Caucasians. High constipation/nausea.' }, 'codeine_iv': { drugName: 'Codeine', route: 'iv', unit: 'mg/day', omeddFactor: 0.208, comments: 'IM/SC ONLY, NOT IV (per Table 1). Max 60mg/dose suggested. Use discouraged. High side effects.' }, 'oxycodone_oral': { drugName: 'Oxycodone', route: 'oral', unit: 'mg/day', omeddFactor: 1.5, comments: 'Suitable for mild-mod pain. Check formulary status.' }, 'oxycodone_iv': { drugName: 'Oxycodone', route: 'iv', unit: 'mg/day', omeddFactor: NaN, comments: 'IV not listed in Table 1. Consult specific product info if available/used.' }, 'meperidine_oral': { drugName: 'Meperidine', route: 'oral', unit: 'mg/day', omeddFactor: 0.083, comments: 'NOT recommended chronic use. Neurotoxic metabolite (normeperidine) accumulates in renal failure/high dose/elderly. Risk seizures. Max duration 48h / 600mg/day suggested.' }, 'meperidine_iv': { drugName: 'Meperidine', route: 'iv', unit: 'mg/day', omeddFactor: 0.333, comments: 'NOT recommended chronic use. Neurotoxicity risk (see Oral).' }, 'fentanyl_iv': { drugName: 'Fentanyl', route: 'iv', unit: 'mcg/day', omeddFactor: 0.25, comments: 'Very short acting (IV bolus). Used procedures, PCA, infusion. Unit is mcg/day here for calculation; clinical use often mcg/hr.' }, 'fentanyl_patch': { drugName: 'Fentanyl', route: 'patch', unit: 'mcg/hr', type: 'patch', conversionTable: { 12: 30, 25: 60, 50: 120, 75: 180, 100: 240 }, comments: 'Transdermal. NOT for acute pain. Slow onset/offset. Use Table 2/conversion guidance.' }, 'methadone_oral': { drugName: 'Methadone', route: 'oral', unit: 'mg/day', type: 'special', comments: 'Highly variable. Specialist advice MANDATORY. QTc risk.' }, 'tapentadol_oral': { drugName: 'Tapentadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.4, comments: 'Also NRI activity. Conversion approximate. Max dose typically 500-600mg/day.' }, 'tramadol_oral': { drugName: 'Tramadol', route: 'oral', unit: 'mg/day', omeddFactor: 0.1, comments: 'Also SNRI activity. Seizure risk. Max dose 400mg/day. Variable metabolism (CYP2D6).' } };
 
-        // --- DOM Elements ---
-        const form = document.getElementById('opioidForm');
-        const fromOpioidRouteSelect = document.getElementById('from_opioid_route');
-        const fromDoseInput = document.getElementById('from_dose');
-        const doseUnitLabel = document.getElementById('dose_unit_label');
-        const calculateBtn = document.getElementById('calculateBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const resultsDiv = document.getElementById('results');
-        const omeddValueSpan = document.getElementById('omedd_value');
-        const calculationNoteP = document.getElementById('calculation_note');
-        const methadoneWarningDiv = document.getElementById('methadone_warning');
-        const generalWarningDiv = document.getElementById('general_warning');
-        const resultsTableBody = document.getElementById('results_table_body');
+        // --- DOM Elements (Keep as is) ---
+        const form = document.getElementById('opioidForm'); /* ... etc ... */ const fromOpioidRouteSelect = document.getElementById('from_opioid_route'); const fromDoseInput = document.getElementById('from_dose'); const doseUnitLabel = document.getElementById('dose_unit_label'); const calculateBtn = document.getElementById('calculateBtn'); const resetBtn = document.getElementById('resetBtn'); const resultsDiv = document.getElementById('results'); const omeddValueSpan = document.getElementById('omedd_value'); const calculationNoteP = document.getElementById('calculation_note'); const methadoneWarningDiv = document.getElementById('methadone_warning'); const generalWarningDiv = document.getElementById('general_warning'); const resultsTableBody = document.getElementById('results_table_body');
 
-        // --- Populate Dropdown ---
-        function populateDropdown() { /* ... (keep previous populateDropdown function) ... */ fromOpioidRouteSelect.innerHTML = '<option value="">-- Select Opioid & Route --</option>'; Object.keys(opioids).forEach(key => { const data = opioids[key]; if (data.type === 'special') return; let displayName = `${data.drugName} (${data.route === 'iv' ? 'IV/SC/IM' : data.route.charAt(0).toUpperCase() + data.route.slice(1)})`; if (data.route === 'patch') { displayName = `${data.drugName} (Patch)`; } else if (data.route === 'iv' && data.drugName === 'Codeine'){ displayName = `${data.drugName} (IM/SC ONLY)`; } const option = document.createElement('option'); option.value = key; option.textContent = displayName; fromOpioidRouteSelect.appendChild(option); });}
+        // --- Populate Dropdown (Keep as is) ---
+        function populateDropdown() { /* ... */ fromOpioidRouteSelect.innerHTML = '<option value="">-- Select Opioid & Route --</option>'; Object.keys(opioids).forEach(key => { const data = opioids[key]; if (data.type === 'special') return; let displayName = `${data.drugName} (${data.route === 'iv' ? 'IV/SC/IM' : data.route.charAt(0).toUpperCase() + data.route.slice(1)})`; if (data.route === 'patch') { displayName = `${data.drugName} (Patch)`; } else if (data.route === 'iv' && data.drugName === 'Codeine'){ displayName = `${data.drugName} (IM/SC ONLY)`; } const option = document.createElement('option'); option.value = key; option.textContent = displayName; fromOpioidRouteSelect.appendChild(option); }); }
 
-        // --- Helper Functions ---
+        // --- Helper Functions (Keep as is) ---
         function isInvalidInput(value) { /* ... */ return value === "" || value === null || isNaN(value) || value < 0; }
         function round(value, decimals = 1) { /* ... */ if (isNaN(value) || !isFinite(value)) return ""; if (value > 0 && value < Math.pow(10, -decimals)) { return value.toExponential(decimals > 0 ? decimals - 1 : 0); } return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals); }
 
-        // --- Event Handlers ---
-        function updateUnits() { /* ... (keep previous updateUnits function) ... */ const selectedKey = fromOpioidRouteSelect.value; if (selectedKey && opioids[selectedKey]) { doseUnitLabel.textContent = `(${opioids[selectedKey].unit})`; } else { doseUnitLabel.textContent = '(Unit)'; } if (resultsDiv.style.display !== 'none') { resultsDiv.style.display = 'none'; } methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; }
+        // --- Event Handlers (Keep as is) ---
+        function updateUnits() { /* ... */ const selectedKey = fromOpioidRouteSelect.value; if (selectedKey && opioids[selectedKey]) { doseUnitLabel.textContent = `(${opioids[selectedKey].unit})`; } else { doseUnitLabel.textContent = '(Unit)'; } if (resultsDiv.style.display !== 'none') { resultsDiv.style.display = 'none'; } methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; }
         function resetForm() { /* ... */ form.reset(); resultsDiv.style.display = 'none'; methadoneWarningDiv.style.display = 'none'; generalWarningDiv.style.display = 'none'; generalWarningDiv.innerHTML = ''; doseUnitLabel.textContent = '(Unit)'; resultsTableBody.innerHTML = ''; }
 
-        // --- Core Calculation and Display Logic ---
+        // --- Core Calculation and Display Logic (Keep as is, minor HTML/CSS class changes if needed) ---
         function calculateAndDisplay(triggeringKey = null, triggeringDose = null, triggeringRoute = null) {
-            let baseKey = fromOpioidRouteSelect.value;
-            let baseDose = parseFloat(fromDoseInput.value);
-            let isEditTrigger = false;
-            let basisNote = '';
-            let warnings = new Set();
+             let baseKey = fromOpioidRouteSelect.value; let baseDose = parseFloat(fromDoseInput.value); let isEditTrigger = false; let basisNote = ''; let warnings = new Set();
 
-            if (triggeringKey && triggeringRoute && !isInvalidInput(triggeringDose)) { /* ... (keep previous trigger handling) ... */ baseKey = triggeringKey; baseDose = triggeringDose; isEditTrigger = true; basisNote = `Recalculated based on ${opioids[baseKey].drugName} (${triggeringRoute}) ${baseDose} ${opioids[baseKey].unit}.`;} else if (!isEditTrigger && baseKey && !isInvalidInput(baseDose)){ basisNote = `Calculated based on ${opioids[baseKey].drugName} (${opioids[baseKey].route === 'iv' ? 'IV/SC/IM' : opioids[baseKey].route}) ${baseDose} ${opioids[baseKey].unit}.`;} else if (!isEditTrigger) { alert('Please select an opioid/route and enter a valid positive dose.'); resultsDiv.style.display = 'none'; return; }
+             if (triggeringKey && triggeringRoute && !isInvalidInput(triggeringDose)) { /* ... trigger handling ... */ baseKey = triggeringKey; baseDose = triggeringDose; isEditTrigger = true; basisNote = `Recalculated based on ${opioids[baseKey].drugName} (${triggeringRoute}) ${baseDose} ${opioids[baseKey].unit}.`; } else if (!isEditTrigger && baseKey && !isInvalidInput(baseDose)){ /* ... initial calc note ... */ basisNote = `Calculated based on ${opioids[baseKey].drugName} (${opioids[baseKey].route === 'iv' ? 'IV/SC/IM' : opioids[baseKey].route}) ${baseDose} ${opioids[baseKey].unit}.`;} else if (!isEditTrigger) { alert('Please select an opioid/route and enter a valid positive dose.'); resultsDiv.style.display = 'none'; return; }
 
-            const baseData = opioids[baseKey];
+             const baseData = opioids[baseKey];
 
-            if (baseData.type === 'special') { /* ... (keep previous methadone handling) ... */ methadoneWarningDiv.innerHTML = `<strong>Methadone Conversion Warning!</strong> Conversions involving Methadone are complex and variable, requiring specialist knowledge. <strong>This tool cannot provide safe Methadone conversions. Consult specialist advice.</strong> Methadone is excluded below.`; methadoneWarningDiv.style.display = 'block'; omeddValueSpan.textContent = ' N/A '; resultsTableBody.innerHTML = `<tr class="text-center" style="color: #666;"><td colspan="4" style="padding: 10px;">Methadone conversions require specialist advice and cannot be calculated here.</td></tr>`; calculationNoteP.textContent = "Cannot calculate OMEDD for Methadone."; resultsDiv.style.display = 'block'; return; } else { methadoneWarningDiv.style.display = 'none'; }
+             if (baseData.type === 'special') { /* ... methadone handling ... */ methadoneWarningDiv.innerHTML = `<span>Methadone Conversion Warning!</span> Conversions involving Methadone are complex and variable, requiring specialist knowledge. <strong>This tool cannot provide safe Methadone conversions. Consult specialist advice.</strong> Methadone is excluded below.`; methadoneWarningDiv.style.display = 'block'; omeddValueSpan.textContent = ' N/A '; resultsTableBody.innerHTML = `<tr class="text-center" style="color: #666;"><td colspan="4" style="padding: 10px;">Methadone conversions require specialist advice and cannot be calculated here.</td></tr>`; calculationNoteP.textContent = "Cannot calculate OMEDD for Methadone."; resultsDiv.style.display = 'block'; return; } else { methadoneWarningDiv.style.display = 'none'; }
 
-            let omedd = NaN;
-            if (baseData.type === 'patch') { /* ... (keep previous patch handling) ... */ if (baseData.conversionTable && baseData.conversionTable[baseDose]) { omedd = baseData.conversionTable[baseDose]; } else { alert(`Dose ${baseDose} ${baseData.unit} is not a standard ${baseData.drugName} strength in the conversion table. Please use a standard dose (e.g., 12, 25, 50, 75, 100 mcg/hr).`); resultsDiv.style.display = 'none'; return; } } else if (baseData.omeddFactor) { /* ... (keep previous factor handling, including Fentanyl IV) ... */ omedd = baseDose * baseData.omeddFactor; if (baseKey === 'fentanyl_iv') { omedd = baseDose * 0.25; basisNote = `Calculated based on ${baseData.drugName} (IV) ${baseDose} mcg/day. (Note: Check unit, often given mcg/hr)`; }}
+             let omedd = NaN;
+             if (baseData.type === 'patch') { /* ... patch OMEDD calc ... */ if (baseData.conversionTable && baseData.conversionTable[baseDose]) { omedd = baseData.conversionTable[baseDose]; } else { alert(`Dose ${baseDose} ${baseData.unit} is not a standard ${baseData.drugName} strength. Use standard doses.`); resultsDiv.style.display = 'none'; return; } } else if (baseData.omeddFactor) { /* ... factor OMEDD calc ... */ omedd = baseDose * baseData.omeddFactor; if (baseKey === 'fentanyl_iv') { omedd = baseDose * 0.25; basisNote = `Calculated based on ${baseData.drugName} (IV) ${baseDose} mcg/day. (Clinical unit often mcg/hr)`; }}
 
-            if (isNaN(omedd) || omedd < 0) { /* ... (keep previous OMEDD validation) ... */ alert('Error calculating Oral Morphine Equivalent Daily Dose (OMEDD). Check input.'); resultsDiv.style.display = 'none'; return; }
+             if (isNaN(omedd) || omedd < 0) { /* ... OMEDD validation ... */ alert('Error calculating OMEDD.'); resultsDiv.style.display = 'none'; return; }
 
-            omeddValueSpan.textContent = ` ${round(omedd, 1)} `;
-            calculationNoteP.textContent = basisNote;
-            resultsTableBody.innerHTML = '';
+             omeddValueSpan.textContent = ` ${round(omedd, 1)} `;
+             calculationNoteP.textContent = basisNote;
+             resultsTableBody.innerHTML = '';
 
-            const uniqueDrugNames = [...new Set(Object.values(opioids).filter(d => d.type !== 'special').map(d => d.drugName))];
-            uniqueDrugNames.sort();
+             const uniqueDrugNames = [...new Set(Object.values(opioids).filter(d => d.type !== 'special').map(d => d.drugName))];
+             uniqueDrugNames.sort();
 
-            uniqueDrugNames.forEach(drugName => {
-                const tr = document.createElement('tr');
-                // tr.className = 'hover:bg-slate-50'; // Removed Tailwind class
+             uniqueDrugNames.forEach(drugName => {
+                 const tr = document.createElement('tr');
+                 const oralData = Object.values(opioids).find(d => d.drugName === drugName && d.route === 'oral');
+                 const ivData = Object.values(opioids).find(d => d.drugName === drugName && (d.route === 'iv' || d.route === 'patch'));
+                 const displayData = oralData || ivData;
+                 if (!displayData) return;
 
-                const oralData = Object.values(opioids).find(d => d.drugName === drugName && d.route === 'oral');
-                const ivData = Object.values(opioids).find(d => d.drugName === drugName && (d.route === 'iv' || d.route === 'patch'));
-                const displayData = oralData || ivData;
+                 // 1. Drug Name Cell
+                 const tdName = document.createElement('td'); tdName.style.fontWeight = '500'; tdName.textContent = drugName;
+                 if (drugName === 'Meperidine') warnings.add('Meperidine: High neurotoxicity risk. Avoid chronic use/renal impairment/elderly.');
+                 if (drugName === 'Codeine') warnings.add('Codeine: Variable efficacy (CYP2D6). High side effects. Max dose limits.');
+                 tr.appendChild(tdName);
 
-                if (!displayData) return;
+                 // --- Input Cell Helper ---
+                 const createInputCell = (routeData, routeType) => { /* ... (Keep previous helper logic, ensure class name is 'result-input') ... */ const td = document.createElement('td'); td.style.textAlign = 'right'; let calculatedDose = NaN; let inputDisabled = true; let placeholder = 'N/A'; let unitSuffix = ''; if (routeData && routeData.omeddFactor && !isNaN(routeData.omeddFactor) && omedd >= 0) { calculatedDose = omedd / routeData.omeddFactor; if (routeData.route === 'iv' && routeData.drugName === 'Fentanyl') { calculatedDose = omedd / 0.25; } inputDisabled = false; placeholder = ''; unitSuffix = routeData.unit; } else if (routeData && routeData.type === 'patch') { calculatedDose = NaN; placeholder = 'See Notes'; inputDisabled = true; unitSuffix = `(${routeData.unit})`; } else { calculatedDose = NaN; } const input = document.createElement('input'); input.type = 'number'; input.step = 'any'; input.min = '0'; input.value = round(calculatedDose); input.dataset.drugKey = `${drugName.toLowerCase().replace(/\s+/g, '_')}_${routeType}`; input.dataset.route = routeType; input.className = 'result-input'; input.disabled = inputDisabled; input.placeholder = placeholder; input.addEventListener('input', handleResultEdit); td.appendChild(input); const unitSpan = document.createElement('span'); unitSpan.className = 'unit-suffix'; unitSpan.textContent = unitSuffix; td.appendChild(unitSpan); return td; };
 
-                // 1. Drug Name Cell
-                const tdName = document.createElement('td');
-                tdName.style.fontWeight = '500'; // Medium weight
-                tdName.textContent = drugName;
-                if (drugName === 'Meperidine') warnings.add('Meperidine: High risk of neurotoxicity (normeperidine) esp. in renal impairment/elderly/high dose/chronic use. Avoid if possible.');
-                if (drugName === 'Codeine') warnings.add('Codeine: Variable metabolism (CYP2D6), ineffective in some. High nausea/constipation. Max dose limits apply.');
-                tr.appendChild(tdName);
+                 // 2. Oral Dose Cell & 3. IV Dose Cell
+                 tr.appendChild(createInputCell(oralData, 'oral'));
+                 tr.appendChild(createInputCell(ivData, ivData?.type === 'patch' ? 'patch' : 'iv'));
 
-                // --- Helper to create input cell ---
-                const createInputCell = (routeData, routeType) => {
-                    const td = document.createElement('td');
-                    td.style.textAlign = 'right'; // Align cell content right
-                    let calculatedDose = NaN;
-                    let inputDisabled = true;
-                    let placeholder = 'N/A';
-                    let unitSuffix = '';
+                 // 4. Comments Cell (with OMEDD factor)
+                 const tdComments = document.createElement('td'); tdComments.className = 'comments-text'; let baseComment = displayData.comments || ''; let factorText = ''; let factors = []; if(oralData && oralData.omeddFactor && !isNaN(oralData.omeddFactor)) { factors.push(`Oral: ${oralData.omeddFactor.toFixed(1)}x`); } if(ivData && ivData.omeddFactor && !isNaN(ivData.omeddFactor)) { let routeName = (ivData.route === 'iv' ? 'IV/SC/IM' : ''); if(routeName) factors.push(`${routeName}: ${ivData.omeddFactor.toFixed(1)}x`); } if (ivData && ivData.type === 'patch') { factors.push("Patch: See Table 2/Notes"); } if (factors.length > 0) { factorText = `[OMEDD Factor(s) vs Oral Morphine: ${factors.join(', ')}]`; } tdComments.innerHTML = `${baseComment}<span class="factor-note">${factorText}</span>`;
+                 tr.appendChild(tdComments);
+                 resultsTableBody.appendChild(tr);
+             });
 
-                    if (routeData && routeData.omeddFactor && !isNaN(routeData.omeddFactor) && omedd >= 0) {
-                         calculatedDose = omedd / routeData.omeddFactor;
-                         if (routeData.route === 'iv' && routeData.drugName === 'Fentanyl') { calculatedDose = omedd / 0.25; } // mcg/day
-                         inputDisabled = false;
-                         placeholder = '';
-                         unitSuffix = routeData.unit;
-                    } else if (routeData && routeData.type === 'patch') {
-                         calculatedDose = NaN;
-                         placeholder = 'See Notes';
-                         inputDisabled = true;
-                         unitSuffix = `(${routeData.unit})`;
-                    } else { calculatedDose = NaN; }
+             // Display warnings
+             if (warnings.size > 0) { /* ... warning display ... */ generalWarningDiv.innerHTML = `<strong>Important Notes:</strong><ul class="list-disc list-inside mt-1">${[...warnings].map(w => `<li>${w}</li>`).join('')}</ul>`; generalWarningDiv.style.display = 'block';} else { generalWarningDiv.style.display = 'none'; }
 
-                     const input = document.createElement('input');
-                     input.type = 'number';
-                     input.step = 'any'; input.min = '0';
-                     input.value = round(calculatedDose);
-                     input.dataset.drugKey = `${drugName.toLowerCase().replace(/\s+/g, '_')}_${routeType}`; // Ensure key format consistency
-                     input.dataset.route = routeType;
-                     input.className = 'result-input'; // Use simple CSS class
-                     input.disabled = inputDisabled;
-                     input.placeholder = placeholder;
-                     input.addEventListener('input', handleResultEdit);
-                     td.appendChild(input);
-
-                     const unitSpan = document.createElement('span');
-                     unitSpan.className = 'unit-suffix'; // Simple class
-                     unitSpan.textContent = unitSuffix;
-                     td.appendChild(unitSpan);
-                     return td;
-                };
-
-                // 2. Oral Dose Cell
-                tr.appendChild(createInputCell(oralData, 'oral'));
-                // 3. IV/SC/IM Dose Cell
-                tr.appendChild(createInputCell(ivData, ivData?.type === 'patch' ? 'patch' : 'iv'));
-
-                // 4. Comments Cell
-                const tdComments = document.createElement('td');
-                tdComments.className = 'comments-text'; // Use simple class
-                let baseComment = displayData.comments || '';
-                let factorText = '';
-
-                // Build factor text
-                let factors = [];
-                 if(oralData && oralData.omeddFactor && !isNaN(oralData.omeddFactor)) {
-                    factors.push(`Oral: ${oralData.omeddFactor.toFixed(1)}x`); // Add 'x' for clarity
-                 }
-                 if(ivData && ivData.omeddFactor && !isNaN(ivData.omeddFactor)) {
-                    let routeName = (ivData.route === 'iv' ? 'IV/SC/IM' : ''); // Use IV/SC/IM for label
-                    if(routeName) factors.push(`${routeName}: ${ivData.omeddFactor.toFixed(1)}x`);
-                 }
-                  // Handle Fentanyl patch separately for comment - OMEDD comes *from* patch dose
-                  if (ivData && ivData.type === 'patch') {
-                       factors.push("Patch: See Table 2/Notes");
-                  }
-
-                 if (factors.length > 0) {
-                     factorText = `[OMEDD Factor(s) vs Oral Morphine: ${factors.join(', ')}]`;
-                 }
-
-                 // Combine base comment and factor text
-                 tdComments.innerHTML = `${baseComment}<span class="factor-note">${factorText}</span>`; // Use innerHTML to allow span styling
-
-                tr.appendChild(tdComments);
-                resultsTableBody.appendChild(tr);
-            });
-
-            // Display warnings
-            if (warnings.size > 0) { /* ... (keep previous warning display logic) ... */ generalWarningDiv.innerHTML = `<strong>Important Notes:</strong><ul class="list-disc list-inside mt-1">${[...warnings].map(w => `<li>${w}</li>`).join('')}</ul>`; generalWarningDiv.style.display = 'block';} else { generalWarningDiv.style.display = 'none'; }
-
-            resultsDiv.style.display = 'block';
-            if (!isEditTrigger) { resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+             resultsDiv.style.display = 'block';
+             if (!isEditTrigger) { resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         }
 
-        // --- Handler for Edits ---
-        function handleResultEdit(event) { /* ... (keep previous handleResultEdit function) ... */ const editedInput = event.target; const key = editedInput.dataset.drugKey; const route = editedInput.dataset.route; const newDose = parseFloat(editedInput.value); if (route === 'patch') { console.warn("Editing patch dose not supported for recalculation."); return; } if (!isInvalidInput(newDose)) { calculateAndDisplay(key, newDose, route); } else if (editedInput.value === "") { console.log("Input cleared."); } else { console.error("Invalid dose entered:", editedInput.value); } }
+        // --- Handler for Edits (Keep as is) ---
+        function handleResultEdit(event) { /* ... */ const editedInput = event.target; const key = editedInput.dataset.drugKey; const route = editedInput.dataset.route; const newDose = parseFloat(editedInput.value); if (route === 'patch') { console.warn("Editing patch dose not supported."); return; } if (!isInvalidInput(newDose)) { calculateAndDisplay(key, newDose, route); } else if (editedInput.value === "") { console.log("Input cleared."); } else { console.error("Invalid dose entered:", editedInput.value); } }
 
-        // --- Event Listeners ---
+        // --- Event Listeners (Keep as is) ---
         fromOpioidRouteSelect.addEventListener('change', updateUnits);
         calculateBtn.addEventListener('click', () => calculateAndDisplay());
         resetBtn.addEventListener('click', resetForm);
 
-        // --- Initial Setup ---
-        document.addEventListener('DOMContentLoaded', () => {
-             populateDropdown();
-             updateUnits();
-        });
+        // --- Initial Setup (Keep as is) ---
+        document.addEventListener('DOMContentLoaded', () => { populateDropdown(); updateUnits(); });
 
     </script>
 
