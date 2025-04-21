@@ -4,192 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Opioid Conversion Calculator</title>
+    <!-- Include Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- Basic Reset & Global Styles (Adapted from Cirrhosis Tool) --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* Optional: Add custom styles or overrides here if needed */
+        /* Style for number input arrows (optional hide) */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
         }
-
-        body {
-            font-family: sans-serif;
-            line-height: 1.6;
-            background-color: #f8f9fa;
-            color: #333;
-            padding: 15px;
+        input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
         }
-
-        /* --- Main Container (From Cirrhosis Tool) --- */
-        .main-container {
-            max-width: 750px; /* Adjusted width */
-            margin: 20px auto;
-            padding: 25px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        /* Subtle bg for editable result inputs */
+        .result-input {
+            background-color: #f8fafc; /* Slightly off-white */
+            border: 1px solid #e2e8f0; /* Light border */
+             transition: background-color 0.2s ease, border-color 0.2s ease;
         }
-
-        /* --- Headings & Text (Adapted from Cirrhosis Tool) --- */
-        h1, h2, h3 {
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        h1 { font-size: 1.8em; text-align: center; border-bottom-width: 2px; margin-bottom: 20px; }
-        h2 { font-size: 1.4em; margin-top: 30px; color: #0056b3; border-bottom-style: dashed;}
-        h3 { font-size: 1.2em; margin-top: 20px; color: #555; border-bottom: none; margin-bottom: 10px;}
-        .subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 0.95em; }
-
-        /* --- Form Styling (Adapted from Cirrhosis Tool) --- */
-        .form-section {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed #eee;
-        }
-        .form-section:last-of-type {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        form input[type="number"], form select {
-            width: 100%;
-            padding: 9px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 0.95em;
-        }
-        form input[type="number"]::placeholder { color: #aaa; }
-
-        /* Grid for Inputs */
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Default single column */
-            gap: 15px 20px; /* Row gap, Column gap */
-        }
-        @media (min-width: 600px) { /* Simple 2-column for inputs */
-             .input-grid { grid-template-columns: repeat(2, 1fr); }
-             .input-grid > div:first-child { grid-column: 1 / 2; } /* Opioid on left */
-             .input-grid > div:nth-child(2) { grid-column: 2 / 3; } /* Dose on right */
-        }
-
-        .unit-label {
-            font-size: 0.85em;
-            color: #555;
-            display: inline-block;
-            margin-left: 5px;
-        }
-
-        /* --- Button Styling (From Cirrhosis Tool) --- */
-        .button-container {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        form button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.05em;
-            margin: 0 10px;
-            transition: background-color 0.2s ease;
-        }
-        form button:hover { background-color: #0056b3; }
-        form button[type="reset"] { background-color: #6c757d; }
-        form button[type="reset"]:hover { background-color: #5a6268; }
-
-        /* --- Results Area (Adapted from Cirrhosis Tool) --- */
-        #results {
-            margin-top: 30px;
-            background-color: #f0f8ff; /* Light blue background */
-            padding: 20px;
-            border: 1px solid #b3d7ff; /* Blue border */
-            border-radius: 8px;
-        }
-
-        .result-section { margin-bottom: 20px; }
-        .result-section h3 { color: #004a99; border-bottom: 1px dotted #99c2ff; margin-bottom: 12px; padding-bottom: 3px;}
-
-        .result-item {
-            margin-bottom: 8px;
-            padding: 5px 0;
-            font-size: 0.95em;
-            border-bottom: 1px dotted #cce5ff;
-        }
-        .result-item:last-child { border-bottom: none; }
-        .result-item span:first-child { font-weight: bold; color: #333; display: inline-block; min-width: 180px; /* Alignment */ }
-        .result-item span:last-child { font-weight: bold; color: #0056b3; /*float: right;*/ } /* Removed float for simpler layout */
-
-        .info-message {
-            font-style: italic;
-            color: #555;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        .error-message {
-            color: #dc3545; /* Red */
-            font-weight: bold;
-            margin-top: 10px;
-            padding: 8px;
-            border: 1px solid #f5c6cb;
-            background-color: #f8d7da;
-            border-radius: 4px;
-        }
-
-
-        /* --- Disclaimer (From Cirrhosis Tool) --- */
-        .disclaimer {
-            margin-top: 25px;
-            font-style: italic;
-            color: #dc3545;
-            font-size: 0.85em;
-            font-weight: bold;
-            text-align: center;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            background-color: #f8d7da;
-            border-radius: 4px;
-        }
-         .disclaimer strong { color: #721c24; }
-
+         .result-input:focus {
+             background-color: white;
+             border-color: #3b82f6; /* Blue-500 */
+             outline: none; /* Remove default focus outline */
+             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4); /* Ring effect */
+         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 p-4">
 
-    <div class="main-container">
-        <h1>Interactive Opioid Conversion Calculator</h1>
-        <p class="subtitle">Select the starting opioid and enter the total daily dose to calculate approximate equi-analgesic doses of other opioids. (Based on BNF Aug 2020 figures)</p>
+    <div class="max-w-4xl mx-auto bg-gradient-to-b from-white to-slate-50 p-6 md:p-8 rounded-xl shadow-xl border border-slate-200">
+        <h1 class="text-3xl font-bold text-slate-800 mb-2 text-center">Interactive Opioid Conversion Calculator</h1>
+        <p class="text-base text-slate-600 mb-8 text-center">Select starting opioid and dose to calculate approximate equivalents. Results can be edited to recalculate. (Based on BNF Aug 2020)</p>
 
-        <form id="opioidForm">
+        <form id="opioidForm" class="space-y-6">
 
-            <!-- Input Section -->
-            <fieldset class="form-section">
-                <h3>Starting Opioid Information</h3>
-                <div class="input-grid">
+            <fieldset class="border border-slate-200 p-5 rounded-lg shadow-sm bg-white">
+                <legend class="text-lg font-semibold text-slate-800 px-2 -ml-2">Starting Opioid Information</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mt-3">
                     <div>
-                        <label for="from_opioid">Convert From:</label>
-                        <select id="from_opioid" name="from_opioid" required>
+                        <label for="from_opioid" class="block text-sm font-medium text-slate-700 mb-1">Convert From:</label>
+                        <select id="from_opioid" name="from_opioid" required class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
                             <option value="">-- Select Opioid --</option>
                             <option value="codeine_oral">Codeine (Oral)</option>
                             <option value="dihydrocodeine_oral">Dihydrocodeine (Oral)</option>
                             <option value="hydromorphone_oral">Hydromorphone (Oral)</option>
-                            <option value="methadone_oral">Methadone (Oral)</option>
+                            <option value="methadone_oral">Methadone (Oral) - WARNING</option>
                             <option value="morphine_oral">Morphine (Oral)</option>
                             <option value="oxycodone_oral">Oxycodone (Oral)</option>
                             <option value="tapentadol_oral">Tapentadol (Oral)</option>
@@ -200,76 +60,108 @@
                         </select>
                     </div>
                     <div>
-                        <label for="from_dose">Current Dose:</label>
-                        <input type="number" id="from_dose" name="from_dose" required min="0" step="any">
-                        <span id="dose_unit_label" class="unit-label">(Unit)</span>
+                        <label for="from_dose" class="block text-sm font-medium text-slate-700 mb-1">Current Dose:</label>
+                        <div class="flex items-center mt-1">
+                            <input type="number" id="from_dose" name="from_dose" required min="0" step="any" class="block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm p-2.5 bg-white text-slate-900">
+                            <span id="dose_unit_label" class="ml-2 text-sm text-slate-600 whitespace-nowrap">(Unit)</span>
+                        </div>
                     </div>
                 </div>
-                 <p class="info-message">Enter the <strong>total dose per 24 hours</strong> for oral medications, or the <strong>patch strength</strong> for transdermal patches.</p>
+                 <p class="text-xs text-slate-500 mt-3">Enter <strong>total dose per 24 hours</strong> for oral meds, or <strong>patch strength</strong> for transdermal.</p>
             </fieldset>
 
-            <div class="button-container">
-                <button type="button" id="calculateBtn">Calculate Equivalents</button>
-                <button type="reset" id="resetBtn">Reset</button>
+            <!-- Button Container Box -->
+            <div class="mt-8 pt-6 pb-4 px-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
+                <div class="flex justify-center space-x-4">
+                    <button type="button" id="calculateBtn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                        Calculate Equivalents
+                    </button>
+                    <button type="reset" id="resetBtn" class="px-6 py-2.5 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400">
+                        Reset
+                    </button>
+                </div>
             </div>
+            <!-- End Button Container Box -->
+
         </form>
 
-        <!-- Results Section (Initially Hidden) -->
-        <div id="results" style="display: none;">
-            <h2>Approximate Equivalent Doses</h2>
-            <p class="info-message">Calculated Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value"> [OMEDD] mg</strong></p>
-
-            <div id="methadone_warning" class="error-message" style="display: none;">
-                <strong>Methadone Conversion Warning:</strong> Conversions involving Methadone are complex and variable. They require specialist knowledge and careful monitoring due to long/variable half-life and QTc prolongation risk. <strong>This calculator cannot provide safe Methadone conversions. Consult specialist advice.</strong>
+        <!-- Results Area -->
+        <div id="results" class="mt-8 p-6 bg-blue-50 border border-blue-300 rounded-lg shadow-md space-y-4" style="display: none;">
+            <div>
+                <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Calculated Basis:</p>
+                <p class="text-base text-blue-700">Oral Morphine Equivalent Daily Dose (OMEDD): <strong id="omedd_value">[OMEDD]</strong> mg</p>
             </div>
 
-            <div class="result-section" id="oral_equivalents">
-                <h3>Oral Equivalents (approx. total daily dose)</h3>
-                <!-- Oral results will be populated here -->
+            <div id="methadone_warning" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100 border border-red-300" role="alert" style="display: none;">
+              <span class="font-medium">Methadone Conversion Warning!</span> Conversions involving Methadone are complex and variable, requiring specialist knowledge. <strong>This tool cannot provide safe Methadone conversions. Consult specialist advice.</strong> Results below exclude Methadone.
             </div>
 
-            <div class="result-section" id="transdermal_equivalents">
-                 <h3>Transdermal Equivalents (approx. patch strength)</h3>
-                 <!-- Transdermal results will be populated here -->
-            </div>
+             <div>
+                 <p class="text-sm font-medium text-blue-800 uppercase tracking-wider mb-2">Approximate Equivalent Doses:</p>
+                 <p class="text-xs text-slate-600 mb-3">Values below are editable. Changing a dose will recalculate others based on that new value.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-700 border-collapse border border-slate-300">
+                         <thead class="text-xs text-slate-700 uppercase bg-slate-100">
+                             <tr>
+                                 <th scope="col" class="px-4 py-3 border border-slate-300">Opioid</th>
+                                 <th scope="col" class="px-4 py-3 border border-slate-300 text-right">Equivalent Dose</th>
+                                 <th scope="col" class="px-4 py-3 border border-slate-300">Unit</th>
+                             </tr>
+                         </thead>
+                         <tbody id="results_table_body">
+                             <!-- Results will be populated here -->
+                             <!-- Example Row Structure (Generated by JS):
+                             <tr>
+                                 <td class="px-4 py-2 border border-slate-300 font-medium">Oxycodone (Oral)</td>
+                                 <td class="px-4 py-2 border border-slate-300">
+                                     <input type="number" value="6.7" step="any" min="0" data-opioid-key="oxycodone_oral" class="w-full text-right p-1 border-none focus:ring-1 focus:ring-blue-500 rounded result-input">
+                                 </td>
+                                 <td class="px-4 py-2 border border-slate-300">mg/day</td>
+                             </tr>
+                             -->
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
 
-             <p class="info-message" style="margin-top: 15px;"><strong>Important:</strong> These are *approximate* calculations based on published tables. Individual patient response varies. Always reduce the calculated dose (e.g., by 25-50%) when switching opioids due to incomplete cross-tolerance, and titrate carefully based on clinical response. Refer to current guidelines.</p>
+             <p class="mt-5 text-xs text-slate-600 leading-relaxed">
+                <strong>Important:</strong> These are *approximate* calculations. Individual response varies. Always reduce calculated dose (e.g., 25-50%) when switching due to incomplete cross-tolerance, and titrate carefully. Refer to current guidelines.
+            </p>
+
+             <p class="mt-5 text-xs text-red-600 border-t border-slate-200 pt-3 font-semibold">
+                <strong>Disclaimer:</strong> This tool provides approximate opioid dose conversions for informational and educational purposes ONLY. It is NOT a substitute for professional clinical judgment, patient assessment, or local guidelines. Dosing decisions must be individualized by a qualified healthcare provider. Significant inter-individual variability exists. Conversions involving methadone require specialist input. Calculation errors are possible. Use with caution.
+            </p>
         </div>
+        <!-- End Results Area -->
 
-        <div class="disclaimer">
-            <strong>Disclaimer:</strong> This tool provides approximate opioid dose conversions for informational and educational purposes ONLY. It is NOT a substitute for professional clinical judgment, patient assessment, or local guidelines. Dosing decisions must be individualized by a qualified healthcare provider. Significant inter-individual variability exists. Conversions involving methadone require specialist input. Calculation errors are possible. Use with caution.
-        </div>
     </div>
 
     <script>
-        // --- Opioid Data Store (Potency relative to 10mg Oral Morphine -> potency factor vs 1mg OM) ---
-        // OMEDD = Oral Morphine Equivalent Daily Dose
+        // --- Opioid Data Store ---
         const opioids = {
             'codeine_oral': { name: 'Codeine (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.1 },
             'dihydrocodeine_oral': { name: 'Dihydrocodeine (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.1 },
             'hydromorphone_oral': { name: 'Hydromorphone (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 5 },
-            'methadone_oral': { name: 'Methadone (Oral)', type: 'special', unit: 'mg/day', potencyFactor: NaN }, // Special Case
+            'methadone_oral': { name: 'Methadone (Oral)', type: 'special', unit: 'mg/day', potencyFactor: NaN },
             'morphine_oral': { name: 'Morphine (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 1 },
             'oxycodone_oral': { name: 'Oxycodone (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 1.5 },
-            'tapentadol_oral': { name: 'Tapentadol (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.4 }, // Note: MOA differs, use conversion cautiously
-            'tramadol_oral': { name: 'Tramadol (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.1 }, // Note: MOA differs, use conversion cautiously
-
-            // Transdermal: Store conversion TO OMEDD (mg/day) based on patch strength (mcg/hr)
+            'tapentadol_oral': { name: 'Tapentadol (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.4 },
+            'tramadol_oral': { name: 'Tramadol (Oral)', type: 'oral', unit: 'mg/day', potencyFactor: 0.1 },
             'buprenorphine_weekly': {
                 name: 'Buprenorphine Patch (Weekly)', type: 'transdermal', unit: 'mcg/hr',
-                conversionTable: { 5: 12, 10: 24, 20: 48 }, // patch strength (mcg/hr) -> OMEDD (mg/day)
-                reverseTable: { 12: 5, 24: 10, 48: 20} // OMEDD -> patch strength
+                conversionTable: { 5: 12, 10: 24, 20: 48 },
+                reverseTable: { 12: 5, 24: 10, 48: 20 }
             },
             'buprenorphine_twice_weekly': {
                 name: 'Buprenorphine Patch (Twice Weekly)', type: 'transdermal', unit: 'mcg/hr',
                 conversionTable: { 35: 84, 52: 126, 70: 168 },
-                 reverseTable: { 84: 35, 126: 52, 168: 70 }
+                reverseTable: { 84: 35, 126: 52, 168: 70 }
             },
             'fentanyl_patch': {
                 name: 'Fentanyl Patch', type: 'transdermal', unit: 'mcg/hr',
-                // Standard BNF conversion table (approx)
                 conversionTable: { 12: 30, 25: 60, 50: 120, 75: 180, 100: 240 },
-                // Approximate reverse lookup (find closest OMEDD <= target)
+                 // Fentanyl factor approx 2.4 mg/day OMEDD per mcg/hr
+                reverseFactor: 2.4, // Use factor for reverse calculation if needed
                 reverseTable: { 30: 12, 60: 25, 120: 50, 180: 75, 240: 100 }
             }
         };
@@ -284,8 +176,7 @@
         const resultsDiv = document.getElementById('results');
         const omeddValueSpan = document.getElementById('omedd_value');
         const methadoneWarningDiv = document.getElementById('methadone_warning');
-        const oralEquivalentsDiv = document.getElementById('oral_equivalents');
-        const transdermalEquivalentsDiv = document.getElementById('transdermal_equivalents');
+        const resultsTableBody = document.getElementById('results_table_body');
 
         // --- Helper Functions ---
         function isInvalidInput(value) {
@@ -293,39 +184,44 @@
         }
 
         function round(value, decimals = 1) {
-            if (isNaN(value) || !isFinite(value)) return "N/A";
+            if (isNaN(value) || !isFinite(value)) return ""; // Return empty string for input value if invalid
+            // Avoid rounding extremely small numbers to 0 for display in input
+            if (value > 0 && value < Math.pow(10, -decimals)) {
+                 return value.toExponential(decimals > 0 ? decimals -1 : 0); // Use scientific notation
+            }
             return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
         }
 
-         // Find closest lower/equal key in a lookup table
          function findClosestLowerKey(table, targetValue) {
-            let closestKey = null;
-            let minDiff = Infinity;
-            let foundKey = null;
-
-            const sortedKeys = Object.keys(table).map(Number).sort((a, b) => a - b);
-
-            for (const key of sortedKeys) {
-                if (key <= targetValue) {
-                     if (targetValue - key <= minDiff) { // Find the key <= targetValue with the smallest difference
-                          minDiff = targetValue - key;
-                          foundKey = key;
-                     }
-                }
-            }
-             return foundKey ? table[foundKey] : null; // Return the value associated with the found key
-        }
+             let closestKey = null;
+             let foundValue = null;
+             const sortedKeys = Object.keys(table).map(Number).sort((a, b) => a - b);
+             for (const key of sortedKeys) {
+                 if (key <= targetValue) {
+                     closestKey = key;
+                     foundValue = table[key];
+                 } else {
+                     break; // Stop once we exceed targetValue
+                 }
+             }
+             return foundValue; // Return the patch strength (value)
+         }
 
         // --- Event Handlers ---
         function updateUnits() {
             const selectedKey = fromOpioidSelect.value;
             if (selectedKey && opioids[selectedKey]) {
                 doseUnitLabel.textContent = `(${opioids[selectedKey].unit})`;
+                 // Hide methadone warning unless methadone is selected
+                methadoneWarningDiv.style.display = (selectedKey === 'methadone_oral') ? 'block' : 'none';
             } else {
                 doseUnitLabel.textContent = '(Unit)';
+                methadoneWarningDiv.style.display = 'none';
             }
             // Hide results if selection changes after calculation
-             resultsDiv.style.display = 'none';
+            if (resultsDiv.style.display !== 'none') {
+                resultsDiv.style.display = 'none';
+            }
         }
 
         function resetForm() {
@@ -333,128 +229,204 @@
             resultsDiv.style.display = 'none';
             methadoneWarningDiv.style.display = 'none';
             doseUnitLabel.textContent = '(Unit)';
+            resultsTableBody.innerHTML = ''; // Clear table
+            // Scroll back to top
+            // window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function calculateConversions() {
-            const fromKey = fromOpioidSelect.value;
-            const fromDose = parseFloat(fromDoseInput.value);
+        // --- Core Calculation and Display Logic ---
+        // Accepts optional params if triggered by editing a result
+        function calculateAndDisplay(triggeringOpioidKey = null, triggeringDose = null) {
+            let baseOpioidKey = fromOpioidSelect.value;
+            let baseDose = parseFloat(fromDoseInput.value);
+            let isEditTrigger = false;
 
-            // --- Input Validation ---
-            if (!fromKey || isInvalidInput(fromDose)) {
+            // If triggered by an edit, use that as the base
+            if (triggeringOpioidKey !== null && triggeringDose !== null) {
+                 if (!isInvalidInput(triggeringDose)) {
+                    baseOpioidKey = triggeringOpioidKey;
+                    baseDose = triggeringDose;
+                    isEditTrigger = true;
+                 } else {
+                     console.error("Invalid dose from edit trigger.");
+                     // Optionally provide feedback to user or revert the invalid edit
+                     // For now, just stop recalculation on invalid edit input
+                     return;
+                 }
+            }
+
+            // --- Input Validation (for initial calculation) ---
+            if (!isEditTrigger && (!baseOpioidKey || isInvalidInput(baseDose))) {
                 alert('Please select an opioid and enter a valid positive dose.');
+                resultsDiv.style.display = 'none'; // Ensure results are hidden
                 return;
             }
 
-            const fromData = opioids[fromKey];
-            resultsDiv.style.display = 'none'; // Hide previous results initially
-            methadoneWarningDiv.style.display = 'none';
-            oralEquivalentsDiv.innerHTML = '<h3>Oral Equivalents (approx. total daily dose)</h3>'; // Clear previous results
-            transdermalEquivalentsDiv.innerHTML = '<h3>Transdermal Equivalents (approx. patch strength)</h3>'; // Clear previous results
+            const baseData = opioids[baseOpioidKey];
 
-            // --- Handle Methadone ---
-            if (fromData.type === 'special') {
+            // --- Handle Methadone Selection ---
+            if (baseData.type === 'special') {
                 methadoneWarningDiv.style.display = 'block';
-                resultsDiv.style.display = 'block'; // Show the results area to display the warning
-                omeddValueSpan.textContent = ' N/A';
+                omeddValueSpan.textContent = ' N/A ';
+                resultsTableBody.innerHTML = '<tr class="text-center text-slate-500"><td colspan="3" class="py-3">Methadone conversions require specialist advice.</td></tr>';
+                resultsDiv.style.display = 'block';
                 return;
+            } else {
+                 methadoneWarningDiv.style.display = 'none'; // Hide if not methadone
             }
+
 
             // --- Calculate OMEDD (Oral Morphine Equivalent Daily Dose) ---
             let omedd = NaN;
-            if (fromData.type === 'oral') {
-                omedd = fromDose * fromData.potencyFactor;
-            } else if (fromData.type === 'transdermal') {
-                // Use conversion table - direct lookup for listed doses
-                if (fromData.conversionTable[fromDose]) {
-                    omedd = fromData.conversionTable[fromDose];
+            if (baseData.type === 'oral') {
+                omedd = baseDose * baseData.potencyFactor;
+            } else if (baseData.type === 'transdermal') {
+                if (baseData.conversionTable && baseData.conversionTable[baseDose]) {
+                    omedd = baseData.conversionTable[baseDose];
                 } else {
-                    // Attempt simple interpolation or factor for unlisted doses (APPROXIMATION)
-                     if (fromKey === 'fentanyl_patch') {
-                         omedd = fromDose * 2.4; // Common approximation factor
-                         console.warn("Fentanyl dose not in table, using approx factor 2.4");
-                    } else if (fromKey.includes('buprenorphine')) {
-                         // Buprenorphine is highly variable, avoid simple factor if not in table
-                         alert(`Dose ${fromDose} ${fromData.unit} is not a standard ${fromData.name} strength listed in the conversion table. Accurate conversion requires clinical judgment or specialist advice.`);
-                         return; // Stop calculation for non-standard Buprenorphine
-                    } else {
-                        omedd = NaN; // Cannot calculate if not in table and no rule defined
-                    }
+                    // Approx for Fentanyl if not exact match
+                    if (baseKey === 'fentanyl_patch' && baseData.reverseFactor) {
+                         omedd = baseDose * baseData.reverseFactor;
+                         console.warn("Fentanyl dose not in table, using approx factor");
+                    } else if (baseKey.includes('buprenorphine')) {
+                         // Avoid calculation for non-standard Buprenorphine
+                         alert(`Dose ${baseDose} ${baseData.unit} is not a standard ${baseData.name} strength. Accurate conversion requires clinical judgment.`);
+                         resultsDiv.style.display = 'none'; return;
+                    } else { omedd = NaN; }
 
                     if (isNaN(omedd)) {
-                         alert(`Could not calculate OMEDD for ${fromDose} ${fromData.unit} of ${fromData.name}. Dose may not be standard.`);
-                         return;
-                     }
+                         alert(`Could not calculate OMEDD for ${baseDose} ${baseData.unit} of ${baseData.name}.`);
+                         resultsDiv.style.display = 'none'; return;
+                    }
                 }
             }
 
             if (isNaN(omedd)) {
                  alert('Error calculating Oral Morphine Equivalent Daily Dose.');
-                 return;
+                 resultsDiv.style.display = 'none'; return;
             }
 
-            omeddValueSpan.textContent = ` ${round(omedd, 1)} mg`;
+            omeddValueSpan.textContent = ` ${round(omedd, 1)} `;
 
-            // --- Calculate Equivalent Doses for Other Opioids ---
-            let oralResultsHTML = '';
-            let transdermalResultsHTML = '';
+            // --- Populate Results Table ---
+            resultsTableBody.innerHTML = ''; // Clear existing rows
+            let calculationErrorOccurred = false;
 
             for (const targetKey in opioids) {
-                if (targetKey === fromKey) continue; // Skip converting to itself
+                 // Skip methadone and the opioid being used as the base for calculation
+                if (opioids[targetKey].type === 'special' || targetKey === baseOpioidKey) {
+                    continue;
+                }
 
                 const targetData = opioids[targetKey];
-
-                if (targetData.type === 'special') continue; // Skip calculating TO methadone
-
                 let targetDose = NaN;
-                let doseUnit = '';
-                let resultNote = '';
 
                 if (targetData.type === 'oral') {
                     if (targetData.potencyFactor > 0) {
                         targetDose = omedd / targetData.potencyFactor;
-                        doseUnit = targetData.unit;
-                        oralResultsHTML += `<div class="result-item"><span>${targetData.name}:</span> <span>${round(targetDose, 1)} ${doseUnit}</span></div>`;
-                    }
+                    } else { targetDose = NaN; } // Avoid division by zero/invalid
                 } else if (targetData.type === 'transdermal') {
-                     // Find closest patch strength based on OMEDD using reverseTable
-                    targetDose = findClosestLowerKey(targetData.reverseTable, omedd);
-                     doseUnit = targetData.unit;
-
-                     if (targetDose !== null) {
-                         transdermalResultsHTML += `<div class="result-item"><span>${targetData.name}:</span> <span>${targetDose} ${doseUnit}</span></div>`;
-                     } else {
-                         // Indicate if OMEDD is too low for the smallest patch
-                         transdermalResultsHTML += `<div class="result-item"><span>${targetData.name}:</span> <span style="color: #666;">(OMEDD likely too low for available patches)</span></div>`;
+                     // Use reverse table lookup for standard patches
+                     targetDose = findClosestLowerKey(targetData.reverseTable, omedd);
+                     if (targetDose === null && targetKey === 'fentanyl_patch' && targetData.reverseFactor && omedd > 0) {
+                        // Approx Fentanyl patch if no table match and OMEDD > 0
+                        targetDose = round(omedd / targetData.reverseFactor, 0); // Round to nearest whole mcg/hr
+                        console.warn(`Approximating Fentanyl patch strength for OMEDD ${omedd}`);
+                     } else if (targetDose === null) {
+                        targetDose = NaN; // Indicates OMEDD too low or no reverse defined
                      }
                 }
+
+                // Create table row
+                const tr = document.createElement('tr');
+                tr.className = 'bg-white hover:bg-slate-50'; // Add hover effect
+
+                // Opioid Name Cell
+                const tdName = document.createElement('td');
+                tdName.className = 'px-4 py-2 border border-slate-300 font-medium text-slate-800';
+                tdName.textContent = targetData.name;
+                tr.appendChild(tdName);
+
+                // Dose Input Cell
+                const tdDose = document.createElement('td');
+                tdDose.className = 'px-4 py-2 border border-slate-300';
+
+                 const doseInput = document.createElement('input');
+                 doseInput.type = 'number';
+                 doseInput.step = 'any'; // Allow decimals
+                 doseInput.min = '0';
+                 doseInput.value = round(targetDose); // Display calculated dose, handle NaN
+                 doseInput.dataset.opioidKey = targetKey; // Store key for identification
+                 doseInput.className = 'w-full text-right p-1 rounded focus:outline-none result-input';
+
+                if (isNaN(targetDose) || targetDose === null) {
+                     doseInput.value = '';
+                     doseInput.placeholder = 'N/A'; // Indicate if calculation failed/not applicable
+                     doseInput.disabled = true; // Disable input if no valid dose
+                     calculationErrorOccurred = !isEditTrigger; // Flag error only on initial calc
+                 }
+
+                // Add event listener to handle edits
+                 doseInput.addEventListener('input', handleResultEdit);
+
+                 tdDose.appendChild(doseInput);
+                 tr.appendChild(tdDose);
+
+
+                 // Unit Cell
+                 const tdUnit = document.createElement('td');
+                 tdUnit.className = 'px-4 py-2 border border-slate-300 text-slate-600';
+                 tdUnit.textContent = targetData.unit;
+                 tr.appendChild(tdUnit);
+
+                 resultsTableBody.appendChild(tr);
             }
 
-             // Add generated HTML to the respective divs
-             if (oralResultsHTML) {
-                oralEquivalentsDiv.innerHTML += oralResultsHTML;
-             } else {
-                 oralEquivalentsDiv.innerHTML += '<p class="info-message">No other oral equivalents calculated.</p>';
-             }
-              if (transdermalResultsHTML) {
-                transdermalEquivalentsDiv.innerHTML += transdermalResultsHTML;
-             } else {
-                  transdermalEquivalentsDiv.innerHTML += '<p class="info-message">No transdermal equivalents calculated.</p>';
+             if (calculationErrorOccurred) {
+                 console.warn("Some equivalent doses could not be calculated (e.g., OMEDD too low for patches).");
+                 // Optionally add a message in the UI
              }
 
 
             // --- Show Results ---
             resultsDiv.style.display = 'block';
-            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             // Scroll only on initial calculate button press, not on edits
+             if (!isEditTrigger) {
+                 resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+             }
         }
+
+        // --- Handler for Edits within the Results Table ---
+        function handleResultEdit(event) {
+            const editedInput = event.target;
+            const opioidKey = editedInput.dataset.opioidKey;
+            const newDose = parseFloat(editedInput.value);
+
+            // Check if the input is valid before recalculating
+            if (!isInvalidInput(newDose)) {
+                 // Recalculate everything based on this edited value
+                 // Pass the key and new dose of the *edited* opioid
+                 calculateAndDisplay(opioidKey, newDose);
+            } else if (editedInput.value === "") {
+                // Allow clearing the field, but don't recalculate based on empty
+                console.log("Input cleared, no recalculation triggered.");
+            } else {
+                // Handle invalid input (e.g., negative numbers, text)
+                console.error("Invalid dose entered in results table:", editedInput.value);
+                 // Optional: Show a temporary error state on the input?
+                 // For now, just log error and don't recalculate
+            }
+        }
+
 
         // --- Event Listeners ---
         fromOpioidSelect.addEventListener('change', updateUnits);
-        calculateBtn.addEventListener('click', calculateConversions);
+        calculateBtn.addEventListener('click', () => calculateAndDisplay()); // Initial calculation
         resetBtn.addEventListener('click', resetForm);
 
         // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            resetForm(); // Ensure form is clear and units are placeholder on load
+             updateUnits(); // Set initial unit label state
         });
 
     </script>
