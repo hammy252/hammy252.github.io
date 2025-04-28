@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- MODIFIED TITLE -->
+    <title>Hyponatremia Diagnostic Aid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset and Font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: #f1f5f9; /* Equivalent to bg-slate-100 */
+            padding: 20px; /* Replaces body p-4 */
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 896px; /* Approx max-w-4xl */
+            margin: 20px auto;
+            background: linear-gradient(to bottom, white, #f8fafc); /* from-white to-slate-50 */
+            padding: 24px; /* p-6 */
+            border-radius: 12px; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl (approximation) */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+        }
+
+        /* Headings and Text */
+        h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+            padding-bottom: 10px;
+             border-bottom: 1px solid #eee;
+        }
+
+        .subtitle {
+            font-size: 1rem; /* text-base */
+            color: #475569; /* text-slate-600 */
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            /* space-y-6 handled by fieldset margin */
+        }
+
+        fieldset {
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            padding: 20px; /* p-5 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            background-color: white; /* bg-white */
+            margin-bottom: 1.5rem; /* Replacement for form space-y-6 */
+        }
+
+        legend {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            padding: 0 8px; /* px-2 */
+            margin-left: -8px; /* -ml-2 */
+            margin-bottom: 15px;
+        }
+
+        /* Grid Layout for Inputs */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* grid-cols-1 */
+            gap: 20px 24px; /* gap-y-5 gap-x-6 */
+            margin-top: 12px; /* mt-3 */
+        }
+         /* Added 3-column grid for wider screens */
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .input-grid {
+                grid-template-columns: repeat(3, 1fr); /* lg:grid-cols-3 */
+            }
+        }
+
+
+        /* Labels */
+        label {
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #334155; /* text-slate-700 */
+            margin-bottom: 4px; /* mb-1 */
+        }
+
+        /* Select Inputs */
+        select {
+            margin-top: 4px; /* mt-1 */
+            display: block;
+            width: 100%;
+            border-radius: 6px; /* rounded-md */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            padding: 10px; /* p-2.5 */
+            background-color: white; /* bg-white */
+            color: #0f172a; /* text-slate-900 */
+            font-size: 0.875rem; /* sm:text-sm */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        select:focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            outline: 1px solid #3b82f6; /* Simple focus ring */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* focus:ring approximation */
+        }
+
+        /* Button Container */
+        .button-container {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem 1rem 1rem 1rem; /* pt-6 pb-4 px-4 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+        .button-wrapper {
+             display: flex;
+             justify-content: center;
+             gap: 1rem; /* Replacement for space-x-4 */
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 15px; /* px-6 py-2.5 adjusted */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            border-radius: 6px; /* rounded-md */
+            border: none; /* Added */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+        button:focus {
+             outline: 2px solid transparent; /* focus:outline-none */
+             outline-offset: 2px;
+             box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.5); /* focus:ring approximation */
+        }
+        button:disabled {
+            opacity: 0.6; /* disabled:opacity-60 */
+            cursor: not-allowed; /* disabled:cursor-not-allowed */
+        }
+
+        /* Primary Button (Interpret) */
+        #interpret-btn {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white; /* text-white */
+        }
+        #interpret-btn:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+         #interpret-btn:focus {
+             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+         }
+
+        /* Secondary Button (Reset) */
+        #reset-btn {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            color: #1e293b; /* text-slate-800 */
+        }
+        #reset-btn:hover {
+            background-color: #cbd5e1; /* hover:bg-slate-300 */
+        }
+         #reset-btn:focus {
+              box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5); /* focus:ring-slate-400 */
+         }
+
+        /* Results Area */
+        #result {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem; /* p-6 */
+            background-color: #eff6ff; /* bg-blue-50 */
+            border: 1px solid #93c5fd; /* border-blue-300 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            display: none; /* Initially hidden */
+        }
+        #result > div {
+            margin-bottom: 1rem; /* space-y-4 */
+        }
+        #result > div:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* font-semibold - increased weight */
+            color: #1e40af; /* text-blue-800 */
+            text-transform: uppercase; /* uppercase */
+            letter-spacing: 0.05em; /* tracking-wider */
+            display: block; /* Ensure it's on its own line */
+            margin-bottom: 6px; /* Increased margin */
+        }
+
+        /* MODIFIED RESULT DISPLAYS */
+        #classification-display { /* Replaces interpretation */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1d4ed8; /* text-blue-700 */
+            margin-bottom: 0.5rem; /* Added spacing */
+        }
+
+        #differential-display { /* Replaces phase-stage */
+             font-size: 1rem; /* text-base */
+             font-weight: 500; /* font-medium */
+             color: #2563eb; /* text-blue-600 */
+        }
+
+        #notes-display { /* Replaces recommendations */
+            font-size: 0.875rem; /* text-sm */
+            color: #334155; /* text-slate-700 */
+            line-height: 1.65; /* leading-relaxed */
+        }
+         /* Style for lists within notes */
+        #notes-display ul {
+            list-style-position: outside; /* Changed for better indent */
+            list-style-type: disc;
+            margin-top: 0.5rem;
+            padding-left: 1.25rem; /* Add padding for indentation */
+        }
+         #notes-display ul ul { /* Nested lists */
+            margin-left: 1.5rem;
+            margin-top: 0.25rem;
+         }
+         #notes-display li {
+            margin-bottom: 0.35rem; /* space-y-1.5 */
+         }
+
+        .disclaimer {
+             margin-top: 1.25rem; /* mt-5 */
+             font-size: 0.75rem; /* text-xs */
+             color: #64748b; /* text-slate-500 */
+             border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+             padding-top: 0.75rem; /* pt-3 */
+             font-style: italic;
+        }
+         .disclaimer strong {
+            font-style: normal; /* Reset italic for strong tag */
+         }
+
+        /* Responsive Grid */
+        @media (min-width: 768px) { /* md breakpoint */
+            body {
+                padding: 40px; /* Replaces md:p-8 */
+            }
+            .main-container {
+                 padding: 32px; /* md:p-8 */
+            }
+             .input-grid {
+                grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+             }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .input-grid {
+                grid-template-columns: repeat(3, 1fr); /* lg:grid-cols-3 */
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- MODIFIED HEADINGS -->
+        <h1>Hyponatremia Diagnostic Aid</h1>
+        <p class="subtitle">Enter clinical and lab parameters to help differentiate causes of hyponatremia.</p>
+
+        <form id="hyponatremia-form"> <!-- MODIFIED ID -->
+
+            <fieldset>
+                <legend>Diagnostic Parameters</legend>
+                <div class="input-grid">
+                    <!-- NEW INPUTS FOR HYPONATREMIA -->
+                    <div>
+                        <label for="serum_osm">Serum Osmolality (Sosm):</label>
+                        <select id="serum_osm" name="serum_osm">
+                            <option value="na">Not Available</option>
+                            <option value="low_lt_275">Low (< 275 mOsm/kg)</option>
+                            <option value="normal_275_295">Normal (275-295 mOsm/kg)</option>
+                            <option value="high_gt_295">High (> 295 mOsm/kg)</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="volume_status">Clinical Volume Status:</label>
+                        <select id="volume_status" name="volume_status">
+                            <option value="na">Not Assessed / Unclear</option>
+                            <option value="Hypovolemic">Hypovolemic (Dehydrated)</option>
+                            <option value="Euvolemic">Euvolemic (Normal Volume)</option>
+                            <option value="Hypervolemic">Hypervolemic (Fluid Overload)</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="urine_osm">Urine Osmolality (Uosm):</label>
+                        <select id="urine_osm" name="urine_osm">
+                            <option value="na">Not Available</option>
+                            <option value="low_lt_100">Low (< 100 mOsm/kg)</option>
+                            <option value="intermediate_100_300">Intermediate (100-300 mOsm/kg)</option>
+                            <option value="high_gt_300">High (> 300 mOsm/kg)</option>
+                            <option value="high_gt_sosm">High (> Serum Osmolality)</option> <!-- Added for SIADH clarity -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="urine_na">Urine Sodium (UNa):</label>
+                        <select id="urine_na" name="urine_na">
+                            <option value="na">Not Available</option>
+                            <option value="low_lt_20">Low (< 20 mEq/L)</option>
+                             <option value="intermediate_20_40">Intermediate (20-40 mEq/L)</option>
+                            <option value="high_gt_40">High (> 40 mEq/L)</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="urine_sg">Urine Specific Gravity (USG):</label>
+                        <select id="urine_sg" name="urine_sg">
+                            <option value="na">Not Available</option>
+                            <option value="low_lt_1005">Low (< 1.005)</option>
+                            <option value="intermediate_1005_1010">Intermediate (1.005 - 1.010)</option>
+                            <option value="high_gt_1010">High (> 1.010)</option>
+                        </select>
+                    </div>
+                     <div>
+                         <label for="diuretic_use">Recent Diuretic Use?</label>
+                         <select id="diuretic_use" name="diuretic_use">
+                             <option value="no">No</option>
+                             <option value="yes">Yes</option>
+                             <option value="unknown">Unknown</option>
+                         </select>
+                     </div>
+
+                </div>
+            </fieldset>
+
+            <div class="button-container">
+                <div class="button-wrapper">
+                    <!-- MODIFIED BUTTON ID -->
+                    <button type="button" id="interpret-btn">Interpret Parameters</button>
+                    <button type="reset" id="reset-btn">Reset Form</button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- MODIFIED RESULT AREA -->
+        <div id="result">
+            <div>
+                <p class="result-label">Classification:</p>
+                <p id="classification-display"></p>
+            </div>
+             <div>
+                 <p class="result-label">Potential Causes / Differential Diagnosis:</p>
+                 <div id="differential-display">
+                     {/* Differential diagnoses will be inserted here by JS */}
+                 </div>
+             </div>
+             <div>
+                 <p class="result-label">Key Findings & Notes:</p>
+                 <div id="notes-display">
+                    {/* Notes will be inserted here by JS */}
+                 </div>
+             </div>
+             <!-- MODIFIED DISCLAIMER -->
+             <p class="disclaimer">
+                <strong>Disclaimer:</strong> This tool provides potential interpretations based on common diagnostic algorithms for hyponatremia. Results <strong>must</strong> be interpreted in the full clinical context (history, medications, physical exam) by a qualified healthcare professional. This tool does not replace clinical judgment, consider atypical presentations, or account for all possible causes or medication effects. Always refer to current clinical practice guidelines.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to form elements (MODIFIED IDs)
+        const form = document.getElementById('hyponatremia-form');
+        const serumOsmSelect = document.getElementById('serum_osm');
+        const volumeStatusSelect = document.getElementById('volume_status');
+        const urineOsmSelect = document.getElementById('urine_osm');
+        const urineNaSelect = document.getElementById('urine_na');
+        const urineSgSelect = document.getElementById('urine_sg');
+        const diureticUseSelect = document.getElementById('diuretic_use'); // Added diuretic input
+
+        const interpretBtn = document.getElementById('interpret-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const resultDiv = document.getElementById('result');
+        // MODIFIED RESULT DISPLAY IDs
+        const classificationDisplay = document.getElementById('classification-display');
+        const differentialDisplay = document.getElementById('differential-display');
+        const notesDisplay = document.getElementById('notes-display');
+
+        // --- Interpretation Logic ---
+        // RENAMED FUNCTION
+        function interpretHyponatremia() {
+            // Read input values
+            const sosm = serumOsmSelect.value;
+            const volume = volumeStatusSelect.value;
+            const uosm = urineOsmSelect.value;
+            const una = urineNaSelect.value;
+            const usg = urineSgSelect.value;
+            const diureticUse = diureticUseSelect.value;
+
+            let classification = 'Requires Assessment';
+            let differential = ['<ul><li>Unable to determine differential with provided data.</li></ul>']; // Start with default list
+            let notes = ['<ul><li>Clinical correlation is essential.</li>']; // Start with default list
+
+            // --- Core Logic based on Diagnostic Algorithm ---
+
+            // Step 1: Check Serum Osmolality
+            if (sosm === 'na') {
+                classification = 'Serum Osmolality Required';
+                differential = ['<ul><li>Cannot classify hyponatremia type without Serum Osmolality.</li></ul>'];
+                notes.push('<li>Measure Serum Osmolality to confirm true hypotonic hyponatremia vs. pseudohyponatremia or hypertonic hyponatremia.</li>');
+            } else if (sosm === 'normal_275_295') {
+                classification = 'Isotonic Hyponatremia (Pseudohyponatremia)';
+                differential = ['<ul><li>Severe Hyperlipidemia</li><li>Severe Hyperproteinemia (e.g., IVIG, Multiple Myeloma)</li></ul>'];
+                notes.push('<li>This is often a lab artifact due to high levels of lipids or proteins displacing water in the plasma sample.</li>');
+                notes.push('<li>Confirm with direct ion-selective electrode (ISE) sodium measurement if available, or check lipid panel/serum protein electrophoresis.</li>');
+                 notes.push('<li>Patient\'s true plasma osmolality and cell volume are normal.</li>');
+            } else if (sosm === 'high_gt_295') {
+                classification = 'Hypertonic Hyponatremia';
+                differential = ['<ul><li>Hyperglycemia (e.g., DKA, HHS)</li><li>Recent administration of Mannitol or IV contrast</li><li>Ingestion of other osmotically active substances (rare)</li></ul>'];
+                notes.push('<li>Sodium is diluted by osmotic shift of water from intracellular to extracellular space.</li>');
+                notes.push('<li>Check blood glucose. If elevated, calculate corrected sodium.</li>');
+                notes.push('<li>Treatment involves addressing the underlying cause (e.g., managing hyperglycemia).</li>');
+            } else if (sosm === 'low_lt_275') {
+                // This is TRUE HYPOTONIC HYPONATREMIA - Proceed to Volume Status
+                classification = 'Hypotonic Hyponatremia'; // Base classification
+                notes.push('<li>True hyponatremia confirmed (Serum Osm < 275 mOsm/kg).</li>');
+                notes.push('<li>Further differentiation depends on volume status and urine studies.</li>');
+
+                // Step 2: Assess Volume Status (within Hypotonic Hyponatremia)
+                if (volume === 'na') {
+                    classification = 'Hypotonic Hyponatremia - Volume Status Needed';
+                    differential = ['<ul><li>Cannot determine cause without clinical volume assessment.</li></ul>'];
+                    notes.push('<li>Assess patient for signs of hypovolemia (orthostasis, tachycardia, dry mucous membranes) or hypervolemia (edema, JVD, rales).</li>');
+                } else if (volume === 'Hypovolemic') {
+                    classification = 'Hypotonic Hypovolemic Hyponatremia';
+                     notes.push('<li>Patient has both water and sodium deficit, with sodium deficit being relatively greater OR water replacement without adequate sodium.</li>');
+                    notes.push('<li>ADH is appropriately stimulated by low volume, leading to water retention and concentrated urine (Uosm usually >300-450).</li>');
+                    if (uosm === 'low_lt_100'){
+                         notes.push('<li>WARNING: Low Uosm (<100) is UNEXPECTED in true hypovolemia unless another factor is present (e.g., recent large water intake, resolving obstruction). Re-evaluate volume status.</li>');
+                    } else if (uosm === 'na') {
+                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention.</li>');
+                    }
+
+                    // Differentiate based on Urine Sodium
+                    if (una === 'na') {
+                         differential = ['<ul><li>Urine Na+ needed to differentiate renal vs. extra-renal losses.</li></ul>'];
+                         notes.push('<li>If diuretic use is recent/current, Urine Na+ may be high even with extra-renal losses. Consider Fractional Excretion of Urea (FEUrea) if unsure.</li>');
+                    } else if (una === 'low_lt_20' || una === 'intermediate_20_40') { // Grouping low/intermediate for extra-renal
+                        classification = 'Hypotonic Hypovolemic Hyponatremia (Likely Extra-renal Na+ Loss)';
+                        differential = ['<ul><li>Gastrointestinal losses (vomiting, diarrhea)</li><li>Skin losses (sweat, burns)</li><li>Third spacing (e.g., pancreatitis, rhabdomyolysis)</li></ul>'];
+                        notes.push('<li>Low UNa (<20-40 mEq/L) suggests kidneys are appropriately conserving sodium.</li>');
+                         if(diureticUse === 'yes') notes.push('<li>Note: Diuretic effect can mask low UNa; if recently stopped, UNa might still be high initially. Low UNa strongly points away from diuretics as the primary cause if *not* recently used.</li>');
+                         notes.push('<li>Treatment typically involves isotonic saline (0.9% NaCl).</li>');
+                    } else if (una === 'high_gt_40') {
+                        classification = 'Hypotonic Hypovolemic Hyponatremia (Likely Renal Na+ Loss)';
+                        differential = ['<ul><li>Diuretic use (especially thiazides)</li><li>Primary Adrenal Insufficiency (Addison\'s - check cortisol/ACTH, K+)</li><li>Cerebral Salt Wasting (CSW - usually post-neuro event, often very high Uosm/UNa)</li><li>Salt-wasting nephropathies (rare)</li><li>Bicarbonaturia (e.g., RTA type 2, post-hypercapnia)</li></ul>'];
+                        notes.push('<li>High UNa (>40 mEq/L) indicates kidneys are inappropriately losing sodium.</li>');
+                        if(diureticUse === 'yes') notes.push('<li>Diuretic use is a very common cause in this category.</li>');
+                        if(diureticUse === 'no') notes.push('<li>If NO diuretic use, strongly consider adrenal insufficiency or CSW.</li>');
+                         notes.push('<li>Treatment depends on cause (e.g., saline for volume, specific treatment for AI/CSW).</li>');
+                    }
+
+                } else if (volume === 'Euvolemic') {
+                    classification = 'Hypotonic Euvolemic Hyponatremia';
+                    notes.push('<li>Patient appears clinically volume neutral (no significant edema or dehydration).</li>');
+                     notes.push('<li>Hyponatremia is due to excess water retention relative to solute, or excessive water intake.</li>');
+
+                    // Differentiate based on Urine Osmolality
+                    if (uosm === 'na') {
+                        differential = ['<ul><li>Urine Osmolality is crucial for differentiating euvolemic causes.</li></ul>'];
+                        notes.push('<li>If Uosm < 100: Suggests ADH suppression (water overload states).</li>');
+                        notes.push('<li>If Uosm > 100: Suggests ADH effect (SIADH, other endocrine).</li>');
+                    } else if (uosm === 'low_lt_100') {
+                         classification = 'Hypotonic Euvolemic Hyponatremia (Dilute Urine - ADH Suppressed)';
+                         differential = ['<ul><li>Primary Polydipsia (psychogenic or dipsogenic)</li><li>Low Solute Intake ("Beer Potomania", "Tea and Toast" diet)</li></ul>'];
+                         notes.push('<li>Maximally dilute urine (Uosm < 100 mOsm/kg, USG < 1.005) indicates appropriate ADH suppression.</li>');
+                         notes.push('<li>Water intake exceeds the kidney\'s maximal excretion capacity, OR solute intake is too low to allow adequate free water excretion.</li>');
+                         notes.push(`<li>Urine Na+ is often low (${una === 'low_lt_20' ? 'as reported' : 'typically < 20'}) due to low dietary intake, but can be variable.</li>`);
+                         notes.push('<li>Treatment involves increased solute intake or water restriction, depending on the cause.</li>');
+                    } else if (uosm === 'intermediate_100_300' || uosm === 'high_gt_300' || uosm === 'high_gt_sosm') {
+                        classification = 'Hypotonic Euvolemic Hyponatremia (Concentrated Urine - ADH Effect)';
+                        differential = ['<ul><li>**SIADH (Syndrome of Inappropriate ADH secretion) - MOST COMMON**</li><li>Secondary Adrenal Insufficiency (ACTH deficiency - isolated glucocorticoid lack)</li><li>Hypothyroidism (severe)</li><li>Drugs (e.g., SSRIs, carbamazepine, NSAIDs, ecstasy)</li><li>Reset Osmostat (rare)</li></ul>'];
+                        notes.push('<li>Inappropriately concentrated urine (Uosm > 100, often > Sosm) despite low serum osmolality suggests ADH effect.</li>');
+                        notes.push('<li>SIADH is a diagnosis of exclusion. Must rule out hypothyroidism and adrenal insufficiency (check TSH, AM cortisol/ACTH stim).</li>');
+                        notes.push(`<li>Urine Na+ is typically > 20-40 mEq/L (${una === 'high_gt_40' ? 'as reported' : (una === 'intermediate_20_40' ? 'as reported' : 'check if consistent')}) reflecting normal volume status and dietary intake, *unless* patient is also sodium restricted or has superimposed volume depletion.</li>`);
+                         if (diureticUse === 'yes') notes.push('<li>Diuretics (esp. thiazides) can cause a picture mimicking SIADH initially; stop if possible and reassess.</li>');
+                        notes.push('<li>Treatment primarily involves fluid restriction and addressing underlying cause of SIADH if found (e.g., lung/CNS pathology, drug).</li>');
+                         if (uosm === 'intermediate_100_300') notes.push('<li>Uosm 100-300 can sometimes be seen in polydipsia/low solute if not maximally dilute, but more often suggests mild ADH effect. Clinical context is key.</li>');
+                    }
+
+                } else if (volume === 'Hypervolemic') {
+                    classification = 'Hypotonic Hypervolemic Hyponatremia';
+                     notes.push('<li>Patient has excess total body water AND excess total body sodium, but water excess is relatively greater.</li>');
+                    notes.push('<li>Clinical signs of fluid overload (edema, JVD, ascites).</li>');
+                    notes.push('<li>Low effective circulating volume often triggers ADH and RAAS, leading to water and sodium retention. Urine is typically concentrated (Uosm > 100-300).</li>');
+                     if (uosm === 'low_lt_100'){
+                         notes.push('<li>WARNING: Low Uosm (<100) is UNEXPECTED in hypervolemic states unless excessive free water intake is occurring concurrently. Re-evaluate diagnosis.</li>');
+                    } else if (uosm === 'na') {
+                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention.</li>');
+                    }
+
+
+                    // Differentiate based on Urine Sodium (less critical here than in hypovolemia, but helps confirm state)
+                     if (una === 'na') {
+                         differential = ['<ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li><li>Advanced Kidney Disease (AKI/CKD)</li></ul>'];
+                         notes.push('<li>Urine Na+ helps differentiate renal vs. non-renal sodium retention causes.</li>');
+                     } else if (una === 'low_lt_20' || una === 'intermediate_20_40') { // Grouping low/intermediate for non-renal sodium retention
+                         classification = 'Hypotonic Hypervolemic Hyponatremia (Low UNa - Avid Na+ Retention)';
+                         differential = ['<ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li></ul>'];
+                         notes.push('<li>Low UNa (<20-40 mEq/L) indicates kidneys are avidly conserving sodium due to perceived low effective arterial volume.</li>');
+                          if(diureticUse === 'yes') notes.push('<li>Note: Diuretics will increase UNa and obscure this finding. Low UNa *despite* diuretic use would be unusual unless dose ineffective or administration inconsistent.</li>');
+                          notes.push('<li>Treatment involves fluid and sodium restriction, diuretics, and managing the underlying condition.</li>');
+                     } else if (una === 'high_gt_40') {
+                         classification = 'Hypotonic Hypervolemic Hyponatremia (High UNa - Impaired Renal Excretion)';
+                         differential = ['<ul><li>Advanced Kidney Disease (Acute Kidney Injury - AKI, or Chronic Kidney Disease - CKD)</li></ul>'];
+                         notes.push('<li>High UNa (>40 mEq/L) in a hypervolemic state suggests the kidneys cannot excrete sodium (and water) properly due to intrinsic renal failure.</li>');
+                         if(diureticUse === 'yes') notes.push('<li>Diuretic use also causes high UNa, consider if AKI/CKD is primary or if diuretics are just effective. Check baseline renal function.</li>');
+                         notes.push('<li>Urine osmolality in advanced CKD may be fixed around plasma osmolality (~300) or lower, as concentrating/diluting ability is lost.</li>');
+                         notes.push('<li>Treatment focuses on managing renal failure, fluid/sodium restriction, possibly dialysis.</li>');
+                     }
+                }
+            } // End of Hypotonic Logic
+
+             // Add note about USG correlation
+             if (usg !== 'na' && uosm !== 'na') {
+                 let sg_uosm_match = 'consistent';
+                 if ((usg === 'low_lt_1005' && uosm !== 'low_lt_100') || (usg === 'high_gt_1010' && uosm === 'low_lt_100')) {
+                     sg_uosm_match = 'potentially inconsistent';
+                 }
+                 notes.push(`<li>Urine Specific Gravity (${usg}) reported is generally ${sg_uosm_match} with the Urine Osmolality (${uosm}). Uosm is generally preferred for accuracy.</li>`);
+             } else if (usg !== 'na') {
+                  notes.push(`<li>Urine Specific Gravity reported: ${usg}. (Urine Osmolality provides more precise information on concentration).</li>`);
+             }
+
+
+             // Final assembly of results
+             differentialDisplay.innerHTML = differential.join(''); // Join items for the list
+             notes.push('</ul>'); // Close the main UL for notes
+             notesDisplay.innerHTML = notes.join(''); // Join note items
+
+             // Display results
+             classificationDisplay.textContent = classification;
+             resultDiv.style.display = 'block';
+             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+
+        // --- Form Handling Logic ---
+        function resetForm() {
+            form.reset();
+            resultDiv.style.display = 'none';
+            classificationDisplay.textContent = '';
+            differentialDisplay.innerHTML = '';
+            notesDisplay.innerHTML = '';
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- Event Listeners ---
+        interpretBtn.addEventListener('click', interpretHyponatremia); // Use renamed function
+        resetBtn.addEventListener('click', resetForm);
+
+        // Hide results if form inputs change after interpretation
+        form.addEventListener('change', () => {
+            if (resultDiv.style.display !== 'none') {
+                 resultDiv.style.display = 'none';
+            }
+        });
+
+    </script>
+
+</body>
+</html>
