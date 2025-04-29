@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acid-Base Disorder Interpretation Aid</title>
+    <style>
+        /* General Styling */
+        :root {
+            --primary-color: #0056b3; /* Yale Blue */
+            --secondary-color: #f0f8ff; /* Alice Blue */
+            --accent-color: #e9ecef; /* Light Gray */
+            --text-color: #333;
+            --border-color: #ccc;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --white-color: #fff;
+            --button-hover-color: #004494;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--white-color);
+            margin: 20px;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            box-sizing: border-box; /* Ensure padding is included in width */
+        }
+
+        /* Headings and Text */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8em;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 1em;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5em;
+        }
+
+        h2 {
+            font-size: 1.6em;
+            margin-top: 1.5em;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 0.3em;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            margin-top: 1.2em;
+        }
+
+        p {
+            margin-bottom: 1em;
+            text-align: justify;
+        }
+
+        ul {
+            margin-bottom: 1em;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+
+        strong {
+            color: var(--primary-color);
+        }
+
+        /* Form Styling */
+        form {
+            margin-top: 20px;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fdfdfd;
+        }
+
+        legend {
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        select {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--white-color);
+            font-size: 1em;
+            appearance: none; /* Remove default arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 10px 10px;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+        }
+
+        /* Button Styling */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 600;
+        }
+
+        button[type="button"]#interpret-button {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        button[type="button"]#interpret-button:hover {
+            background-color: var(--button-hover-color);
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        button[type="reset"]#reset-button {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        button[type="reset"]#reset-button:hover {
+            background-color: #d3d9df;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        /* Results Area */
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            background-color: var(--secondary-color);
+            box-shadow: 0 3px 8px var(--shadow-color);
+        }
+
+        #result h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            color: var(--primary-color);
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        .result-content {
+            margin-bottom: 15px;
+            padding-left: 10px; /* Indent content slightly */
+        }
+
+        .result-content ul {
+            margin-top: 5px;
+            margin-bottom: 0;
+            padding-left: 20px; /* Indent list items */
+        }
+
+        .result-content li {
+             margin-bottom: 0.4em;
+        }
+
+
+        /* Disclaimer */
+        .disclaimer {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid var(--accent-color);
+            padding-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr; /* Stack inputs vertically */
+            }
+
+            .button-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+             button {
+                width: 100%;
+             }
+        }
+
+         @media (max-width: 480px) {
+             body {
+                 padding: 5px; /* Add padding for very small screens */
+             }
+             .main-container {
+                 margin: 5px;
+                 padding: 15px;
+             }
+              h1 {
+                font-size: 1.6em;
+            }
+         }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Acid-Base Disorder Interpretation Aid</h1>
+
+        <div class="info-section">
+            <h2>Background Information</h2>
+            <p>Acid-base balance is crucial for physiological function. Disturbances can arise from respiratory or metabolic causes, leading to acidosis (pH < 7.38) or alkalosis (pH > 7.42). The body attempts to compensate for primary disturbances to normalize pH.</p>
+            <p>This tool provides a basic interpretation based on pH, PaCO2, and HCO3 ranges, following a systematic approach.</p>
+
+            <h3>Key Diagnostic Parameters</h3>
+            <ul>
+                <li><strong>pH:</strong> Measures overall acidity or alkalinity (Normal arterial: ~7.38-7.42).</li>
+                <li><strong>PaCO2:</strong> Partial pressure of CO2 in arterial blood, reflects respiratory component (Normal: ~38-42 mmHg).</li>
+                <li><strong>HCO3:</strong> Bicarbonate concentration, reflects metabolic component (Normal: ~22-26 mEq/L).</li>
+                <li><strong>Anion Gap (AG):</strong> Calculated value (Na - (Cl + HCO3)), crucial for differentiating metabolic acidosis (Normal: ~8-12 mEq/L, adjusted for albumin). <strong>Note: This tool does NOT calculate the anion gap.</strong></li>
+            </ul>
+
+            <h3>Systematic Interpretation Approach Overview</h3>
+            <ol>
+                <li><strong>Determine Primary Disturbance:</strong> Based on pH and corresponding PaCO2/HCO3 deviation.</li>
+                <li><strong>Calculate & Interpret Anion Gap (if Metabolic Acidosis):</strong> Differentiates causes (High AG vs. Normal AG). *Requires manual calculation.*</li>
+                <li><strong>Evaluate Compensation:</strong> Assess if the compensatory response is appropriate. Inappropriate compensation suggests a mixed disorder. *This tool provides basic hints, not precise calculations.*</li>
+            </ol>
+             <p>Remember that a normal pH can mask underlying mixed acid-base disorders.</p>
+        </div>
+
+        <form id="acidbase-form">
+            <fieldset>
+                <legend>Acid-Base Parameters</legend>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="ph_value">pH Level:</label>
+                        <select id="ph_value" name="ph_value" required>
+                            <option value="" disabled selected>-- Select pH Range --</option>
+                            <option value="acidemia">Acidemia (< 7.38)</option>
+                            <option value="normal">Normal (7.38 - 7.42)</option>
+                            <option value="alkalemia">Alkalemia (> 7.42)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="paco2_value">PaCO2 Level:</label>
+                        <select id="paco2_value" name="paco2_value" required>
+                            <option value="" disabled selected>-- Select PaCO2 Range --</option>
+                            <option value="low">Low (< 38 mmHg)</option>
+                            <option value="normal">Normal (38 - 42 mmHg)</option>
+                            <option value="high">High (> 42 mmHg)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hco3_value">HCO3 Level:</label>
+                        <select id="hco3_value" name="hco3_value" required>
+                            <option value="" disabled selected>-- Select HCO3 Range --</option>
+                            <option value="low">Low (< 22 mEq/L)</option>
+                            <option value="normal">Normal (22 - 26 mEq/L)</option>
+                            <option value="high">High (> 26 mEq/L)</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="button-container">
+                <button type="button" id="interpret-button">Interpret</button>
+                <button type="reset" id="reset-button">Reset</button>
+            </div>
+        </form>
+
+        <div id="result" style="display: none;">
+            <h2>Interpretation Results</h2>
+            <p class="result-label">Interpretation:</p>
+            <div class="result-content">
+                <span id="classification"></span>
+            </div>
+
+            <p class="result-label">Potential Differentials / Considerations:</p>
+            <div class="result-content">
+                 <span id="differential"></span>
+            </div>
+
+
+            <p class="result-label">Clinical Notes & Next Steps:</p>
+            <div class="result-content">
+                <span id="notes"></span>
+            </div>
+        </div>
+
+        <p class="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides a preliminary interpretation based on simplified parameter ranges. It is intended for educational purposes and as a quick reference aid only. It does <strong>not</strong> calculate the anion gap, evaluate compensation adequacy using specific formulas (e.g., Winter's), or account for chronicity (acute vs. chronic respiratory disorders). Interpretation requires considering precise numerical values, the full clinical context (patient history, examination, other laboratory data, medications), and professional clinical judgment. This tool does not replace the need for thorough clinical evaluation or consultation with relevant guidelines and experts. Always verify results and management decisions with a qualified healthcare professional.
+        </p>
+
+    </div>
+
+    <script>
+        // Get DOM elements
+        const form = document.getElementById('acidbase-form');
+        const interpretButton = document.getElementById('interpret-button');
+        const resetButton = document.getElementById('reset-button');
+        const resultDiv = document.getElementById('result');
+        const classificationDisplay = document.getElementById('classification');
+        const differentialDisplay = document.getElementById('differential');
+        const notesDisplay = document.getElementById('notes');
+        const inputElements = form.querySelectorAll('select');
+
+        // --- Event Listeners ---
+
+        // Interpret button click
+        interpretButton.addEventListener('click', interpretAcidBase);
+
+        // Reset button click
+        resetButton.addEventListener('click', resetForm);
+
+        // Hide results if any input changes after interpretation
+        inputElements.forEach(input => {
+            input.addEventListener('change', () => {
+                if (resultDiv.style.display === 'block') {
+                    resultDiv.style.display = 'none';
+                }
+            });
+        });
+
+        // --- Functions ---
+
+        // Function to reset the form and hide results
+        function resetForm() {
+            form.reset();
+            resultDiv.style.display = 'none';
+            classificationDisplay.textContent = '';
+            differentialDisplay.innerHTML = '';
+            notesDisplay.innerHTML = '';
+        }
+
+        // Main interpretation function
+        function interpretAcidBase() {
+            const ph = document.getElementById('ph_value').value;
+            const paco2 = document.getElementById('paco2_value').value;
+            const hco3 = document.getElementById('hco3_value').value;
+
+            // Clear previous results
+            classificationDisplay.textContent = '';
+            differentialDisplay.innerHTML = '';
+            notesDisplay.innerHTML = '';
+
+            let classification = "Undetermined";
+            let differentials = [];
+            let notes = [];
+
+            // --- Input Validation ---
+            if (!ph || !paco2 || !hco3) {
+                classification = "Error: Please select values for all parameters (pH, PaCO2, HCO3).";
+                classificationDisplay.textContent = classification;
+                resultDiv.style.display = 'block';
+                 resultDiv.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // --- Core Logic (Based on Step 1 and compensation hints) ---
+
+            if (ph === 'acidemia') { // pH < 7.38
+                notes.push("<strong>Finding:</strong> Acidemia detected (pH < 7.38).");
+                if (paco2 === 'high' && hco3 === 'low') {
+                    classification = "Mixed: Respiratory Acidosis AND Metabolic Acidosis";
+                    differentials = ["Severe hypoperfusion (e.g., shock with lactic acidosis)", "Cardiopulmonary arrest", "Certain toxic ingestions (e.g., salicylates - late)", "Severe asthma/COPD with exhaustion/hypoperfusion"];
+                    notes.push("<strong>Finding:</strong> High PaCO2 suggests respiratory acidosis component.");
+                    notes.push("<strong>Finding:</strong> Low HCO3 suggests metabolic acidosis component.");
+                     notes.push("<strong>Action:</strong> Anion gap calculation is CRUCIAL.");
+                } else if (paco2 === 'high') {
+                    classification = "Primary Respiratory Acidosis";
+                    differentials = ["CNS depression (drugs, stroke)", "Airway obstruction", "Severe pneumonia/ARDS", "COPD exacerbation", "Neuromuscular weakness (e.g., Myasthenia Gravis, Guillain-Barré)", "Iatrogenic hypoventilation"];
+                    notes.push("<strong>Finding:</strong> High PaCO2 suggests respiratory acidosis is the primary or dominant disorder.");
+                    if (hco3 === 'high') {
+                        notes.push("<strong>Observation:</strong> Elevated HCO3 likely represents metabolic compensation (suggestive of a chronic process, >3-5 days) but could indicate a concurrent metabolic alkalosis.");
+                    } else if (hco3 === 'normal') {
+                        notes.push("<strong>Observation:</strong> Normal HCO3 suggests acute respiratory acidosis (<3-5 days) as metabolic compensation takes time.");
+                    } else { // hco3 === 'low'
+                        notes.push("<strong>Warning:</strong> Low HCO3 with respiratory acidosis is unexpected for compensation and strongly suggests a concomitant metabolic acidosis (mixed disorder - see above).");
+                        notes.push("<strong>Action:</strong> Anion gap calculation is CRUCIAL.");
+                    }
+                } else if (hco3 === 'low') {
+                    classification = "Primary Metabolic Acidosis";
+                    differentials = [
+                        "<strong>If Anion Gap is HIGH (calculate manually):</strong> Mnemonic GOLDMARK - Glycols, Oxoproline, L-Lactate, D-Lactate, Methanol, Aspirin, Renal failure, Ketoacidosis (DKA, alcoholic, starvation).",
+                        "<strong>If Anion Gap is NORMAL (calculate manually):</strong> Mnemonic HARDUP - Hyperalimentation/Hyperchloremia (saline), Acetazolamide/Addison's, Renal Tubular Acidosis (RTA), Diarrhea, Ureteroenteric fistula, Pancreatic fistula."
+                    ];
+                    notes.push("<strong>Finding:</strong> Low HCO3 suggests metabolic acidosis is the primary or dominant disorder.");
+                    notes.push("<strong>Action:</strong> Anion gap calculation is ESSENTIAL to narrow the differential diagnosis.");
+                    if (paco2 === 'low') {
+                        notes.push("<strong>Observation:</strong> Low PaCO2 likely represents respiratory compensation. Adequacy check requires Winter's formula (not performed by this tool).");
+                    } else if (paco2 === 'normal') {
+                        notes.push("<strong>Observation:</strong> Normal PaCO2 suggests inadequate or absent respiratory compensation, or a very early process.");
+                    } else { // paco2 === 'high'
+                        notes.push("<strong>Warning:</strong> High PaCO2 with metabolic acidosis is unexpected for compensation and strongly suggests a concomitant respiratory acidosis (mixed disorder - see above).");
+                    }
+                } else { // pH low, but PaCO2 normal/low and HCO3 normal/high
+                    classification = "Acidemia present, but PaCO2/HCO3 pattern is atypical for a single primary disorder.";
+                    notes.push("<strong>Warning:</strong> This pattern requires careful review. Consider measurement error, rapidly evolving processes, or complex mixed disorders not easily categorized.");
+                    if (paco2 === 'normal' && hco3 === 'normal') {
+                        notes.push("<strong>Warning:</strong> Normal PaCO2 and HCO3 with significant acidemia is highly unusual and concerning. Recheck labs immediately and reassess patient clinically.");
+                    }
+                }
+            } else if (ph === 'alkalemia') { // pH > 7.42
+                notes.push("<strong>Finding:</strong> Alkalemia detected (pH > 7.42).");
+                if (paco2 === 'low' && hco3 === 'high') {
+                    classification = "Mixed: Respiratory Alkalosis AND Metabolic Alkalosis";
+                    differentials = ["Critically ill patients (e.g., sepsis with hyperventilation + vomiting/NG suction)", "Liver failure (hyperventilation) with diuretic use", "Pregnancy with hyperemesis gravidarum", "Overzealous mechanical ventilation with concurrent alkali administration/NG suction."];
+                    notes.push("<strong>Finding:</strong> Low PaCO2 suggests respiratory alkalosis component.");
+                    notes.push("<strong>Finding:</strong> High HCO3 suggests metabolic alkalosis component.");
+                    notes.push("<strong>Action:</strong> Assess volume status, electrolytes (esp. K+, Cl-), liver function, medications.");
+                } else if (paco2 === 'low') {
+                    classification = "Primary Respiratory Alkalosis";
+                    differentials = ["Hyperventilation (anxiety, pain, fever)", "Hypoxia (PE, pneumonia, high altitude, CHF)", "CNS disorders (stroke, tumor)", "Sepsis", "Liver failure", "Salicylate toxicity (often early stage)", "Pregnancy", "Mechanical hyperventilation"];
+                    notes.push("<strong>Finding:</strong> Low PaCO2 suggests respiratory alkalosis is the primary or dominant disorder.");
+                    if (hco3 === 'low') {
+                        notes.push("<strong>Observation:</strong> Low HCO3 likely represents metabolic compensation (suggestive of a chronic process, >3-5 days) but could indicate a concurrent metabolic acidosis.");
+                         notes.push("<strong>Action:</strong> Consider Anion Gap if metabolic acidosis component is suspected.");
+                    } else if (hco3 === 'normal') {
+                        notes.push("<strong>Observation:</strong> Normal HCO3 suggests acute respiratory alkalosis (<3-5 days) as metabolic compensation takes time.");
+                    } else { // hco3 === 'high'
+                        notes.push("<strong>Warning:</strong> High HCO3 with respiratory alkalosis is unexpected for compensation and strongly suggests a concomitant metabolic alkalosis (mixed disorder - see above).");
+                        notes.push("<strong>Action:</strong> Assess volume status, electrolytes (esp. K+, Cl-).");
+                    }
+                } else if (hco3 === 'high') {
+                    classification = "Primary Metabolic Alkalosis";
+                    differentials = [
+                         "<strong>Saline Responsive (Urine Chloride typically < 25 mEq/L):</strong> Vomiting, Nasogastric (NG) suction, Diuretic use (remote), Post-hypercapnia, Villous adenoma (rare).",
+                         "<strong>Saline Resistant (Urine Chloride typically > 40 mEq/L):</strong> Mineralocorticoid excess (Primary hyperaldosteronism, Cushing's), Severe hypokalemia (<2 mEq/L), Bartter's/Gitelman's syndromes, Licorice ingestion."
+                    ];
+                    notes.push("<strong>Finding:</strong> High HCO3 suggests metabolic alkalosis is the primary or dominant disorder.");
+                    notes.push("<strong>Action:</strong> Assess volume status and measure urine chloride to help differentiate causes.");
+                    if (paco2 === 'high') {
+                        notes.push("<strong>Observation:</strong> High PaCO2 likely represents respiratory compensation. Adequacy check requires formula (not performed by this tool).");
+                    } else if (paco2 === 'normal') {
+                        notes.push("<strong>Observation:</strong> Normal PaCO2 suggests inadequate or absent respiratory compensation, or a very early process.");
+                    } else { // paco2 === 'low'
+                         notes.push("<strong>Warning:</strong> Low PaCO2 with metabolic alkalosis is unexpected for compensation and strongly suggests a concomitant respiratory alkalosis (mixed disorder - see above).");
+                    }
+                } else { // pH high, but PaCO2 normal/high and HCO3 normal/low
+                    classification = "Alkalemia present, but PaCO2/HCO3 pattern is atypical for a single primary disorder.";
+                     notes.push("<strong>Warning:</strong> This pattern requires careful review. Consider measurement error, rapidly evolving processes, or complex mixed disorders not easily categorized.");
+                    if (paco2 === 'normal' && hco3 === 'normal') {
+                        notes.push("<strong>Warning:</strong> Normal PaCO2 and HCO3 with significant alkalemia is highly unusual. Recheck labs immediately and reassess patient clinically.");
+                    }
+                }
+            } else { // ph === 'normal' (7.38-7.42)
+                notes.push("<strong>Finding:</strong> pH is within the normal range (7.38-7.42). This may indicate normal status OR a compensated/mixed disorder.");
+                if (paco2 === 'normal' && hco3 === 'normal') {
+                    classification = "Normal Acid-Base Status";
+                    differentials = ["No significant acid-base disturbance detected based on these parameters."];
+                } else if (paco2 === 'high' && hco3 === 'high') {
+                    classification = "Normal pH with High PaCO2 and High HCO3 - Suggests Compensated State or Mixed Disorder";
+                    differentials = ["Compensated Chronic Respiratory Acidosis (e.g., stable COPD)", "Compensated Metabolic Alkalosis", "Could represent resolving acute processes or other mixed states."];
+                    notes.push("<strong>Observation:</strong> Elevated PaCO2 suggests underlying respiratory acidosis tendency.");
+                    notes.push("<strong>Observation:</strong> Elevated HCO3 suggests underlying metabolic alkalosis tendency or compensation for respiratory acidosis.");
+                    notes.push("<strong>Action:</strong> Clinical history (e.g., known lung disease, diuretic use, vomiting) is crucial for differentiation.");
+                } else if (paco2 === 'low' && hco3 === 'low') {
+                    classification = "Normal pH with Low PaCO2 and Low HCO3 - Suggests Compensated State or Mixed Disorder";
+                    differentials = ["Compensated Chronic Respiratory Alkalosis (e.g., pregnancy, chronic liver disease)", "Compensated Metabolic Acidosis", "Could represent resolving acute processes or other mixed states (e.g., salicylate toxicity)."];
+                    notes.push("<strong>Observation:</strong> Low PaCO2 suggests underlying respiratory alkalosis tendency.");
+                    notes.push("<strong>Observation:</strong> Low HCO3 suggests underlying metabolic acidosis tendency or compensation for respiratory alkalosis.");
+                    notes.push("<strong>Action:</strong> Clinical history is crucial. Anion gap calculation is ESSENTIAL if metabolic acidosis component is suspected.");
+                } else if (paco2 === 'high' && hco3 === 'low') {
+                    classification = "Mixed: Respiratory Acidosis AND Metabolic Acidosis (with near-normal pH)";
+                    differentials = ["Severe hypoperfusion (lactic acidosis)", "Cardiopulmonary arrest", "Toxic ingestions (e.g., methanol, ethylene glycol, late salicylates)", "Severe lung disease with concurrent renal failure or DKA"];
+                     notes.push("<strong>Warning:</strong> Significant opposing disturbances are present, nearly cancelling out their effect on pH. This often indicates severe underlying pathology.");
+                    notes.push("<strong>Finding:</strong> High PaCO2 indicates respiratory acidosis component.");
+                    notes.push("<strong>Finding:</strong> Low HCO3 indicates metabolic acidosis component.");
+                    notes.push("<strong>Action:</strong> Anion gap calculation is CRUCIAL.");
+                } else if (paco2 === 'low' && hco3 === 'high') {
+                    classification = "Mixed: Respiratory Alkalosis AND Metabolic Alkalosis (with near-normal pH)";
+                    differentials = ["Critically ill patient (e.g., liver disease with diuretics/vomiting)", "Pregnancy with hyperemesis", "Over-ventilation + NG suction"];
+                    notes.push("<strong>Warning:</strong> Significant opposing disturbances are present, nearly cancelling out their effect on pH.");
+                    notes.push("<strong>Finding:</strong> Low PaCO2 indicates respiratory alkalosis component.");
+                    notes.push("<strong>Finding:</strong> High HCO3 indicates metabolic alkalosis component.");
+                     notes.push("<strong>Action:</strong> Assess volume status, electrolytes, liver function, medications.");
+                } else {
+                    // Cases like normal pH, high paco2, normal hco3 etc. are less common/stable states
+                    classification = "Normal pH with Abnormal PaCO2 or HCO3";
+                    notes.push("<strong>Observation:</strong> This pattern (e.g., normal pH, high PaCO2, normal HCO3) is usually transient or indicates an incompletely compensated state or early mixed disorder. Requires careful clinical correlation and possibly repeat measurements.");
+                    if(paco2 !== 'normal') notes.push(`PaCO2 is ${paco2}.`);
+                    if(hco3 !== 'normal') notes.push(`HCO3 is ${hco3}.`);
+                }
+            }
+
+            // --- Final Tool Limitations Note ---
+            notes.push("<hr><strong>Tool Limitations Reminder:</strong> This tool uses broad categories. Accurate interpretation demands precise values, <strong>manual anion gap calculation</strong>, evaluation of compensation adequacy (e.g., using Winter's formula for metabolic acidosis), consideration of chronicity, and integration with the complete clinical picture. Consult experienced clinicians and relevant literature.");
+
+            // --- Display Results ---
+            classificationDisplay.textContent = classification;
+            // Format differentials and notes as lists
+            differentialDisplay.innerHTML = differentials.length > 0 ? `<ul>${differentials.map(d => `<li>${d}</li>`).join('')}</ul>` : '<li>Further investigation needed based on primary interpretation and clinical context.</li>';
+            notesDisplay.innerHTML = `<ul>${notes.map(n => `<li>${n}</li>`).join('')}</ul>`;
+
+
+            // Show results and scroll into view
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+    </script>
+
+</body>
+</html>
