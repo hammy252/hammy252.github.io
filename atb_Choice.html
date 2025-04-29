@@ -236,7 +236,7 @@
             border: 1px solid #e2e8f0; /* border-slate-200 */
             border-radius: 8px; /* rounded-lg */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
-            display: none; /* Initially hidden */
+            /* display: none; */ /* Initially hidden via JS */
         }
         .result-title {
             font-size: 1.25rem; /* text-xl */
@@ -291,6 +291,7 @@
              font-weight: 500; /* font-medium */
              color: #0f172a; /* text-slate-900 */
              background-color: #f8fafc; /* bg-slate-50 */
+             /* Not sticky by default, but could be added if desired */
         }
 
          /* Activity cell styling */
@@ -353,7 +354,7 @@
         }
 
         /* Utility to hide elements (Reused) */
-        .hidden { display: none; }
+        .hidden { display: none !important; } /* Add !important for robustness */
 
         /* Responsive Styles (Reused) */
         @media (min-width: 768px) {
@@ -448,7 +449,7 @@
         </form>
 
         <!-- Results area reused, content structure adapted for table -->
-        <div id="result" class="hidden">
+        <div id="result" class="hidden"> <!-- Start hidden -->
             <h3 id="result-title" class="result-title">Antibiotic Activity Spectrum</h3>
             <div class="overflow-x-auto">
                  <div id="result-table-container">
@@ -461,6 +462,7 @@
                  <div class="legend-item"><span class="legend-color legend-color-good"></span>Good Activity (✓✓)</div>
                  <div class="legend-item"><span class="legend-color legend-color-some"></span>Some Activity (✓)</div>
                  <div class="legend-item"><span class="legend-color legend-color-poor"></span>Little/No Activity (✕)</div>
+                 <div class="legend-item"><span class="legend-color legend-color-unknown" style="background-color: #f3f4f6; border-color: #d1d5db;"></span>Unknown/Not Listed (?)</div> <!-- Added legend for unknown -->
             </div>
 
              <!-- Updated Disclaimer -->
@@ -477,7 +479,7 @@
         // This data needs to be curated and validated against reliable sources.
         const coverageData = {
             // Gram Positives
-            "Enterococcus (general)": {
+            "Enterococcus (general)": { // VRE excluded by default here
                 "Vancomycin": "good", "Ampicillin": "some", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "some", "Amox/Clav (Augmentin)": "some", "Cefazolin": "poor",
                 "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Pip/Tazo (Zosyn)": "some",
                 "Meropenem": "some", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
@@ -564,7 +566,6 @@
 
         // --- Derive Organism and Antibiotic Lists from Data ---
         const allOrganisms = Object.keys(coverageData).sort();
-        // Get a union of all antibiotics mentioned across all organisms
         const allAntibioticsSet = new Set();
         allOrganisms.forEach(org => {
             Object.keys(coverageData[org]).forEach(abx => allAntibioticsSet.add(abx));
@@ -579,27 +580,24 @@
         const antibioticSelectorGroup = document.getElementById('antibiotic-selector-group');
         const organismSelect = document.getElementById('organism-select');
         const antibioticSelect = document.getElementById('antibiotic-select');
-        const interpretBtn = document.getElementById('interpret-btn'); // Changed ID for consistency
+        const interpretBtn = document.getElementById('interpret-btn');
         const resetBtn = document.getElementById('reset-btn');
-        const resultContainer = document.getElementById('result'); // Use the container div ID
+        const resultContainer = document.getElementById('result');
         const resultTitle = document.getElementById('result-title');
         const resultTableContainer = document.getElementById('result-table-container');
 
         // --- Populate Dropdowns ---
         function populateDropdowns() {
-            // Clear existing options first, keeping the disabled placeholder
             organismSelect.innerHTML = '<option value="" disabled selected>-- Select an Organism --</option>';
             antibioticSelect.innerHTML = '<option value="" disabled selected>-- Select an Antibiotic --</option>';
 
-            // Populate Organisms
             allOrganisms.forEach(orgKey => {
                 const option = document.createElement('option');
                 option.value = orgKey;
-                option.textContent = orgKey; // Use the key directly as it's user-friendly now
+                option.textContent = orgKey;
                 organismSelect.appendChild(option);
             });
 
-            // Populate Antibiotics
             antibiotics.forEach(abx => {
                 const option = document.createElement('option');
                 option.value = abx;
@@ -614,115 +612,118 @@
             if (selectedMode === 'organism') {
                 organismSelectorGroup.classList.remove('hidden');
                 antibioticSelectorGroup.classList.add('hidden');
-                antibioticSelect.value = ""; // Reset other dropdown to placeholder
+                antibioticSelect.value = ""; // Reset other dropdown
             } else { // antibiotic mode
                 organismSelectorGroup.classList.add('hidden');
                 antibioticSelectorGroup.classList.remove('hidden');
-                organismSelect.value = ""; // Reset other dropdown to placeholder
+                organismSelect.value = ""; // Reset other dropdown
             }
-            // Hide results when mode changes or selection is cleared
-            hideResults();
+            hideResults(); // Hide results when mode changes
         }
 
         // --- Hide Results ---
         function hideResults() {
-             resultContainer.classList.add('hidden');
-             resultTableContainer.innerHTML = ''; // Clear previous table
+             resultContainer.classList.add('hidden'); // Add hidden class
+             resultTableContainer.innerHTML = ''; // Clear previous table content
              resultTitle.textContent = 'Antibiotic Activity Spectrum'; // Reset title
         }
 
         // --- Display Logic (Renamed interpret function) ---
         function displayCoverage() {
-            try { // Add error handling block
+            console.log("Display Coverage called"); // Debugging log
+            try {
                 const selectedMode = document.querySelector('input[name="viewMode"]:checked').value;
                 let tableHTML = '';
                 let currentTitle = '';
-                let isValidSelection = false;
+                let isValidSelection = false; // Flag to track if a valid choice was made
 
-                hideResults(); // Hide previous results before generating new ones
+                // Hide previous results before potentially showing new ones
+                hideResults();
 
                 if (selectedMode === 'organism') {
-                    // --- VIEW BY ORGANISM ---
                     const selectedOrganism = organismSelect.value;
-                    if (selectedOrganism && coverageData[selectedOrganism]) {
+                    console.log("Mode: Organism, Selected:", selectedOrganism); // Debugging log
+                    if (selectedOrganism && coverageData[selectedOrganism]) { // Check if selection is valid and data exists
                         isValidSelection = true;
                         currentTitle = `Antibiotic Activity vs. ${selectedOrganism}`;
                         const organismData = coverageData[selectedOrganism];
 
-                        // Build Table Header
                         tableHTML = '<table class="result-table"><thead><tr><th>Antibiotic</th><th>Activity</th></tr></thead><tbody>';
-
-                        // Build Table Body Rows (one row per antibiotic)
                         antibiotics.forEach(abx => {
-                            const activity = organismData[abx] || 'unknown';
+                            const activity = organismData[abx] || 'unknown'; // Default to unknown if not listed for this organism
                             const { activityClass, activityText } = getActivityStyling(activity);
-                            // Apply specific class to antibiotic name cell
+                            // Added <wbr> for potential line breaks in long antibiotic names
                             tableHTML += `<tr><td class="antibiotic-name-cell">${abx.replace(/\//g, '/<wbr>')}</td><td class="activity-cell ${activityClass}">${activityText}</td></tr>`;
                         });
                         tableHTML += '</tbody></table>';
                     } else if (selectedOrganism) {
-                         // Handle case where organism might be selected but data is missing
-                         console.error(`Coverage data not found for selected organism: ${selectedOrganism}`);
-                         resultTableContainer.innerHTML = '<p style="color: red; text-align: center;">Error: Coverage data not found for the selected organism.</p>';
-                         resultContainer.classList.remove('hidden');
-                         return; // Stop execution for this case
+                        console.error(`Coverage data not found for selected organism: ${selectedOrganism}`);
+                        resultTableContainer.innerHTML = '<p style="color: red; text-align: center;">Error: Coverage data is missing for the selected organism.</p>';
+                        // Still show the result container to display the error
+                        resultContainer.classList.remove('hidden');
+                        return; // Stop further processing
                     } else {
-                        // No organism selected
-                        alert("Please select an organism.");
-                        return; // Stop execution
+                        // No organism selected yet
+                        alert("Please select an organism first.");
+                        return; // Stop
                     }
 
                 } else { // VIEW BY ANTIBIOTIC
                     const selectedAntibiotic = antibioticSelect.value;
-                     if (selectedAntibiotic) {
+                    console.log("Mode: Antibiotic, Selected:", selectedAntibiotic); // Debugging log
+                     if (selectedAntibiotic) { // Check if selection is valid
                         isValidSelection = true;
                         currentTitle = `Spectrum of Activity for ${selectedAntibiotic}`;
 
-                        // Build Table Header
                         tableHTML = '<table class="result-table"><thead><tr><th>Organism / Group</th><th>Activity</th></tr></thead><tbody>';
-
-                        // Build Table Body Rows (one per organism)
                         allOrganisms.forEach(orgKey => {
                             const organismData = coverageData[orgKey];
+                            // Use optional chaining ?. to safely access nested property
                             const activity = organismData?.[selectedAntibiotic] || 'unknown';
                             const { activityClass, activityText } = getActivityStyling(activity);
 
                             tableHTML += '<tr>';
-                            // Apply specific class to organism name cell for potential sticky styling
-                            tableHTML += `<td class="organism-name-cell">${orgKey}</td>`;
+                            tableHTML += `<td class="organism-name-cell">${orgKey}</td>`; // Use specific class for sticky potential
                             tableHTML += `<td class="activity-cell ${activityClass}">${activityText}</td>`;
                             tableHTML += '</tr>';
                         });
-
                         tableHTML += '</tbody></table>';
                     } else {
-                        // No antibiotic selected
-                        alert("Please select an antibiotic.");
-                        return; // Stop execution
+                         // No antibiotic selected yet
+                        alert("Please select an antibiotic first.");
+                        return; // Stop
                     }
                 }
 
-                // Update and show results only if a valid selection was processed
+                // Update and show results ONLY if a valid selection was processed successfully
                 if (isValidSelection) {
+                    console.log("Valid selection, generating table..."); // Debugging log
                     resultTitle.textContent = currentTitle;
                     resultTableContainer.innerHTML = tableHTML;
-                    resultContainer.classList.remove('hidden'); // Show results container
+                    resultContainer.classList.remove('hidden'); // <-- THIS LINE SHOWS THE RESULTS
+                    console.log("Result container should now be visible."); // Debugging log
                     // Scroll results into view
-                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Changed block to nearest
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    console.log("No valid selection made or data found."); // Debugging log
+                    // Ensure results remain hidden if we didn't successfully generate a table
+                    hideResults();
                 }
+
             } catch (error) {
                 console.error("Error during displayCoverage execution:", error);
-                resultTableContainer.innerHTML = '<p style="color: red; text-align: center;">An unexpected error occurred. Please check the console (F12) for details.</p>';
-                resultContainer.classList.remove('hidden');
+                resultTableContainer.innerHTML = `<p style="color: red; text-align: center;">An unexpected error occurred while generating results. Check the console (F12) for details. Error: ${error.message}</p>`;
+                resultContainer.classList.remove('hidden'); // Show error message
             }
         }
 
          // Helper function for table cell styling and text
          function getActivityStyling(activity) {
             let activityClass = 'activity-unknown';
-            let activityText = '?'; // Default for unknown/not specified
+            let activityText = '?';
 
-            switch (String(activity).toLowerCase()) { // Ensure comparison is case-insensitive
+            // Ensure consistent comparison by converting to lower case string
+            switch (String(activity).toLowerCase()) {
                 case 'good':
                     activityClass = 'activity-good';
                     activityText = '✓✓';
@@ -735,6 +736,7 @@
                     activityClass = 'activity-poor';
                     activityText = '✕';
                     break;
+                // case 'unknown' or default: handled by initialization
             }
              return { activityClass, activityText };
          }
@@ -742,14 +744,13 @@
         // --- Form Reset Logic (Reused) ---
         function resetForm() {
             form.reset();
-             // Set radio button back to default and trigger mode change
             document.querySelector('input[name="viewMode"][value="organism"]').checked = true;
-            handleModeChange(); // Ensure correct dropdown shows and results are hidden
-            // Explicitly hide results and clear table content
-            hideResults();
-            // Reset dropdowns to placeholder state explicitly
+            handleModeChange(); // This will reset dropdown visibility and hide results
+            // Explicitly reset selects to placeholder after form.reset()
             organismSelect.value = "";
             antibioticSelect.value = "";
+            // Ensure results are hidden (handleModeChange already calls hideResults, but belt-and-suspenders)
+            hideResults();
             // Scroll form back into view (optional)
              try {
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -758,11 +759,10 @@
 
         // --- Event Listeners (Adapted) ---
         modeRadios.forEach(radio => radio.addEventListener('change', handleModeChange));
-        interpretBtn.addEventListener('click', displayCoverage); // Use updated button ID
+        interpretBtn.addEventListener('click', displayCoverage);
         resetBtn.addEventListener('click', resetForm);
 
         // Hide result if dropdown selection changes AFTER results were shown
-        // This prevents showing outdated results if user changes selection without clicking 'Show Coverage' again
         organismSelect.addEventListener('change', () => {
             if (!resultContainer.classList.contains('hidden')) {
                 hideResults();
@@ -780,19 +780,21 @@
              console.log("DOM Loaded. Initializing guide...");
              try {
                  populateDropdowns();
-                 resetForm(); // Initialize form state and hide results
+                 // Set initial state: mode 'organism', hide antibiotic dropdown, hide results.
+                 resetForm(); // Call resetForm to set initial state correctly.
                  console.log("Guide initialized successfully.");
              } catch (error) {
                  console.error("Error during initialization:", error);
-                 // Display an error message to the user in the main container
                  const mainContainer = document.querySelector('.main-container');
                  if(mainContainer) {
                      const errorMsg = document.createElement('p');
-                     errorMsg.textContent = "Error initializing the tool. Please check the console (F12).";
+                     errorMsg.textContent = `Error initializing the tool: ${error.message}. Please check the console (F12).`;
                      errorMsg.style.color = 'red';
                      errorMsg.style.fontWeight = 'bold';
                      errorMsg.style.textAlign = 'center';
                      errorMsg.style.marginTop = '20px';
+                     errorMsg.style.border = '1px solid red';
+                     errorMsg.style.padding = '10px';
                      mainContainer.insertBefore(errorMsg, form); // Insert before the form
                  }
              }
