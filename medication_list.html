@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Medication Quick Reference</title>
+    <style>
+        /* General Styling */
+        :root {
+            --primary-color: #0056b3; /* Dark Blue */
+            --secondary-color: #f8f9fa; /* Light Gray */
+            --accent-color: #e9ecef; /* Lighter Gray */
+            --text-color: #333;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --error-color: #dc3545; /* Red */
+            --success-color: #28a745; /* Green */
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* Main Container */
+        .main-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            max-width: 900px; /* Increased max-width */
+            width: 95%;
+            margin: 20px;
+        }
+
+        /* Headings */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.75em;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 30px;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        /* Informational Section */
+        .info-section {
+            background-color: var(--accent-color);
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .info-section p, .info-section ul {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .info-section ul {
+            padding-left: 20px;
+        }
+
+        .info-section li {
+            margin-bottom: 5px;
+        }
+
+        /* Results Area */
+        .results-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            /* Initially hidden, potentially shown by JS if filtering added */
+            /* display: none; */ 
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        #medication-list dl {
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+
+        #medication-list dt {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-top: 15px;
+            color: #333; /* Slightly darker text for drug name */
+        }
+
+        #medication-list dd {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+        
+        #medication-list dd strong {
+             color: var(--primary-color);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.85em;
+            font-style: italic;
+            color: #6c757d; /* Gray text */
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 480px) {
+             body {
+                padding-top: 10px;
+             }
+            .main-container {
+                padding: 15px;
+                margin: 10px;
+            }
+             h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.2em;
+            }
+             .info-section {
+                 padding: 10px 15px;
+             }
+             #medication-list dd {
+                 margin-left: 10px;
+                 padding-left: 8px;
+             }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Clinical Medication Quick Reference</h1>
+
+        <div class="info-section">
+            <h2>About This Tool</h2>
+            <p>This tool provides a quick reference for common medications encountered in clinical settings, organized by functional group. It includes brief information on potential side effects, general dosing considerations, and key contraindications or cautions.</p>
+            <p><strong>Important Considerations:</strong></p>
+            <ul>
+                <li><strong>Not Exhaustive:</strong> This is not a complete list of all medications, side effects, doses, or contraindications.</li>
+                <li><strong>Dosing Varies:</strong> Dosing information is general and highly variable based on indication, patient factors (weight, renal/hepatic function), and clinical response. Always verify specific doses.</li>
+                <li><strong>Clinical Judgment Required:</strong> This tool is intended for informational purposes only and does not replace clinical judgment, institutional protocols, or consultation with pharmacists or prescribing references (e.g., Lexicomp, Micromedex, Epocrates, package inserts).</li>
+                <li><strong>Verification:</strong> Always double-check medication orders, concentrations (especially for drips), compatibilities, and patient allergies.</li>
+            </ul>
+        </div>
+
+        <!-- Medication information is displayed directly -->
+        <div id="result" class="results-container">
+            <div id="medication-list">
+
+                <!-- Intravenous Infusions / Drips -->
+                <h2>Intravenous Infusions / Drips</h2>
+                <dl>
+                    <dt>Dexmedetomidine (Precedex)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypotension, bradycardia, transient hypertension (with loading dose), nausea, dry mouth. <br>
+                        <strong>Dosing:</strong> Sedation: Often loading dose (e.g., 1 mcg/kg over 10 min) then infusion (e.g., 0.2-1.5 mcg/kg/hr). Dose adjusted to sedation target. No loading dose if hypotension/bradycardia is a concern. <br>
+                        <strong>Contraindications/Cautions:</strong> Caution in heart block, severe ventricular dysfunction, hypotension, bradycardia. Does not provide significant respiratory depression at typical sedation doses.
+                    </dd>
+
+                    <dt>Diltiazem (Cardizem)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypotension, bradycardia, AV block, edema, headache, dizziness. <br>
+                        <strong>Dosing:</strong> Rate control (e.g., Afib/Aflutter): IV bolus (e.g., 0.25 mg/kg actual body weight over 2 min), may repeat with 0.35 mg/kg. IV Infusion: Start 5-10 mg/hr, titrate up to 15 mg/hr as needed for rate control. <br>
+                        <strong>Contraindications/Cautions:</strong> Sick sinus syndrome (w/o pacemaker), 2nd/3rd degree AV block (w/o pacemaker), severe hypotension (<90 mmHg systolic), acute MI, pulmonary congestion, WPW syndrome with Afib/Aflutter, concurrent IV beta-blocker use.
+                    </dd>
+                    
+                    <dt>Dobutamine</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Tachycardia, arrhythmias (PVCs, VT), hypertension or hypotension, angina, headache, nausea. <br>
+                        <strong>Dosing:</strong> Inotropic support: IV Infusion typically 2.5-20 mcg/kg/min, titrate to hemodynamic effect. Lower doses may cause vasodilation. <br>
+                        <strong>Contraindications/Cautions:</strong> Idiopathic hypertrophic subaortic stenosis (IHSS). Caution in Afib (may increase ventricular response rate - consider AV node blocker first), recent MI, hypovolemia (correct first).
+                    </dd>
+
+                    <dt>Epinephrine (Adrenaline)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Tachycardia, hypertension, arrhythmias, anxiety, tremor, hyperglycemia, metabolic acidosis, tissue ischemia/necrosis (extravasation). <br>
+                        <strong>Dosing:</strong> Vasopressor (sepsis, shock): IV Infusion typically 0.01-1 mcg/kg/min (or 1-10 mcg/min fixed dose), titrate to MAP goal. Anaphylaxis/Cardiac Arrest doses differ. <br>
+                        <strong>Contraindications/Cautions:</strong> No absolute contraindications in cardiac arrest. Caution in hypertension, tachyarrhythmias, coronary artery disease, hyperthyroidism. Use central line if possible for pressor doses.
+                    </dd>
+
+                    <dt>Fentanyl</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Respiratory depression, sedation, bradycardia, hypotension, constipation, nausea/vomiting, chest wall rigidity (rapid/high dose IV). <br>
+                        <strong>Dosing:</strong> Analgesia/Sedation: IV Infusion typically 25-200 mcg/hr (or weight-based 0.5-2 mcg/kg/hr), titrate to pain/sedation score. Bolus doses differ (e.g., 25-100 mcg IV). <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma. Caution in head injury (increased ICP), hypotension, bradycardia, hepatic/renal impairment. High potency opioid.
+                    </dd>
+                    
+                    <dt>Hydromorphone (Dilaudid)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Respiratory depression, sedation, hypotension, bradycardia, constipation, nausea/vomiting, dizziness. <br>
+                        <strong>Dosing:</strong> Analgesia: IV Infusion typically 0.5-3 mg/hr (highly variable, often after loading/boluses). Titrate to pain score. Note high potency (approx. 5-7x morphine). <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma, GI obstruction/paralytic ileus. Caution in head injury, hypotension, elderly, opioid naive.
+                    </dd>
+
+                    <dt>Insulin</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypoglycemia, hypokalemia (shifts K+ into cells), weight gain (long-term). <br>
+                        <strong>Dosing:</strong> Hyperglycemia/DKA/HHS: IV Infusion (Regular Insulin). Dosing protocol-driven (e.g., start 0.1 units/kg/hr or fixed rate based on blood glucose), titrate based on frequent glucose checks and protocol targets. Hyperkalemia: IV bolus (e.g., 10 units Regular Insulin) WITH glucose (e.g., D50W) unless patient is hyperglycemic. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypoglycemia. Requires frequent blood glucose monitoring. Different insulin types are NOT interchangeable for infusions.
+                    </dd>
+
+                    <dt>Isoproterenol (Isuprel)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Tachycardia, palpitations, arrhythmias, hypotension (due to vasodilation), flushing, headache, tremor. <br>
+                        <strong>Dosing:</strong> Bradycardia/Heart Block (temporary measure): IV Infusion typically 2-10 mcg/min, titrate to heart rate. Use decreasingly common due to side effects. <br>
+                        <strong>Contraindications/Cautions:</strong> Tachyarrhythmias, digoxin toxicity, angina pectoris. Caution in hyperthyroidism, diabetes. Potent beta-agonist.
+                    </dd>
+
+                    <dt>Labetalol</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypotension (especially orthostatic), bradycardia, dizziness, fatigue, nausea, bronchospasm. <br>
+                        <strong>Dosing:</strong> Hypertensive Emergency: IV Infusion typically 0.5-2 mg/min after initial boluses (e.g., 20mg IV push, then 40-80mg q10min up to 300mg cumulative). Titrate to BP goal. <br>
+                        <strong>Contraindications/Cautions:</strong> Asthma/COPD, severe bradycardia, 2nd/3rd degree AV block (w/o pacemaker), decompensated heart failure, cardiogenic shock.
+                    </dd>
+                    
+                    <dt>Lorazepam (Ativan)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, respiratory depression, hypotension, dizziness, confusion, propylene glycol toxicity (with high dose/prolonged infusion - causes metabolic acidosis, renal failure). <br>
+                        <strong>Dosing:</strong> Sedation/Anxiety/Seizures: IV Infusion typically 0.5-4 mg/hr (highly variable), titrate to sedation scale (e.g., RASS). Bolus doses differ. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, sleep apnea, acute narrow-angle glaucoma. Caution in elderly, debilitated, hepatic/renal impairment. Monitor for propylene glycol toxicity with prolonged/high dose infusions.
+                    </dd>
+
+                    <dt>Morphine</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Respiratory depression, sedation, constipation, nausea/vomiting, hypotension, bradycardia, histamine release (itching, flushing). <br>
+                        <strong>Dosing:</strong> Analgesia: IV Infusion typically 1-10 mg/hr (highly variable), titrate to pain score. Bolus doses differ (e.g., 2-10mg IV). <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma, GI obstruction/paralytic ileus. Caution in head injury, hypotension, renal impairment (metabolite accumulation), biliary colic.
+                    </dd>
+                    
+                    <dt>Naloxone (Narcan)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Opioid withdrawal (pain, agitation, tachycardia, hypertension), nausea/vomiting, pulmonary edema (rare). <br>
+                        <strong>Dosing:</strong> Opioid Overdose Reversal (Continuous Infusion for long-acting opioids or large overdoses): IV Infusion typically start at ~2/3 of the effective initial bolus dose per hour (e.g., if 0.6mg bolus worked, start infusion at 0.4mg/hr). Titrate to maintain respiratory function without inducing severe withdrawal. Used less commonly as drip vs repeat boluses. <br>
+                        <strong>Contraindications/Cautions:</strong> Use with caution in opioid-dependent patients (risk of acute withdrawal). Dose should be titrated carefully to avoid "overshoot". Short half-life often requires repeat dosing or infusion.
+                    </dd>
+
+                    <dt>Nitroglycerin</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Headache, hypotension, reflex tachycardia, flushing, dizziness, methemoglobinemia (rare, high doses). <br>
+                        <strong>Dosing:</strong> Angina/ACS/Acute HF/Hypertension: IV Infusion typically start 5-10 mcg/min, titrate upwards (e.g., increase by 5-10 mcg/min q3-5min) based on symptoms/BP. Max dose varies (e.g., up to 200-400 mcg/min or higher, watch BP). Requires special non-PVC tubing. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypotension (SBP <90 mmHg), severe bradycardia (<50 bpm), right ventricular infarction, use of PDE-5 inhibitors (e.g., sildenafil) within 24-48 hrs, constrictive pericarditis, cardiac tamponade. Tolerance (tachyphylaxis) can develop.
+                    </dd>
+
+                    <dt>Norepinephrine (Levophed)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypertension, tachycardia/bradycardia (reflex), arrhythmias, anxiety, headache, peripheral/visceral ischemia, tissue necrosis (extravasation - potent vasoconstrictor). <br>
+                        <strong>Dosing:</strong> Vasopressor (Shock/Hypotension): IV Infusion typically start 0.01-0.1 mcg/kg/min (or 2-8 mcg/min fixed dose), titrate rapidly to MAP goal (e.g., >65 mmHg). Can go much higher if needed (e.g., up to 1-3 mcg/kg/min or more). <br>
+                        <strong>Contraindications/Cautions:</strong> No absolute C/I in shock. Hypovolemia should be corrected first/concurrently. Use central line whenever possible. Monitor extremities for ischemia. Phentolamine for extravasation.
+                    </dd>
+                    
+                    <dt>Octreotide (Sandostatin)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Bradycardia, conduction abnormalities, nausea, diarrhea, abdominal pain, hyperglycemia/hypoglycemia, cholelithiasis (long-term use). <br>
+                        <strong>Dosing:</strong> Variceal Bleeding: IV bolus (e.g., 50 mcg) followed by IV Infusion (e.g., 50 mcg/hr) for 2-5 days. Other uses (e.g., carcinoid) have different dosing. <br>
+                        <strong>Contraindications/Cautions:</strong> Caution with medications affecting fluid/electrolyte balance or heart rate/conduction. Monitor glucose. May alter absorption of dietary fats.
+                    </dd>
+
+                    <dt>Phenylephrine (Neo-Synephrine)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Reflex bradycardia, hypertension, headache, anxiety, peripheral/visceral ischemia, tissue necrosis (extravasation). <br>
+                        <strong>Dosing:</strong> Vasopressor (Shock/Hypotension, esp. when tachycardia is present): IV Infusion typically start 0.5-2 mcg/kg/min (or 40-180 mcg/min fixed dose), titrate to MAP goal. Often used when norepinephrine causes excessive tachycardia. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe hypertension, ventricular tachycardia. Caution in bradycardia, elderly, coronary artery disease. Pure alpha-agonist (vasoconstriction without significant inotropy/chronotropy). Use central line if possible. Phentolamine for extravasation.
+                    </dd>
+                    
+                    <dt>Propofol (Diprivan)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Hypotension, bradycardia, respiratory depression/apnea, hypertriglyceridemia, injection site pain, propofol-related infusion syndrome (PRIS - rare but severe: metabolic acidosis, rhabdomyolysis, renal failure, cardiac failure - risk with high dose/>48hrs). <br>
+                        <strong>Dosing:</strong> Sedation (ICU): IV Infusion typically 5-50 mcg/kg/min (sometimes higher), titrate to sedation target (e.g., RASS). Anesthesia induction/maintenance doses higher. <br>
+                        <strong>Contraindications/Cautions:</strong> Known hypersensitivity (including egg, soy - check specific formulation). Caution in hypotension, bradycardia, elderly, debilitated, lipid disorders. Monitor triglycerides, CK, acid-base status with prolonged/high dose use. Requires dedicated IV line. Rapid onset/offset.
+                    </dd>
+                    
+                    <dt>Sodium Bicarbonate</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Metabolic alkalosis, hypernatremia, hypokalemia, fluid overload, extravasation injury, decreased ionized calcium. Rapid infusion can cause CNS effects. <br>
+                        <strong>Dosing:</strong> Severe Metabolic Acidosis (e.g., pH <7.1-7.2), certain toxicities (e.g., TCA overdose), hyperkalemia: IV Infusion dose depends heavily on indication, severity, patient weight, bicarb deficit. Often given as boluses (e.g., 50-100 mEq) or slow infusion based on calculated deficit or target pH/bicarb level. Use protocols. <br>
+                        <strong>Contraindications/Cautions:</strong> Metabolic/respiratory alkalosis, hypernatremia, hypocalcemia, pulmonary edema. Ensure adequate ventilation (CO2 production increases). Monitor electrolytes, acid-base status closely. Use with caution in heart failure, renal impairment.
+                    </dd>
+
+                    <dt>Vecuronium</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Prolonged paralysis (esp. w/ renal/hepatic impair, prolonged use), muscle weakness after discontinuation, inadequate analgesia/sedation (if used alone), tachycardia (mild). <br>
+                        <strong>Dosing:</strong> Neuromuscular Blockade (e.g., ARDS ventilation, procedures): IV Infusion typically 0.8-1.2 mcg/kg/min (or ~50-100 mcg/kg/hr) after initial bolus (e.g., 0.08-0.1 mg/kg). Titrate using train-of-four (TOF) monitoring. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. **Must be used with adequate analgesia and sedation.** Monitor depth of blockade (TOF). Caution in renal/hepatic impairment (prolonged duration). Risk of critical illness myopathy/polyneuropathy with prolonged use, especially with corticosteroids.
+                    </dd>
+
+                </dl>
+
+                <!-- Antiemetics -->
+                <h2>Antiemetics</h2>
+                <dl>
+                     <dt>Ondansetron (Zofran)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Headache, constipation, diarrhea, fatigue, dizziness, QTc prolongation (dose-dependent). <br>
+                        <strong>Dosing:</strong> Nausea/Vomiting: IV/PO: 4-8 mg. Max single IV dose often limited to 16mg due to QTc risk. <br>
+                        <strong>Contraindications/Cautions:</strong> Congenital long QT syndrome, concurrent use with apomorphine. Caution with other QTc prolonging drugs, electrolyte abnormalities (hypokalemia, hypomagnesemia).
+                    </dd>
+
+                    <dt>Metoclopramide (Reglan)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Drowsiness, restlessness, fatigue, dizziness, extrapyramidal symptoms (EPS), tardive dyskinesia (BBW - esp. long-term/high dose), NMS (rare). <br>
+                        <strong>Dosing:</strong> Nausea/Vomiting, Gastroparesis: IV/PO: 5-10 mg. <br>
+                        <strong>Contraindications/Cautions:</strong> GI obstruction/perforation/hemorrhage, seizure disorder, pheochromocytoma, concurrent use with drugs likely to cause EPS. Caution in elderly, renal impairment (dose adjust), Parkinson's disease. Limit duration of use if possible.
+                    </dd>
+                    
+                     <dt>Prochlorperazine (Compazine)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, dizziness, blurred vision, dry mouth, constipation, EPS (including akathisia, dystonia), NMS (rare), QTc prolongation, orthostatic hypotension. <br>
+                        <strong>Dosing:</strong> Nausea/Vomiting: IV/IM/PO/PR: 5-10 mg. Use lower doses IV initially. <br>
+                        <strong>Contraindications/Cautions:</strong> Coma, severe CNS depression, use in children <2 years or <20 lbs (risk of fatal respiratory depression). Caution in elderly (increased risk of death in dementia-related psychosis - BBW for antipsychotics), Parkinson's disease, glaucoma, BPH, seizure disorder, severe cardiovascular disease. Avoid IV push if possible (risk of hypotension); dilute and give slowly if necessary.
+                    </dd>
+
+                    <dt>Trimethobenzamide (Tigan)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Drowsiness, dizziness, blurred vision, headache, muscle cramps, EPS (rare). <br>
+                        <strong>Dosing:</strong> Nausea/Vomiting: IM/PO: 200-300 mg tid-qid. (IM preferred if active vomiting). <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Use with caution in children (increased risk of EPS, Reye's syndrome link considered). May mask underlying toxicity or conditions like appendicitis.
+                    </dd>
+                </dl>
+
+                <!-- Analgesics -->
+                <h2>Analgesics</h2>
+                <dl>
+                    <dt>Acetaminophen (Tylenol, Ofirmev [IV])</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Generally well-tolerated at therapeutic doses. Hepatotoxicity with overdose or in susceptible individuals (e.g., chronic alcohol use, malnutrition). Rare: rash, hypersensitivity. IV: Nausea, vomiting, headache, insomnia. <br>
+                        <strong>Dosing:</strong> IV: Adults >= 50kg: 1000 mg q6h or 650 mg q4h (Max 4g/day). Weight-based for <50kg. PO: Regular strength 325-650 mg q4-6h (Max 4g/day); Extra strength 500-1000 mg q6h (Max 3-4g/day, check label). Lower max dose often recommended in liver disease or chronic alcohol use (e.g., 2g/day). <br>
+                        <strong>Contraindications/Cautions:</strong> Severe active liver disease, hypersensitivity. Caution in hepatic impairment, chronic alcohol use, G6PD deficiency, malnutrition. Beware of combination products containing acetaminophen.
+                    </dd>
+
+                    <dt>Ketorolac (Toradol)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> GI bleeding/ulceration/perforation (BBW), nephrotoxicity (BBW), increased risk of cardiovascular thrombotic events (MI, stroke - BBW), bleeding risk (inhibits platelet function), headache, dizziness, edema. <br>
+                        <strong>Dosing:</strong> Short-term pain management (Max 5 days total duration for ALL routes combined): IV: 15-30 mg. IM: 30-60 mg. PO (usually continuation after IV/IM): 10-20 mg. Dose adjustment/avoidance needed based on age (>65), weight (<50kg), and renal function. <br>
+                        <strong>Contraindications/Cautions:</strong> Active PUD/GI bleed, history of PUD/GI bleed, advanced renal impairment/risk of renal failure, suspected/confirmed cerebrovascular bleeding, hemorrhagic diathesis, concurrent NSAID or probenecid use, major surgery with high bleeding risk, CABG surgery (peri-operative pain), labor/delivery. Caution in elderly, heart failure, hypertension, hepatic impairment.
+                    </dd>
+
+                    <dt>Morphine</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Respiratory depression, sedation, constipation, nausea/vomiting, hypotension, bradycardia, histamine release (itching, flushing), dizziness, urinary retention. <br>
+                        <strong>Dosing:</strong> Pain: IV: Initial dose 2-10 mg q2-4h PRN (highly variable). PO (Immediate Release): 10-30 mg q4h PRN. Dose titration based on response and tolerance. Extended-release formulations exist for chronic pain. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma, GI obstruction/paralytic ileus. Caution in head injury (increased ICP), hypotension, bradycardia, renal impairment (active metabolite accumulation), hepatic impairment, elderly, BPH, seizure disorder, biliary colic.
+                    </dd>
+
+                    <dt>Hydromorphone (Dilaudid)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Similar to morphine (respiratory depression, sedation, constipation, N/V, hypotension, bradycardia), but generally less histamine release. Potentially more euphoria/abuse potential. <br>
+                        <strong>Dosing:</strong> Pain: IV: Initial dose 0.2-1 mg q2-3h PRN (highly variable). PO (Immediate Release): 2-4 mg q4-6h PRN. Note high potency (approx. 5-7 times morphine IV/PO). Dose titration based on response and tolerance. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma, GI obstruction/paralytic ileus. Caution in head injury, hypotension, elderly, opioid naive (start low!), renal/hepatic impairment.
+                    </dd>
+                    
+                    <dt>Tramadol (Ultram)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Dizziness, nausea, constipation, headache, somnolence, seizure risk (especially with higher doses, renal impairment, or interacting medications), serotonin syndrome risk (especially with other serotonergic drugs), hypoglycemia. Less respiratory depression than traditional opioids at typical doses. <br>
+                        <strong>Dosing:</strong> Pain: PO (Immediate Release): 50-100 mg q4-6h (Max 400mg/day). Dose reduction needed in renal impairment (CrCl <30) and elderly (>75). Extended-release formulations exist. <br>
+                        <strong>Contraindications/Cautions:</strong> Acute intoxication (alcohol, hypnotics, opioids, psychotropics), concurrent/recent MAOI use (within 14 days), significant respiratory depression, conditions predisposing to seizures, children <12 years old. Caution with other CNS depressants, serotonergic drugs, history of substance abuse.
+                    </dd>
+                    
+                    <dt>Oxycodone (OxyContin [ER], Roxicodone [IR])</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Similar to morphine/hydromorphone (respiratory depression, sedation, constipation, N/V, dizziness, hypotension). Pruritus common. <br>
+                        <strong>Dosing:</strong> Pain: PO (Immediate Release): 5-15 mg q4-6h PRN. Dose titration based on response and tolerance. Extended-release formulations exist for chronic pain (requires careful initiation/conversion). <br>
+                        <strong>Contraindications/Cautions:</strong> Severe respiratory depression, acute/severe asthma, GI obstruction/paralytic ileus. Caution in head injury, hypotension, elderly, renal/hepatic impairment, BPH, seizure disorder. High abuse potential. Beware of combination products (e.g., with acetaminophen - Percocet).
+                    </dd>
+                </dl>
+
+                <!-- Antitussives / Expectorants -->
+                <h2>Antitussives / Expectorants</h2>
+                <dl>
+                    <dt>Benzonatate (Tessalon Perles)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Dizziness, sedation, headache, nausea, constipation, numbness of mouth/throat/chest (if chewed or dissolved in mouth - can cause laryngospasm/bronchospasm). <br>
+                        <strong>Dosing:</strong> Cough: PO: 100-200 mg tid PRN (Max 600mg/day). Swallow capsules whole. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. **Do NOT chew or dissolve capsules in mouth.** Caution if difficulty swallowing. Accidental ingestion in children <10 can be fatal.
+                    </dd>
+
+                    <dt>Guaifenesin (Mucinex)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Generally well-tolerated. Nausea, vomiting, headache, dizziness, rash (rare). <br>
+                        <strong>Dosing:</strong> Expectorant: PO (Extended Release): 600-1200 mg q12h. Immediate release formulations exist (often in combination products). Drink plenty of water. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Not for chronic cough (e.g., smoking, asthma, emphysema) unless directed by provider. Does not suppress cough reflex, aims to thin mucus.
+                    </dd>
+                </dl>
+                
+                <!-- Gastrointestinal Agents (Non-Constipation) -->
+                <h2>Gastrointestinal Agents (Non-Constipation)</h2>
+                <dl>
+                     <dt>Calcium Carbonate (TUMS)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Constipation, bloating, gas, belching, hypercalcemia (rare with occasional use, risk increases with high doses/renal impairment), milk-alkali syndrome (with high calcium/alkali intake). <br>
+                        <strong>Dosing:</strong> Antacid/Calcium Supplement: PO: Dose varies by product strength (e.g., 500-1500 mg) PRN for heartburn. Max daily dose depends on indication and total calcium intake. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypercalcemia, renal calculi, hypophosphatemia. Caution in renal impairment. Can interfere with absorption of other medications (e.g., thyroid hormone, tetracyclines, fluoroquinolones) - separate dosing.
+                    </dd>
+
+                    <dt>Simethicone (Gas-X, Mylicon)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Minimal/rare (not absorbed systemically). Maybe mild diarrhea or nausea. <br>
+                        <strong>Dosing:</strong> Gas Relief: PO: 40-125 mg after meals and at bedtime PRN. Chewable tablets should be chewed thoroughly. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Not useful for colic in infants based on evidence. Acts as an anti-foaming agent.
+                    </dd>
+                </dl>
+
+                <!-- Laxatives -->
+                <h2>Laxatives</h2>
+                 <dl>
+                     <dt>Polyethylene Glycol 3350 (PEG, Miralax)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Bloating, cramping, gas, nausea, diarrhea (especially at higher doses). <br>
+                        <strong>Dosing:</strong> Constipation: PO: 17 grams (about 1 capful) dissolved in 4-8 oz liquid once daily. May take 1-3 days for effect. Higher doses used for bowel prep. <br>
+                        <strong>Contraindications/Cautions:</strong> Known or suspected bowel obstruction. Caution in renal impairment or electrolyte imbalances (though generally considered safe as non-absorbed). (Osmotic Laxative)
+                    </dd>
+
+                    <dt>Senna (Senokot)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Abdominal cramps, diarrhea, nausea, electrolyte disturbances (with chronic use/overuse), melanosis coli (benign pigment changes in colon with long-term use). Urine discoloration (pink/red/brown). <br>
+                        <strong>Dosing:</strong> Constipation: PO: Dose varies by product (e.g., typical starting dose 8.6-17.2 mg sennosides) once or twice daily, often at bedtime. Max dose varies. Takes 6-12 hours for effect. <br>
+                        <strong>Contraindications/Cautions:</strong> GI obstruction, appendicitis, acute inflammatory bowel disease, severe dehydration, undiagnosed abdominal pain. Avoid prolonged use. (Stimulant Laxative)
+                    </dd>
+                    
+                    <dt>Docusate Sodium/Calcium (Colace)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Generally well-tolerated. Mild abdominal cramping, diarrhea (rare). Throat irritation (liquid form). <br>
+                        <strong>Dosing:</strong> Stool Softener (Prevention/Mild Constipation): PO: 50-300 mg daily (divided doses or single dose). Docusate sodium common; calcium form also available. May take 1-3 days for effect. <br>
+                        <strong>Contraindications/Cautions:</strong> Concurrent use with mineral oil (increases absorption), nausea/vomiting, symptoms of appendicitis, undiagnosed abdominal pain. Limited evidence for effectiveness in treating active constipation; better for prevention or when straining should be avoided. (Stool Softener)
+                    </dd>
+
+                    <dt>Magnesium Hydroxide (Milk of Magnesia)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Diarrhea, abdominal cramping, hypermagnesemia (risk increases significantly with renal impairment), electrolyte imbalance. <br>
+                        <strong>Dosing:</strong> Constipation: PO: 15-60 mL (liquid) once daily or in divided doses. Dose varies by concentration. Lower doses used as antacid. Takes 30 min to 6 hours for effect. Drink full glass of water. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe renal impairment (CrCl <30 mL/min), bowel obstruction, myocardial damage, heart block. Caution in any renal impairment, neuromuscular disease (e.g., myasthenia gravis). Can affect absorption of other drugs. (Saline/Osmotic Laxative)
+                    </dd>
+                    
+                    <dt>Enema (e.g., Fleet Enema [Sodium Phosphate], Mineral Oil, Tap Water)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Abdominal cramping, rectal irritation, electrolyte disturbances (especially sodium phosphate - hyperphosphatemia, hypocalcemia, hypernatremia - BBW for acute phosphate nephropathy risk, esp. w/ risk factors), dehydration, bowel perforation (rare). <br>
+                        <strong>Dosing:</strong> Constipation/Bowel Cleansing: Rectal: Administer 1 unit PRN as directed by product instructions. Patient positioning important (left side-lying). <br>
+                        <strong>Contraindications/Cautions:</strong> Sodium Phosphate Enemas: Acute phosphate nephropathy risk (BBW - avoid in renal disease, heart failure, dehydration, elderly, bowel obstruction, active colitis, concurrent diuretics/ACEi/ARBs). Bowel obstruction, severe dehydration, toxic megacolon, imperforate anus. Use all enemas with caution, consider underlying cause. Often considered a last resort for simple constipation.
+                    </dd>
+                </dl>
+
+                <!-- Rate Control Agents -->
+                <h2>Rate Control Agents (Tachycardia)</h2>
+                <dl>
+                    <dt>Metoprolol (Lopressor [Tartrate], Toprol XL [Succinate])</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Bradycardia, hypotension, fatigue, dizziness, depression, shortness of breath, bronchospasm (less than non-selective beta-blockers), masking of hypoglycemia symptoms. <br>
+                        <strong>Dosing:</strong> Rate Control/Angina/HTN: IV Push (Tartrate): 2.5-5 mg q2-5min up to 15 mg total. PO (Tartrate - immediate release): 25-100 mg bid. PO (Succinate - extended release): 25-200 mg once daily. Dosing varies by indication. <br>
+                        <strong>Contraindications/Cautions:</strong> Severe bradycardia (<45-50 bpm), 2nd/3rd degree AV block (w/o pacemaker), decompensated heart failure, cardiogenic shock, sick sinus syndrome (w/o pacemaker), severe peripheral artery disease. Caution in asthma/COPD, diabetes, hepatic impairment. Do not stop abruptly (taper). (Beta-1 Selective Blocker)
+                    </dd>
+
+                    <dt>Diltiazem (Cardizem)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Edema (peripheral), headache, dizziness, bradycardia, hypotension, AV block, constipation, flushing. <br>
+                        <strong>Dosing:</strong> Rate Control (e.g., Afib/Aflutter): IV Bolus: 0.25 mg/kg actual body weight over 2 min, may repeat after 15 min with 0.35 mg/kg. IV Infusion: Start 5-10 mg/hr, titrate up to 15 mg/hr as needed for rate control. PO (Immediate Release): 30-120 mg tid-qid. PO (Extended Release): 120-480 mg once daily (dose/formulation varies). <br>
+                        <strong>Contraindications/Cautions:</strong> Sick sinus syndrome (w/o pacemaker), 2nd/3rd degree AV block (w/o pacemaker), severe hypotension (<90 mmHg systolic), acute MI with pulmonary congestion, WPW syndrome with Afib/Aflutter, concurrent IV beta-blocker use. Caution in heart failure (esp. systolic dysfunction), hepatic/renal impairment. (Non-Dihydropyridine Calcium Channel Blocker)
+                    </dd>
+                </dl>
+
+                <!-- Antihypertensives -->
+                <h2>Antihypertensives</h2>
+                <dl>
+                     <dt>Amlodipine (Norvasc)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Peripheral edema (dose-dependent), dizziness, flushing, headache, fatigue, palpitations. <br>
+                        <strong>Dosing:</strong> Hypertension/Angina: PO: Start 2.5-5 mg once daily, max 10 mg once daily. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Caution in severe aortic stenosis, hepatic impairment, heart failure. Slow onset of action. (Dihydropyridine Calcium Channel Blocker)
+                    </dd>
+
+                    <dt>Hydralazine (Apresoline)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Reflex tachycardia, palpitations, headache, flushing, dizziness, nausea/vomiting, drug-induced lupus erythematosus (DILE - dose and duration dependent, requires monitoring ANA). <br>
+                        <strong>Dosing:</strong> Hypertension: IV Push: 5-20 mg slow IV push q4-6h PRN. PO: Start 10 mg qid, titrate up (Max typically 200-300mg/day). Often requires co-administration with beta-blocker and diuretic to manage side effects. <br>
+                        <strong>Contraindications/Cautions:</strong> Coronary artery disease (can provoke angina), mitral valvular rheumatic heart disease. Caution in renal impairment, cerebrovascular disease. (Direct Vasodilator)
+                    </dd>
+
+                    <dt>Labetalol</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Dizziness, fatigue, nausea, orthostatic hypotension, bradycardia, headache, scalp tingling, bronchospasm. <br>
+                        <strong>Dosing:</strong> Hypertension: IV Push: 10-20 mg slow IV push initially, may give 40-80 mg q10min PRN (Max cumulative 300 mg). IV Infusion: 0.5-2 mg/min. PO: Start 100 mg bid, titrate up (Max 2400mg/day, typical max 800-1200mg/day). <br>
+                        <strong>Contraindications/Cautions:</strong> Asthma/COPD, severe bradycardia, 2nd/3rd degree AV block (w/o pacemaker), decompensated heart failure, cardiogenic shock. Caution in diabetes (mask hypoglycemia), hepatic impairment. (Combined Alpha-1 and Non-Selective Beta Blocker)
+                    </dd>
+
+                    <dt>Losartan (Cozaar)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Dizziness, fatigue, hyperkalemia, upper respiratory infection symptoms, angioedema (rare but serious). Less cough than ACE inhibitors. <br>
+                        <strong>Dosing:</strong> Hypertension: PO: Start 25-50 mg once daily, max 100 mg daily (can be divided bid). Dose adjustment may be needed in hepatic impairment or volume depletion. <br>
+                        <strong>Contraindications/Cautions:</strong> Pregnancy (BBW - fetal toxicity), bilateral renal artery stenosis, concurrent use with aliskiren in diabetic patients. Caution in renal impairment, hepatic impairment, volume depletion, history of angioedema. Monitor potassium and renal function. (Angiotensin II Receptor Blocker - ARB)
+                    </dd>
+                </dl>
+                
+                <!-- Sedatives / Hypnotics / Sleep Aids -->
+                <h2>Sedatives / Hypnotics / Sleep Aids</h2>
+                 <dl>
+                    <dt>Melatonin</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Daytime sleepiness, dizziness, headache, nausea. Generally well-tolerated. Potential interactions (e.g., fluvoxamine increases levels). <br>
+                        <strong>Dosing:</strong> Insomnia/Sleep Regulation: PO: 0.5-10 mg taken 30-60 minutes before bedtime. Wide dose range, start low. Immediate and extended release formulations available. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Caution in patients with autoimmune diseases, seizure disorders, or those taking anticoagulants (potential interaction). Quality/purity of supplements can vary. (Hormone/Dietary Supplement)
+                    </dd>
+
+                    <dt>Ramelteon (Rozerem)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Dizziness, fatigue, somnolence, nausea. Rare: complex sleep behaviors (e.g., sleep-driving). <br>
+                        <strong>Dosing:</strong> Insomnia (Sleep Onset): PO: 8 mg taken within 30 minutes of bedtime. Do not take with or immediately after a high-fat meal. <br>
+                        <strong>Contraindications/Cautions:</strong> Concurrent use with fluvoxamine (strong CYP1A2 inhibitor), severe hepatic impairment. Caution in depression, respiratory impairment (COPD, sleep apnea). Not a controlled substance. (Melatonin Receptor Agonist)
+                    </dd>
+                    
+                     <dt>Mirtazapine (Remeron)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation (more prominent at lower doses), increased appetite, weight gain, dry mouth, constipation, dizziness, orthostatic hypotension (less common). Rare: agranulocytosis, NMS. <br>
+                        <strong>Dosing:</strong> Insomnia (off-label)/Depression: PO: Start 7.5-15 mg at bedtime for insomnia. Antidepressant doses typically 15-45 mg daily. <br>
+                        <strong>Contraindications/Cautions:</strong> Concurrent/recent MAOI use (within 14 days). Caution in elderly, seizure disorders, hepatic/renal impairment, bipolar disorder (risk of mania), QTc prolongation risk (moderate). Monitor for worsening depression/suicidality (BBW for antidepressants in young adults). (Tetracyclic Antidepressant)
+                    </dd>
+
+                    <dt>Hydroxyzine (Vistaril [Pamoate], Atarax [HCl])</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, dry mouth, dizziness, blurred vision, confusion (esp. elderly), urinary retention, constipation. QTc prolongation risk (dose-dependent, avoid >100mg/day total in adults). <br>
+                        <strong>Dosing:</strong> Anxiety/Sedation/Pruritus: PO: 25-100 mg up to qid PRN (lower doses often used for sleep, e.g., 25-50mg hs). <br>
+                        <strong>Contraindications/Cautions:</strong> Known QTc prolongation, risk factors for QTc prolongation (e.g., electrolyte imbalance, other QTc prolonging drugs), early pregnancy. Caution in elderly (anticholinergic effects), glaucoma, BPH, respiratory disease. (First Generation Antihistamine)
+                    </dd>
+                </dl>
+
+                 <!-- Muscle Relaxants -->
+                <h2>Muscle Relaxants</h2>
+                <dl>
+                    <dt>Cyclobenzaprine (Flexeril)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Drowsiness, dizziness, dry mouth, fatigue, constipation, blurred vision. Serotonin syndrome risk (structurally similar to TCAs). <br>
+                        <strong>Dosing:</strong> Muscle Spasm: PO (Immediate Release): 5-10 mg tid (Max 60mg/day). Extended release formulation available (15-30mg once daily). Use for short periods (2-3 weeks). <br>
+                        <strong>Contraindications/Cautions:</strong> Concurrent/recent MAOI use (within 14 days), hyperthyroidism, heart failure, arrhythmias, heart block or conduction disturbances, acute recovery phase of MI. Caution in elderly (anticholinergic effects), urinary retention, glaucoma, hepatic impairment. Avoid alcohol/other CNS depressants.
+                    </dd>
+                </dl>
+                
+                 <!-- Antihistamines / Decongestants -->
+                <h2>Antihistamines / Decongestants</h2>
+                <dl>
+                    <dt>Loratadine (Claritin)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Generally well-tolerated. Headache, fatigue, dry mouth (less common than 1st gen). Non-sedating or minimally sedating for most people. <br>
+                        <strong>Dosing:</strong> Allergic Rhinitis/Urticaria: PO: 10 mg once daily. Dose adjustment in severe renal/hepatic impairment. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. (Second Generation Antihistamine)
+                    </dd>
+
+                    <dt>Naphazoline (Naphcon [Ophthalmic], Privine [Nasal])</dt>
+                     <dd>
+                        <strong>Side Effects:</strong> Ophthalmic: Stinging, burning, blurred vision, mydriasis (pupil dilation), increased intraocular pressure. Nasal: Rebound congestion (rhinitis medicamentosa) with prolonged use (>3-5 days), burning, stinging, sneezing. Systemic effects (rare with proper use): hypertension, palpitations, nervousness. <br>
+                        <strong>Dosing:</strong> Ophthalmic (Allergic Conjunctivitis): 1-2 drops up to qid. Nasal (Congestion): 1-2 sprays/drops per nostril q6h PRN (Max use 3-5 days). <br>
+                        <strong>Contraindications/Cautions:</strong> Narrow-angle glaucoma (ophthalmic use). Caution in hypertension, cardiovascular disease, hyperthyroidism, diabetes. Avoid prolonged nasal use. (Adrenergic Agonist Vasoconstrictor/Decongestant)
+                    </dd>
+
+                    <dt>Diphenhydramine (Benadryl)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, dizziness, fatigue, confusion (esp. elderly), dry mouth, blurred vision, urinary retention, constipation, paradoxical excitation (esp. children). <br>
+                        <strong>Dosing:</strong> Allergy/Sleep/Motion Sickness/EPS: IV/IM/PO: 25-50 mg q4-8h PRN (Max 300-400mg/day). Lower doses often sufficient for sleep. <br>
+                        <strong>Contraindications/Cautions:</strong> Newborns/premature infants, breastfeeding, acute asthma attack, narrow-angle glaucoma, symptomatic BPH/urinary retention. Caution in elderly (high risk anticholinergic effects), dementia, respiratory conditions. Avoid alcohol/other CNS depressants. (First Generation Antihistamine)
+                    </dd>
+                </dl>
+                
+                 <!-- Antipsychotics / Sedatives for Agitation -->
+                <h2>Antipsychotics / Sedatives for Agitation</h2>
+                 <dl>
+                     <dt>Trazodone (Desyrel)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, dizziness, orthostatic hypotension, headache, nausea, dry mouth, blurred vision, priapism (rare but serious - seek immediate medical attention), QTc prolongation (lower risk than some others). <br>
+                        <strong>Dosing:</strong> Agitation/Insomnia (off-label): PO: Start 25-50 mg at bedtime or PRN, titrate up (e.g., up to 100-200mg). Antidepressant doses are higher (up to 400-600mg/day). <br>
+                        <strong>Contraindications/Cautions:</strong> Concurrent/recent MAOI use (within 14 days), concurrent linezolid or IV methylene blue. Caution in patients with cardiac disease, history of priapism, risk factors for QTc prolongation, elderly (orthostasis risk), hepatic/renal impairment. Monitor for worsening depression/suicidality (BBW). (Serotonin Modulator Antidepressant)
+                    </dd>
+
+                    <dt>Quetiapine (Seroquel)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, orthostatic hypotension, dizziness, weight gain, metabolic changes (hyperglycemia, hyperlipidemia - requires monitoring), dry mouth, constipation, QTc prolongation. Rare: NMS, tardive dyskinesia. <br>
+                        <strong>Dosing:</strong> Agitation/Psychosis/Sleep (off-label for sleep): PO (Immediate Release): Start 25-50 mg PRN or hs, titrate based on response. Doses for schizophrenia/bipolar disorder are much higher. <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Caution in elderly with dementia-related psychosis (BBW - increased mortality), cardiovascular disease (orthostasis, QTc), diabetes/risk factors, history of seizures, cataracts, hepatic impairment. Monitor metabolic parameters, BP, ECG if risk factors present. (Atypical Antipsychotic)
+                    </dd>
+
+                    <dt>Olanzapine (Zyprexa)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> Sedation, weight gain (significant), metabolic changes (hyperglycemia, hyperlipidemia), orthostatic hypotension, dizziness, constipation, dry mouth, akathisia, EPS. Rare: NMS, tardive dyskinesia. Post-injection delirium/sedation syndrome (PDSS) with long-acting injection (Zyprexa Relprevv - BBW, requires monitoring). <br>
+                        <strong>Dosing:</strong> Agitation/Psychosis: IM: 2.5-10 mg PRN (Max 30mg/24h). PO: 5-20 mg daily (often started lower). <br>
+                        <strong>Contraindications/Cautions:</strong> Hypersensitivity. Caution in elderly with dementia-related psychosis (BBW - increased mortality), cardiovascular/cerebrovascular disease, diabetes/risk factors, history of seizures, BPH/urinary retention, paralytic ileus, hepatic impairment. Monitor metabolic parameters, BP. Avoid IM olanzapine + parenteral benzodiazepine (risk of excessive sedation/cardiorespiratory depression). Generally considered lower QTc risk than some other antipsychotics but still possible. (Atypical Antipsychotic)
+                    </dd>
+                    
+                    <dt>Haloperidol (Haldol)</dt>
+                    <dd>
+                        <strong>Side Effects:</strong> High risk of Extrapyramidal Symptoms (EPS - dystonia, akathisia, parkinsonism), tardive dyskinesia (long-term risk), Neuroleptic Malignant Syndrome (NMS - rare), QTc prolongation (especially IV - BBW for Torsades de Pointes), sedation, orthostatic hypotension, anticholinergic effects (less than low-potency antipsychotics). <br>
+                        <strong>Dosing:</strong> Agitation/Psychosis: IM/IV: 0.5-5 mg PRN (lower doses often effective for delirium/agitation in elderly). PO: 0.5-5 mg bid-tid (dose varies widely). Use lowest effective dose. <br>
+                        <strong>Contraindications/Cautions:</strong> Parkinson's disease, Lewy body dementia, severe CNS depression, coma, hypersensitivity. Caution in elderly with dementia-related psychosis (BBW - increased mortality), cardiovascular disease (QTc risk - monitor ECG, esp. with IV use or risk factors), seizure disorder, electrolyte abnormalities (hypokalemia, hypomagnesemia). (Typical Antipsychotic - High Potency)
+                    </dd>
+                </dl>
+
+            </div> <!-- /#medication-list -->
+        </div> <!-- /#result -->
+
+        <p class="disclaimer">
+            <strong>Disclaimer:</strong> This tool is intended for educational and informational purposes only. It is not a substitute for professional medical advice, diagnosis, treatment, or consultation with a qualified healthcare provider or pharmacist. Dosing and indications can vary significantly. Always consult official prescribing information and institutional guidelines before making clinical decisions. The creators of this tool assume no liability for any decisions made based on the information provided herein.
+        </p>
+
+    </div> <!-- /.main-container -->
+
+    <script>
+        // Basic JavaScript - currently just ensures content is displayed.
+        // Framework kept for potential future enhancements (e.g., filtering/search).
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get references to elements (useful if adding interaction later)
+            const resultContainer = document.getElementById('result');
+
+            // --- Initialization ---
+            // Ensure the results container is visible on load for static display
+            if (resultContainer) {
+                 resultContainer.style.display = 'block';
+            }
+
+            // --- Add Event Listeners (Example framework, not active for static display) ---
+            // const interpretButton = document.getElementById('interpret-button');
+            // const resetButton = document.getElementById('reset-button');
+            // const formInputs = document.querySelectorAll('#diagnostic-form select, #diagnostic-form input');
+
+            // if (interpretButton) {
+            //     interpretButton.addEventListener('click', handleInterpretation);
+            // }
+
+            // if (resetButton) {
+            //     resetButton.addEventListener('click', resetForm);
+            // }
+
+            // // Hide results if inputs change after interpretation
+            // formInputs.forEach(input => {
+            //     input.addEventListener('change', () => {
+            //         if (resultContainer && resultContainer.style.display === 'block') {
+            //             // Optionally hide or add a note that results may be outdated
+            //             // resultContainer.style.display = 'none';
+            //             console.log("Input changed, results might need update.");
+            //         }
+            //     });
+            // });
+
+
+            // --- Function Definitions (Example framework) ---
+
+            // function handleInterpretation(event) {
+            //     event.preventDefault(); // Prevent form submission
+            //     // 1. Read input values
+            //     // 2. Call core logic function
+            //     // 3. Display results
+            //     // 4. Scroll to results
+            //     if (resultContainer) {
+            //         resultContainer.style.display = 'block';
+            //         resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            //     }
+            // }
+
+            // function resetForm() {
+            //     // const form = document.getElementById('diagnostic-form');
+            //     // if (form) form.reset();
+            //     if (resultContainer) resultContainer.style.display = 'none';
+            //     // Clear result fields if they exist
+            // }
+
+            // --- Core Logic Placeholder ---
+            // function interpretMedicationData(params) {
+                   // Future logic for filtering or searching would go here
+            //     return { classification: "", differential: "", notes: "" };
+            // }
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
