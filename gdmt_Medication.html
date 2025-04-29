@@ -1,619 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HFrEF GDMT Selection Helper</title>
+    <title>Heart Failure Diagnostic Aid</title>
     <style>
+        /* General Styles */
+        :root {
+            --primary-color: #0056b3; /* A slightly darker blue */
+            --secondary-color: #f8f9fa; /* Light grey background */
+            --border-color: #dee2e6; /* Lighter border */
+            --text-color: #212529; /* Dark grey text */
+            --light-text-color: #6c757d; /* Medium grey text */
+            --error-color: #dc3545; /* Red for errors/warnings */
+            --success-color: #198754; /* Green for success/indication */
+            --info-bg-color: #eef; /* Light blue/purple for info sections */
+            --border-radius: 0.375rem; /* Slightly larger radius */
+            --box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            color: var(--text-color);
+            background-color: #e9ecef; /* Slightly off-white page background */
+            margin: 0;
+            padding: 0;
         }
-        h1, h2, h3 {
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
+
+        /* Main Container */
+        .main-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden; /* Contain child elements */
         }
-        h2 { margin-top: 30px; }
-        h3 { margin-top: 20px; color: #555; }
-        .form-section {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed #eee;
-        }
-        .form-section legend {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        form input[type="number"], form select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        form input[type="number"]::placeholder {
-            color: #aaa;
-        }
-        .checkbox-group label {
-            display: inline-block; /* Align label next to checkbox */
-            margin-left: 5px;
-            margin-right: 15px;
-            font-weight: normal; /* Normal weight for checkbox labels */
-            margin-bottom: 10px;
-        }
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 3px;
-            vertical-align: middle;
-        }
-        form button {
-            background-color: #007bff;
+
+        /* Header */
+        header {
+            background-color: var(--primary-color);
             color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        form button:hover {
-            background-color: #0056b3;
-        }
-        #results {
-            margin-top: 30px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
-        }
-        .result-item {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px dotted #ddd;
-        }
-        .result-item strong {
-            color: #0056b3;
-        }
-        .reason {
-             font-style: italic;
-             color: #5a5a5a;
-             display: block; /* Ensure reason appears on its own line */
-             margin-top: 3px;
-        }
-        .indication { color: #28a745; } /* Green */
-        .contraindication { color: #dc3545; } /* Red */
-        .disclaimer {
-            margin-top: 20px;
-            font-style: italic;
-            color: #dc3545;
-            font-weight: bold;
+            padding: 1.5rem 2rem;
             text-align: center;
-            border: 1px solid #dc3545;
-            padding: 10px;
-            background-color: #f8d7da;
-            border-radius: 4px;
+            border-bottom: 5px solid #003f7e; /* Darker blue accent */
         }
-         #results p:first-child { /* Style the summary sentence */
-             font-weight: bold;
-             background-color: #eef;
-             padding: 10px;
-             border-radius: 4px;
-             border: 1px solid #dde;
+
+        header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 500;
+        }
+
+        /* Content Padding */
+        .content-padding {
+            padding: 1.5rem 2rem;
+        }
+
+        /* Informational Section */
+        .info-section {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-color);
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .info-section p,
+        .info-section ul {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .info-section ul {
+            padding-left: 1.5rem;
+        }
+        .info-section li {
+            margin-bottom: 0.5rem;
+        }
+        .info-section strong {
+            font-weight: 600;
+        }
+
+        /* Form Styling */
+        form {
+            margin-bottom: 1.5rem;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: #fff; /* Keep form fields on white */
+        }
+
+        legend {
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 0 0.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem; /* Add space below legend */
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem; /* Increased gap */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group select,
+        .form-group input[type="number"] /* Added for potential future use */
+         {
+            width: 100%;
+            padding: 0.75rem; /* Increased padding */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background-color: #fff;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-group select:focus,
+        .form-group input[type="number"]:focus {
+            border-color: #86b7fe; /* Blue focus border */
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Blue focus glow */
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Buttons */
+        button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            min-width: 120px; /* Ensure buttons have a decent minimum width */
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #interpretBtn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #interpretBtn:hover {
+            background-color: #004080; /* Darker blue on hover */
+        }
+
+        #resetBtn {
+            background-color: var(--light-text-color);
+            color: white;
+        }
+
+        #resetBtn:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+        }
+
+        /* Results Area */
+        #result {
+            background-color: var(--info-bg-color);
+            border: 1px solid #bdd4ff; /* Lighter blue border for results */
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            display: none; /* Hidden by default */
+        }
+
+        #result h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            margin-top: 1rem; /* Space between result sections */
+            font-size: 1.1rem;
+        }
+
+        #classificationDisplay,
+        #managementFocusDisplay,
+        #notesDisplay {
+            margin-bottom: 1rem;
+            padding-left: 0; /* Reset padding if using lists */
+            list-style-position: inside; /* Keep bullet points inside */
+        }
+
+        #managementFocusDisplay ul,
+        #notesDisplay ul {
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding-left: 1.25rem; /* Indent list items */
+        }
+        #managementFocusDisplay li,
+        #notesDisplay li {
+             margin-bottom: 0.5rem;
+        }
+
+        /* Emphasis Classes */
+        .indication { color: var(--success-color); font-weight: 500; }
+        .contraindication { color: var(--error-color); font-weight: 500; }
+        .highlight { background-color: #fff3cd; padding: 0.2em 0.4em; border-radius: 0.25rem; }
+
+        /* Disclaimer */
+        .disclaimer {
+            margin: 2rem auto 1rem auto; /* Adjusted margin */
+            padding: 1rem;
+            font-style: italic;
+            color: #664d03; /* Dark yellow text */
+            background-color: #fff3cd; /* Light yellow background */
+            border: 1px solid #ffecb5; /* Yellow border */
+            border-radius: var(--border-radius);
+            text-align: center;
+            max-width: 850px; /* Match container width better */
+            font-size: 0.9rem;
+        }
+         .disclaimer strong {
+             color: #594000;
          }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 1rem;
+                width: auto;
+            }
+            .content-padding {
+                padding: 1rem 1.5rem;
+            }
+            header {
+                padding: 1rem 1.5rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr; /* Stack form elements */
+                gap: 1rem;
+            }
+             .button-container {
+                flex-direction: column;
+             }
+             button {
+                 width: 100%;
+             }
+        }
+         @media (max-width: 480px) {
+             body {
+                 font-size: 15px; /* Slightly smaller base font on small screens */
+             }
+              header h1 {
+                 font-size: 1.3rem;
+             }
+              .info-section h2, #result h2 {
+                 font-size: 1.25rem;
+             }
+             legend {
+                 font-size: 1.1rem;
+             }
+             .content-padding {
+                 padding: 1rem;
+             }
+              button {
+                 padding: 0.65rem 1rem;
+                 font-size: 0.95rem;
+             }
+         }
+
     </style>
 </head>
+
 <body>
 
-    <h1>HFrEF GDMT Selection Helper</h1>
-    <p>Enter patient details and select relevant conditions to see potentially relevant Guideline-Directed Medical Therapies based on simplified criteria.</p>
+    <div class="main-container">
+        <header>
+            <h1>Heart Failure Diagnostic Aid</h1>
+        </header>
 
-    <form id="gdmtForm">
-        <fieldset class="form-section">
-            <legend>Core Patient Data</legend>
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required>
+        <div class="content-padding">
 
-            <label for="lvef">LVEF (%):</label>
-            <input type="number" id="lvef" name="lvef" placeholder="e.g., 35" required>
+            <section class="info-section">
+                <h2>Background Information: Heart Failure</h2>
 
-            <label for="nyha">NYHA Class:</label>
-            <select id="nyha" name="nyha" required>
-                <option value="">Select NYHA Class</option>
-                <option value="1">I (Asymptomatic)</option>
-                <option value="2">II (Slight limitation)</option>
-                <option value="3">III (Marked limitation)</option>
-                <option value="4">IV (Symptoms at rest)</option>
-            </select>
+                <h3>Definition</h3>
+                <p>Heart failure (HF) is a clinical syndrome resulting from structural or functional impairment of ventricular filling or ejection of blood, leading to an inability to meet the body's metabolic demands. It often involves elevated cardiac filling pressures and a tendency towards volume retention. While supportive evidence like elevated natriuretic peptides (BNP/NT-proBNP) and echocardiographic findings are important, HF remains a clinical diagnosis.</p>
 
-            <label for="hr">Heart Rate (bpm) in Sinus Rhythm:</label>
-            <input type="number" id="hr" name="hr" placeholder="Optional, needed for Ivabradine">
+                <h3>Classification</h3>
+                <ul>
+                    <li><strong>Based on Ejection Fraction (EF):</strong> This is crucial for guiding therapy.
+                        <ul>
+                            <li><strong>HFrEF</strong> (HF with Reduced EF): LVEF ≤ 40%</li>
+                            <li><strong>HFmrEF</strong> (HF with Mildly Reduced EF): LVEF 41-49%</li>
+                            <li><strong>HFpEF</strong> (HF with Preserved EF): LVEF ≥ 50%</li>
+                        </ul>
+                    </li>
+                     <li><strong>NYHA Functional Classification:</strong> Describes symptom severity and functional limitations.</li>
+                     <li><strong>AHA/ACC Stages:</strong> Describes progression from risk factors (Stage A) to refractory HF (Stage D).</li>
+                </ul>
 
-            <label for="qrs">QRS Duration (ms) in Sinus Rhythm:</label>
-            <input type="number" id="qrs" name="qrs" placeholder="Optional, needed for CRT">
-        </fieldset>
 
-        <fieldset class="form-section checkbox-group">
-            <legend>Select Applicable Special Conditions / History</legend>
-            <div>
-                 <input type="checkbox" id="hasAfib" name="hasAfib">
-                 <label for="hasAfib">Atrial Fibrillation (AF)</label>
+                <h3>Common Etiologies</h3>
+                 <p>A <strong>Transthoracic Echocardiogram (TTE)</strong> is vital to determine EF and evaluate structure/function.</p>
+                <ul>
+                    <li><strong>Ischemic Heart Disease:</strong> Most common cause in many regions. Evaluation for coronary artery disease (CAD) is essential in new HF diagnoses.</li>
+                    <li><strong>Non-Ischemic Cardiomyopathies:</strong>
+                        <ul>
+                            <li><strong>Hypertension:</strong> Chronic high blood pressure.</li>
+                            <li><strong>Valvular Heart Disease:</strong> e.g., Aortic Stenosis, Mitral Regurgitation.</li>
+                            <li><strong>Arrhythmias:</strong> e.g., Tachycardia-mediated cardiomyopathy, chronic RV pacing effects.</li>
+                            <li><strong>Toxins:</strong> Alcohol, certain chemotherapies, illicit drugs (cocaine, meth).</li>
+                            <li><strong>Inflammatory/Infectious:</strong> Viral myocarditis, Chagas disease, HIV, autoimmune conditions (SLE, Sarcoidosis).</li>
+                            <li><strong>Metabolic/Infiltrative:</strong> Thiamine deficiency (Beri Beri), Amyloidosis, Hemochromatosis.</li>
+                            <li><strong>Genetic/Inherited Cardiomyopathies.</strong></li>
+                            <li><strong>Stress-Induced:</strong> Takotsubo cardiomyopathy, sepsis-related.</li>
+                            <li><strong>Peripartum Cardiomyopathy.</strong></li>
+                         </ul>
+                    </li>
+                     <li><strong>HFpEF often associated with:</strong> Systemic hypertension, aging, obesity, diabetes mellitus, metabolic syndrome, chronic kidney disease.</li>
+                 </ul>
+                 <h3>Acute HF Exacerbation Triggers</h3>
+                 <p>Common reasons for worsening HF include: Non-adherence (meds/diet), new ischemia/arrhythmia (esp. AFib), uncontrolled hypertension, infection, pulmonary embolism, new medications (e.g., NSAIDs, steroids), anemia, renal failure, thyroid dysfunction.</p>
+
+                <h3>Key Diagnostic Parameters Used in This Aid</h3>
+                <ul>
+                    <li><strong>Left Ventricular Ejection Fraction (LVEF):</strong> Categorizes the primary HF type (HFrEF/HFmrEF/HFpEF).</li>
+                    <li><strong>Signs of Congestion ("Wet"):</strong> Reflects volume overload (e.g., elevated JVP, edema, crackles, orthopnea/PND).</li>
+                    <li><strong>Signs of Hypoperfusion ("Cold"):</strong> Reflects inadequate tissue perfusion (e.g., cool extremities, altered mental status, narrow pulse pressure, worsening renal function due to poor flow).</li>
+                     <li><strong>NYHA Class:</strong> Indicates chronic symptom severity.</li>
+                     <li><strong>BNP/NT-proBNP Level:</strong> Biomarker supporting the diagnosis and assessing severity/prognosis.</li>
+                </ul>
+
+                <h3>Basic Evaluation Approach</h3>
+                <ol>
+                    <li><strong>History & Physical Exam:</strong> Focus on symptoms (dyspnea, orthopnea, PND, edema), medication adherence, potential triggers, volume status (JVP, edema, HJR, lung sounds), and perfusion (extremity temp, mental status, pulse pressure).</li>
+                    <li><strong>Initial Workup:</strong> ECG, Chest X-ray, Labs (CBC, Chem-10, Troponin, BNP/NT-proBNP, LFTs, TSH). Consider lactate if shock suspected.</li>
+                    <li><strong>Echocardiogram (TTE):</strong> Essential to confirm EF, assess valvular function, chamber sizes, and diastolic function.</li>
+                    <li><strong>Etiology Workup:</strong> Based on clinical picture, may include stress testing, coronary angiography, cardiac MRI, genetic testing, or specific labs (iron studies, HIV, etc.).</li>
+                </ol>
+
+            </section>
+
+            <form id="hfForm">
+                <fieldset>
+                    <legend>Patient Presentation & Key Findings</legend>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="lvef_category">Left Ventricular Ejection Fraction (LVEF)</label>
+                            <select id="lvef_category" name="lvef_category" required>
+                                <option value="">Select LVEF Category...</option>
+                                <option value="lte40">≤ 40% (HFrEF)</option>
+                                <option value="41_49">41-49% (HFmrEF)</option>
+                                <option value="gte50">≥ 50% (HFpEF)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="congestion_status">Clinical Signs of Congestion (Wet)?</label>
+                            <select id="congestion_status" name="congestion_status" required>
+                                <option value="">Select Status...</option>
+                                <option value="yes">Yes (e.g., Elevated JVP, Edema, Crackles)</option>
+                                <option value="no">No (Appears Euvolemic)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="perfusion_status">Clinical Signs of Hypoperfusion (Cold)?</label>
+                            <select id="perfusion_status" name="perfusion_status" required>
+                                <option value="">Select Status...</option>
+                                <option value="yes">Yes (e.g., Cool Extremities, AMS, Poor Urine)</option>
+                                <option value="no">No (Appears Well-Perfused)</option>
+                            </select>
+                        </div>
+
+                         <div class="form-group">
+                            <label for="nyha_class">NYHA Functional Class (Chronic)</label>
+                            <select id="nyha_class" name="nyha_class">
+                                <option value="">Select NYHA Class (Optional)...</option>
+                                <option value="I">I (No limitation)</option>
+                                <option value="II">II (Slight limitation)</option>
+                                <option value="III">III (Marked limitation)</option>
+                                <option value="IV">IV (Symptoms at rest)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bnp_level">BNP / NT-proBNP Level</label>
+                            <select id="bnp_level" name="bnp_level">
+                                <option value="">Select Level (Optional)...</option>
+                                <option value="normal">Normal / Low</option>
+                                <option value="elevated">Elevated</option>
+                                <option value="markedly_elevated">Markedly Elevated</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="button-container">
+                    <button type="button" id="interpretBtn">Interpret</button>
+                    <button type="button" id="resetBtn">Reset</button>
+                </div>
+            </form>
+
+            <div id="result">
+                <h2>Interpretation Results</h2>
+                <p class="result-label">Classification & Hemodynamic Profile:</p>
+                <p id="classificationDisplay"></p>
+
+                <p class="result-label">Initial Management Focus:</p>
+                <ul id="managementFocusDisplay"></ul>
+
+                <p class="result-label">Key Considerations & Next Steps:</p>
+                <ul id="notesDisplay"></ul>
             </div>
-             <div>
-                 <input type="checkbox" id="hasIronDeficiency" name="hasIronDeficiency">
-                 <label for="hasIronDeficiency">Known/Suspected Iron Deficiency</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="hasFuncMR" name="hasFuncMR">
-                 <label for="hasFuncMR">Significant Functional Mitral Regurgitation (MR)</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="isBlack" name="isBlack">
-                 <label for="isBlack">Self-Identified Black Race</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="hasAngioedemaHx" name="hasAngioedemaHx">
-                 <label for="hasAngioedemaHx">History of Angioedema (to ACEi/ARB)</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="hasSecondaryIcdIndication" name="hasSecondaryIcdIndication">
-                 <label for="hasSecondaryIcdIndication">History of Sustained VT/VF or Resuscitated Cardiac Arrest</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="hasRecentWorsening" name="hasRecentWorsening">
-                 <label for="hasRecentWorsening">Recent Worsening HF Event (Hospitalization or need for IV Diuretics)</label>
-            </div>
-             <div>
-                 <input type="checkbox" id="isLbbb" name="isLbbb">
-                 <label for="isLbbb">LBBB Morphology (on ECG, relevant for CRT)</label>
-             </div>
-        </fieldset>
 
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> This tool provides a simplified interpretation based on selected parameters for educational purposes. It is <strong>NOT</strong> a substitute for comprehensive clinical evaluation, professional medical advice, diagnosis, or treatment by a qualified healthcare provider. Heart failure management is complex and requires integration of patient history, full physical exam, laboratory data, imaging, and clinical judgment. Always consult relevant clinical practice guidelines and expert opinion for definitive patient care decisions.
+            </div>
 
-        <button type="submit">Analyze GDMT Options</button>
-    </form>
-
-    <div id="results">
-        <!-- Results will be displayed here -->
-    </div>
-
-    <div class="disclaimer">
-        <strong>Disclaimer:</strong> This tool is for informational and educational purposes only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for any medical conditions or treatment decisions. Therapy selection requires comprehensive clinical evaluation, including labs and imaging.
-    </div>
+        </div> <!-- End content-padding -->
+    </div> <!-- End main-container -->
 
     <script>
-        // Helper function to check if a value is not a number or null/empty
-        function isNaNOrNull(value) {
-            if (value === "" || value === null || typeof value === 'undefined') return true;
-            const num = parseInt(value);
-            return isNaN(num);
-        }
+        // DOM Element References
+        const lvefSelect = document.getElementById('lvef_category');
+        const congestionSelect = document.getElementById('congestion_status');
+        const perfusionSelect = document.getElementById('perfusion_status');
+        const nyhaSelect = document.getElementById('nyha_class');
+        const bnpSelect = document.getElementById('bnp_level');
+        const interpretBtn = document.getElementById('interpretBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultDiv = document.getElementById('result');
+        const classificationDisplay = document.getElementById('classificationDisplay');
+        const managementFocusDisplay = document.getElementById('managementFocusDisplay');
+        const notesDisplay = document.getElementById('notesDisplay');
+        const form = document.getElementById('hfForm');
+        const formInputs = form.querySelectorAll('select'); // Get all select inputs
 
-        // --- GDMT Data (Therapies and Rules) ---
-        const gdmtOptions = [
-             // --- Foundational Pillars ---
-            {
-                name: "ARNI (Sacubitril/Valsartan)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
-                indications: "Preferred first-line over ACEi/ARB for HFrEF NYHA II-IV. Can be started de novo or switched from ACEi/ARB (requires 36hr washout).",
-                contraindications: "History of angioedema (ABSOLUTE C/I if prior angioedema to ACEi/ARNI/ARB), concurrent ACEi use, pregnancy. Caution: severe renal impairment, hypotension.",
-                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
-            },
-            {
-                name: "ACE Inhibitor (ACEi)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
-                indications: "Alternative if ARNI not tolerated or feasible. HFrEF NYHA II-IV.",
-                contraindications: "History of angioedema, bilateral renal artery stenosis, pregnancy, hyperkalemia. Caution: renal impairment, hypotension. Preferred over ARNI in breastfeeding.",
-                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
-            },
-            {
-                name: "Angiotensin Receptor Blocker (ARB)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx,
-                indications: "Alternative if intolerant to ACEi (e.g., cough) and ARNI not feasible. HFrEF NYHA II-IV.",
-                contraindications: "Pregnancy, bilateral renal artery stenosis, hyperkalemia. Caution: renal impairment, hypotension. Prior angioedema to ACEi/ARB is generally a contraindication for ARNI as well.",
-                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='contraindication'>Contraindicated due to Angioedema History.</span>" : ""
-            },
-             {
-                name: "Consider ARB if ACEi Angioedema", // Special case if ACEi angioedema but ARB naive
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2 && inputs.hasAngioedemaHx,
-                indications: "If angioedema occurred ONLY with an ACEi, an ARB *might* be cautiously considered under specialist supervision, but ARNI remains contraindicated. Discuss risks thoroughly.",
-                contraindications: "Prior angioedema to ARB or idiopathic angioedema. Pregnancy, bilateral RAS, hyperkalemia.",
-                reasoning: (inputs) => "<span class='indication'>Potentially consider ARB (not ARNI) only if angioedema was specific to ACEi and benefits outweigh risks.</span>"
-             },
-            {
-                name: "Beta-Blocker (Evidence-based: Metoprolol Succinate, Carvedilol, Bisoprolol)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40,
-                indications: "All patients with HFrEF (LVEF ≤40%), regardless of NYHA class (start once stable/euvolemic). Shown to improve survival.",
-                contraindications: "Acute decompensated HF (initiate cautiously once stable), severe bradycardia (<50 bpm), high-degree AV block (without pacemaker), severe asthma/reactive airway disease (use cardioselective like Bisoprolol/Metoprolol cautiously). Titrate slowly."
-            },
-            {
-                name: "Mineralocorticoid Receptor Antagonist (MRA - Spironolactone, Eplerenone)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 2,
-                indications: "HFrEF NYHA II-IV with LVEF ≤35%. Also post-MI with LVEF ≤40% and HF symptoms or diabetes. Monitor K+ and renal function (eGFR) closely.",
-                contraindications: "Hyperkalemia (K+ > 5.0 mEq/L at baseline), severe renal impairment (e.g., eGFR < 30 mL/min/1.73m² - check specific drug), anuria, Addison's disease. Eplerenone is more selective (less gynecomastia)."
-            },
-            {
-                name: "SGLT2 Inhibitor (-gliflozin, e.g., Dapagliflozin, Empagliflozin)",
-                category: "Foundational",
-                indicationRule: (inputs) => inputs.lvef <= 40, // Broad HFrEF benefit
-                indications: "HFrEF (LVEF ≤40%) across NYHA classes (II-IV often studied) regardless of diabetes status. Reduces HF hospitalizations and CV death. Renal protection benefits.",
-                contraindications: "Type 1 Diabetes, history of DKA, severe renal impairment (check specific eGFR cutoffs for initiation/continuation). Risk of genital mycotic infections, volume depletion. Monitor for DKA (can be euglycemic)."
-            },
-            // --- Symptom Management ---
-            {
-                name: "Diuretics (Loop: Furosemide, Bumetanide, Torsemide)",
-                category: "Symptom Management",
-                indicationRule: (inputs) => inputs.nyha >= 2, // Driven by symptoms of congestion
-                indications: "Management of fluid retention (congestion) in symptomatic HF (NYHA II-IV). Dose adjusted based on symptoms and volume status. IV for acute decompensation.",
-                contraindications: "Anuria. Caution: electrolyte imbalances (hypokalemia, hypomagnesemia), hypotension, severe renal impairment. Can cause ototoxicity at high doses/rapid infusion."
-            },
-             // --- Add-on / Specific Situation Therapies ---
-            {
-                name: "Ivabradine",
-                category: "Add-on",
-                // Rule: LVEF<=35, NYHA II-III, Sinus Rhythm, HR>=70 on max BB
-                indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 3) && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && !inputs.hasAfib,
-                indications: "HFrEF (LVEF ≤35%) in **Sinus Rhythm** with resting HR ≥70 bpm despite maximally tolerated beta-blocker dose (or C/I to BB). NYHA II-III. Reduces HF hospitalizations.",
-                contraindications: "AFib, Acute decompensated HF, BP <90/50, sick sinus syndrome, SA block, AV block (2nd/3rd degree unless paced), severe hepatic impairment, pacemaker dependence, strong CYP3A4 inhibitors.",
-                reasoning: (inputs) => isNaNOrNull(inputs.hr) ? "<span class='contraindication'>(Requires Heart Rate Input)</span>" : (inputs.hasAfib ? "<span class='contraindication'>(Contraindicated in AFib)</span>" : "")
-            },
-            {
-                name: "Hydralazine + Isosorbide Dinitrate (Hy/ISDN)",
-                category: "Add-on",
-                 // Rule: LVEF<=40, NYHA III-IV, Self-identified Black
-                 indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 3 && inputs.isBlack,
-                indications: "Recommended add-on therapy for self-identified Black patients with NYHA Class III-IV HFrEF on optimal foundational therapy (ARNI/ACEi/ARB, BB, MRA).",
-                contraindications: "Hypersensitivity. Hydralazine: Caution in CAD, lupus-like syndrome. ISDN: Concurrent PDE5 inhibitors, severe anemia, increased ICP. Both: headache, dizziness, hypotension.",
-                 reasoning: (inputs) => inputs.isBlack ? "<span class='indication'>Specific indication for self-identified Black patients with NYHA III-IV.</span>" : ""
-            },
-            {
-                name: "Hydralazine + Isosorbide Dinitrate (Hy/ISDN) - Alternative",
-                category: "Add-on",
-                // Rule: LVEF<=40, NYHA III-IV, Intolerant to ACEi/ARB/ARNI
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 3 && inputs.hasAngioedemaHx, // Use angioedema Hx as proxy for intolerance
-                indications: "Can also be considered as an alternative or add-on in patients (regardless of race) with NYHA Class III-IV HFrEF who cannot tolerate ACEi/ARB/ARNI, or remain symptomatic despite other optimal GDMT.",
-                contraindications: "Hypersensitivity. Hydralazine: Caution in CAD, lupus-like syndrome. ISDN: Concurrent PDE5 inhibitors, severe anemia, increased ICP. Both: headache, dizziness, hypotension.",
-                reasoning: (inputs) => inputs.hasAngioedemaHx ? "<span class='indication'>Consider if intolerant to ACEi/ARB/ARNI.</span>" : ""
-            },
-             {
-                name: "Digoxin",
-                category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 40 && inputs.nyha >= 2, // Consider if still symptomatic or AF rate control
-                indications: "May be considered to reduce HF hospitalizations (no mortality benefit) in HFrEF patients who remain symptomatic (NYHA II-IV) despite optimal GDMT. Can also aid rate control in AFib (use cautiously).",
-                contraindications: "VFib, high-degree AV block (unless paced). Narrow therapeutic window - monitor levels, K+, Mg++, renal function. Many drug interactions.",
-                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>(Also potential option for AF rate control)</span>" : ""
-            },
-            {
-                name: "Iron (IV Ferric Carboxymaltose / Derisomaltose)",
-                category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef <= 45 && inputs.nyha >= 2 && inputs.hasIronDeficiency,
-                indications: "Symptomatic HFrEF (LVEF ≤45%, some trials up to 50%) and confirmed Iron Deficiency (Ferritin <100 ng/mL, OR Ferritin 100-299 ng/mL with TSAT <20%). Improves symptoms, QOL, reduces HF hospitalizations.",
-                contraindications: "Known hypersensitivity, iron overload. Requires lab confirmation. Monitor for hypersensitivity reactions.",
-                reasoning: (inputs) => inputs.hasIronDeficiency ? "<span class='indication'>Indicated due to suspected/known Iron Deficiency (confirm with labs).</span>" : ""
-            },
-            {
-                name: "Vericiguat",
-                category: "Add-on",
-                indicationRule: (inputs) => inputs.lvef < 45 && inputs.nyha >= 2 && inputs.hasRecentWorsening,
-                indications: "Soluble guanylate cyclase stimulator. Consider for patients with symptomatic chronic HFrEF (LVEF <45%) on GDMT who experience a recent worsening HF event (hospitalization or need for outpatient IV diuretics).",
-                contraindications: "Concurrent use of other sGC stimulators or PDE5 inhibitors. Pregnancy. Caution with hypotension.",
-                reasoning: (inputs) => inputs.hasRecentWorsening ? "<span class='indication'>Considered due to recent worsening HF event.</span>" : ""
-             },
-             {
-                name: "Anticoagulation",
-                category: "Add-on",
-                indicationRule: (inputs) => inputs.hasAfib,
-                indications: "Indicated for stroke prevention in patients with Atrial Fibrillation (AF) based on CHA₂DS₂-VASc score. Choice between DOAC or warfarin.",
-                contraindications: "Active major bleeding, severe thrombocytopenia, high bleeding risk outweighing stroke risk.",
-                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>Indicated for stroke prevention due to AF (assess CHA₂DS₂-VASc).</span>" : ""
-            },
-             // --- Devices ---
-             {
-                name: "Implantable Cardioverter-Defibrillator (ICD) - Secondary Prevention",
-                category: "Device",
-                indicationRule: (inputs) => inputs.hasSecondaryIcdIndication,
-                indications: "Strongly indicated for survivors of cardiac arrest due to VT/VF, or those with spontaneous sustained VT not due to reversible causes.",
-                contraindications: "Terminal illness (<1 year survival), incessant VT/VF, significant psychiatric illness. Procedure risks.",
-                reasoning: (inputs) => inputs.hasSecondaryIcdIndication ? "<span class='indication'>Strong indication due to history of life-threatening arrhythmia.</span>" : ""
-            },
-            {
-                name: "Implantable Cardioverter-Defibrillator (ICD) - Primary Prevention",
-                category: "Device",
-                 // Rule: LVEF<=35, NYHA II-III (or NYHA I LVEF<=30), on GDMT >3mo (NICM) or >40d (post-MI), expected survival >1yr
-                 indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 1 && inputs.nyha <= 3) && !inputs.hasSecondaryIcdIndication && ( (inputs.nyha >=2 && inputs.lvef <= 35) || (inputs.nyha == 1 && inputs.lvef <= 30) ),
-                indications: "Consider for Primary Prevention if LVEF ≤35% (NYHA II-III) or LVEF ≤30% (NYHA I) due to prior MI (≥40 days post) or non-ischemic CM (≥3 months on optimal GDMT). Must have reasonable expectation of meaningful survival >1 year.",
-                contraindications: "Terminal illness (<1 year survival), recent MI (<40d) or revascularization (<3mo), incessant VT/VF, significant psychiatric illness. Procedure risks.",
-                 reasoning: (inputs) => (!inputs.hasSecondaryIcdIndication && inputs.lvef <= 35) ? "<span class='indication'>Consider for primary prevention based on LVEF/NYHA class.</span>" : ""
-            },
-            {
-                name: "Cardiac Resynchronization Therapy (CRT / CRT-D)",
-                category: "Device",
-                // Rule: LVEF<=35, NYHA II-IV ambulatory, Sinus Rhythm, QRS >= 130ms (Ideally LBBB >= 150ms)
-                indicationRule: (inputs) => inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 4) && !isNaNOrNull(inputs.qrs) && inputs.qrs >= 130 && !inputs.hasAfib,
-                indications: "LVEF ≤35%, Sinus Rhythm, NYHA Class II, III, or ambulatory IV, on optimal GDMT. Strongest indication with LBBB morphology (check box) and QRS ≥150 ms. Consider for LBBB QRS 130-149 ms, or non-LBBB QRS ≥150 ms (less benefit). Improves symptoms, function, survival (CRT-D includes ICD).",
-                contraindications: "AFib (relative - can be done but benefit less clear/needs rate control), life expectancy <1 year. Anatomic limitations. Patient preference.",
-                reasoning: (inputs) => isNaNOrNull(inputs.qrs) ? "<span class='contraindication'>(Requires QRS Duration Input)</span>" : (inputs.hasAfib ? "<span class='contraindication'>(Benefit less established/more complex in AFib)</span>" : (inputs.qrs >= 150 && inputs.isLbbb ? "<span class='indication'>(Strongest indication: LBBB & QRS≥150ms)</span>" : (inputs.qrs >= 130 && inputs.isLbbb ? "<span class='indication'>(Indicated: LBBB & QRS 130-149ms)</span>" : (inputs.qrs >= 150 ? "<span class='indication'>(Considered: Non-LBBB & QRS≥150ms)</span>" : ""))))
-            },
-            // --- Advanced Therapies / Referrals ---
-            {
-                name: "Mitral Transcatheter Edge-to-Edge Repair (TEER)",
-                category: "Advanced",
-                // Rule: LVEF 20-50%, NYHA II-IV, Significant Func MR, on GDMT
-                indicationRule: (inputs) => inputs.lvef >= 20 && inputs.lvef <= 50 && inputs.nyha >= 2 && inputs.hasFuncMR,
-                indications: "Selected patients with chronic moderate-to-severe or severe secondary (functional) Mitral Regurgitation (MR) who remain symptomatic (NYHA II-IV) despite optimal GDMT, and have suitable valve anatomy + favorable LV size. Requires heart team evaluation.",
-                contraindications: "Unsuitable anatomy, prohibitive LV dilation/dysfunction, life expectancy <1 year, primary MR.",
-                reasoning: (inputs) => inputs.hasFuncMR ? "<span class='indication'>Consider referral for TEER evaluation due to functional MR.</span>" : ""
-            },
-            {
-                name: "Pulmonary Vein Isolation (PVI) Referral",
-                category: "Advanced",
-                indicationRule: (inputs) => inputs.hasAfib && inputs.lvef <= 40, // AF + HFrEF
-                indications: "Catheter ablation (PVI) may be considered for selected HFrEF patients with symptomatic AFib to improve symptoms and potentially reduce HF hospitalizations/mortality, especially if refractory to rate/rhythm control drugs.",
-                contraindications: "Prohibitive procedural risk, very enlarged LA, patient preference.",
-                reasoning: (inputs) => inputs.hasAfib ? "<span class='indication'>Consider referral for PVI evaluation due to AFib in HFrEF.</span>" : ""
-            },
-            {
-                name: "LVAD / Heart Transplant Referral",
-                category: "Advanced",
-                // Rule: Advanced HF (NYHA III-IV refractory), LVEF<=35
-                indicationRule: (inputs) => inputs.lvef <= 35 && inputs.nyha >= 3 && (inputs.hasRecentWorsening || inputs.nyha == 4), // Proxy for advanced/refractory
-                indications: "Patients with advanced, refractory HFrEF (Stage D) despite optimal medical/device therapy (e.g., NYHA III-IV symptoms, recurrent hospitalizations, end-organ dysfunction due to low output). Needs evaluation at specialized center.",
-                contraindications: "Irreversible end-organ damage (renal, hepatic), severe irreversible PHTN, active malignancy, prohibitive comorbidities, psychosocial issues, non-adherence."
-            },
-            // --- General & Avoid ---
-            {
-                name: "Multi-Professional Disease Management",
-                category: "General",
-                indicationRule: (inputs) => inputs.nyha >= 2, // Especially important for symptomatic patients
-                indications: "Essential for all HF patients, particularly those with higher symptom burden (NYHA II-IV) or recent hospitalizations. Includes patient education, self-care support, medication optimization, coordination of care, addressing psychosocial factors. Improves QOL and reduces readmissions.",
-                contraindications: "N/A",
-                reasoning: (inputs) => inputs.nyha >= 3 ? "<span class='indication'>(Particularly crucial for NYHA III/IV)</span>" : ""
-            },
-            {
-                name: "Lifestyle & General Measures",
-                category: "General",
-                indicationRule: () => true,
-                indications: "Sodium restriction (~<2-3g/day), fluid restriction (~1.5-2L/day if congested/hyponatremic), regular exercise/cardiac rehab, weight management, smoking cessation, influenza/pneumococcal vaccination, manage comorbidities (HTN, DM, Afib, Sleep Apnea).",
-                contraindications: "N/A"
-            },
-            {
-                name: "Medications to AVOID",
-                category: "Avoid",
-                indicationRule: () => true,
-                indications: "NSAIDs (inc. COX-2 inhibitors), TZDs (pioglitazone), Non-dihydropyridine CCBs (Verapamil, Diltiazem in HFrEF), Cilostazol, Class I antiarrhythmics, Dronedarone.",
-                contraindications: "N/A"
-            }
-        ];
+        // --- Event Listeners ---
+        interpretBtn.addEventListener('click', interpretHeartFailure);
+        resetBtn.addEventListener('click', resetForm);
 
-
-        // --- Function to generate the initial summary sentence ---
-        function generateSummarySentence(inputs) {
-            let sentence = "";
-            const isHFrEF = inputs.lvef <= 40;
-            const isHFpEF = inputs.lvef >= 50;
-            const medicationsToAvoid = "NSAIDs, TZDs, Non-DHP CCBs (in HFrEF)"; // Basic list
-
-            if (isHFpEF && !inputs.hasSecondaryIcdIndication) {
-                // HFpEF Summary
-                sentence = `<strong>Summary:</strong> For HFpEF (LVEF ≥ 50%), prioritize managing congestion (<strong>Diuretics</strong> prn), treating underlying causes, and initiating an <strong>SGLT2 Inhibitor</strong>. Consider MRAs based on phenotype. Avoid HFrEF-specific GDMT without other indications. Key medications to avoid include ${medicationsToAvoid}. See details below.`;
-            } else if (isHFrEF) {
-                // HFrEF Summary
-                let foundational = [];
-                // RAAS Inhibitor
-                if (inputs.nyha >= 2) {
-                    if (inputs.hasAngioedemaHx) {
-                        foundational.push("Consider ARB cautiously if only ACEi angioedema");
-                    } else {
-                        foundational.push("ARNI (preferred) or ACEi/ARB");
-                    }
-                } else {
-                    foundational.push("ARNI/ACEi/ARB (if NYHA II-IV)"); // Note class requirement
-                }
-                // Beta-Blocker
-                foundational.push("Beta-Blocker");
-                // MRA
-                if (inputs.lvef <= 35 && inputs.nyha >= 2) {
-                    foundational.push("MRA");
-                } else {
-                    foundational.push("MRA (if LVEF ≤ 35% & NYHA II-IV)"); // Note requirements
-                }
-                // SGLT2i
-                foundational.push("SGLT2 Inhibitor");
-
-                let foundationalText = foundational.filter(f => !f.includes("(")).join(", "); // Basic list
-                let conditionalText = foundational.filter(f => f.includes("(")).join("; "); // More specific criteria list
-
-
-                sentence = `<strong>Summary:</strong> For HFrEF (LVEF ≤ 40%), prioritize initiating/titrating foundational GDMT: <strong>${foundationalText}</strong>. ${conditionalText ? `Ensure criteria met for: ${conditionalText}. ` : ''}Always avoid: <strong>${medicationsToAvoid}</strong>. `;
-
-                // Add notes based on checkboxes if applicable
-                if (inputs.hasAfib) sentence += "Anticoagulation indicated for AFib. ";
-                if (inputs.hasAngioedemaHx) sentence += "ARNI/ACEi contraindicated. ";
-                if (inputs.hasAfib && !isNaNOrNull(inputs.hr) && inputs.hr >= 70 && inputs.lvef <= 35 && (inputs.nyha >= 2 && inputs.nyha <= 3)) sentence += "Ivabradine likely not indicated (AFib). ";
-                if (inputs.hasIronDeficiency) sentence += "Consider IV Iron. ";
-                 if (inputs.hasRecentWorsening && inputs.lvef < 45) sentence += "Consider Vericiguat. ";
-
-
-                sentence += "Review specific indications for add-on therapies and devices below.";
-
-            } else {
-                // HFmrEF or unclear LVEF
-                sentence = `<strong>Summary:</strong> For LVEF between 41-49% (HFmrEF), management often mirrors HFrEF but evidence varies. Consider <strong>SGLT2 Inhibitors</strong> and manage symptoms/comorbidities. Always avoid: <strong>${medicationsToAvoid}</strong>. Review specific therapy details below.`;
-            }
-
-            return `<p>${sentence}</p>`; // Removed inline style, using CSS rule now
-        }
-
-
-        // --- Form Submission Logic ---
-        document.getElementById('gdmtForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent page reload
-
-            // Collect core inputs
-            const inputs = {
-                age: parseInt(document.getElementById('age').value),
-                lvef: parseInt(document.getElementById('lvef').value),
-                nyha: parseInt(document.getElementById('nyha').value),
-                hr: parseInt(document.getElementById('hr').value), // Will be NaN if empty
-                qrs: parseInt(document.getElementById('qrs').value), // Will be NaN if empty
-                // Collect checkbox inputs
-                hasAfib: document.getElementById('hasAfib').checked,
-                hasIronDeficiency: document.getElementById('hasIronDeficiency').checked,
-                hasFuncMR: document.getElementById('hasFuncMR').checked,
-                isBlack: document.getElementById('isBlack').checked,
-                hasAngioedemaHx: document.getElementById('hasAngioedemaHx').checked,
-                hasSecondaryIcdIndication: document.getElementById('hasSecondaryIcdIndication').checked,
-                hasRecentWorsening: document.getElementById('hasRecentWorsening').checked,
-                isLbbb: document.getElementById('isLbbb').checked
-            };
-
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // Clear previous results completely
-
-            // Generate and add the summary sentence FIRST
-            resultsDiv.innerHTML += generateSummarySentence(inputs);
-
-            // Basic HFpEF check (for filtering subsequent results)
-            if (inputs.lvef >= 50 && !inputs.hasSecondaryIcdIndication) {
-                // Display filtered results for HFpEF
-                displayResults(inputs, resultsDiv, gdmtOptions.filter(opt =>
-                    ['General', 'Avoid', 'Symptom Management'].includes(opt.category) ||
-                    opt.name.includes('SGLT2') ||
-                    opt.name.includes('MRA') || // MRA might be considered in specific HFpEF phenotypes
-                    (opt.name.includes('Anticoagulation') && inputs.hasAfib) // Anticoag if AFib present
-                 ));
-            } else {
-                // Display full results for HFrEF/HFmrEF
-                displayResults(inputs, resultsDiv, gdmtOptions);
-            }
-        });
-
-        // Function to display results
-        function displayResults(inputs, resultsDiv, optionsToDisplay) {
-            // Group results by category
-            const categories = {
-                "Foundational": [],
-                "Symptom Management": [],
-                "Add-on": [],
-                "Device": [],
-                "Advanced": [],
-                "General": [],
-                "Avoid": []
-            };
-
-            // Use a Set to avoid duplicate entries
-            const addedTherapies = new Set();
-
-            optionsToDisplay.forEach(option => {
-                if ((option.indicationRule(inputs) || ['General', 'Avoid'].includes(option.category)) && !addedTherapies.has(option.name)) {
-
-                    let contraNotes = "";
-                     if (option.category === 'Foundational' && inputs.hasAngioedemaHx && (option.name.includes('ARNI') || option.name.includes('ACEi'))) {
-                         // Skip adding standard ARNI/ACEi if angioedema Hx - handled by specific rule/summary now
-                         return;
-                     }
-                    if (option.name.includes('Ivabradine') && inputs.hasAfib) {
-                        contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Generally contraindicated in AFib.</span> ";
-                        // Don't return if rule matches; display with note unless explicitly excluded by rule
-                        if (!option.indicationRule(inputs)) return; // Ensure rule still holds without AFib check
-                    }
-                    if (option.name.includes('CRT') && inputs.hasAfib) {
-                        contraNotes = "<span class='contraindication' style='display:block; margin-top:3px;'>Note: Benefit less established/more complex in AFib.</span> ";
-                         // Don't return if rule matches; display with note unless explicitly excluded by rule
-                        if (!option.indicationRule(inputs)) return; // Ensure rule still holds without AFib check
-                    }
-
-
-                    let reasoningText = option.reasoning ? option.reasoning(inputs) : "";
-                    let displayItem = `
-                        <div class="result-item">
-                            <h3>${option.name}</h3>
-                            ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
-                            ${contraNotes ? `<span class="reason">${contraNotes}</span>` : ''}
-                            <p><strong class="indication">Indications:</strong> ${option.indications}</p>
-                            <p><strong class="contraindication">Contraindications/Cautions:</strong> ${option.contraindications}</p>
-                        </div>
-                    `;
-
-                    // Special handling for Avoid category
-                    if (option.category === 'Avoid') {
-                        displayItem = `
-                            <div class="result-item">
-                                <h3>${option.name}</h3>
-                                <p><strong class="contraindication">Details:</strong> ${option.indications}</p>
-                            </div>
-                        `;
-                    }
-                    // Special handling for General category
-                    else if (option.category === 'General') {
-                         displayItem = `
-                            <div class="result-item">
-                                <h3>${option.name}</h3>
-                                ${reasoningText ? `<span class="reason">${reasoningText}</span>` : ''}
-                                <p><strong class="indication">Details:</strong> ${option.indications}</p>
-                            </div>
-                        `;
-                    }
-
-                    // Filter out foundational therapies not matching criteria explicitly
-                    if (option.category === 'Foundational') {
-                        let clearlyIndicated = false;
-                        if(option.name.includes('Beta-Blocker') && inputs.lvef <= 40) clearlyIndicated = true;
-                        if(option.name.includes('SGLT2') && inputs.lvef <= 40) clearlyIndicated = true;
-                        if((option.name.includes('ARNI') || option.name.includes('ACEi') || option.name.includes('ARB')) && inputs.lvef <= 40 && inputs.nyha >= 2 && !inputs.hasAngioedemaHx) clearlyIndicated = true;
-                        if(option.name.includes('Consider ARB if ACEi Angioedema') && inputs.lvef <= 40 && inputs.nyha >= 2 && inputs.hasAngioedemaHx) clearlyIndicated = true;
-                        if(option.name.includes('MRA') && inputs.lvef <= 35 && inputs.nyha >= 2) clearlyIndicated = true;
-
-                        if(!clearlyIndicated && !(option.name.includes('Consider ARB'))) return; // Skip foundational if not clearly indicated by core criteria
-                    }
-
-                    categories[option.category].push(displayItem);
-                    addedTherapies.add(option.name); // Mark as added
+        // Hide results if form inputs are changed after interpretation
+        formInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (resultDiv.style.display !== 'none') {
+                    resultDiv.style.display = 'none';
                 }
             });
+        });
 
-            // Display grouped results
-            let sectionAdded = false; // Track if any sections are added after the summary
-            for (const category in categories) {
-                if (categories[category].length > 0) {
-                    // Use a unique ID for the header to check if it exists
-                    const headerId = `category-header-${category.replace(/\s+/g, '-')}`; // Create a simple ID
-                    if (!document.getElementById(headerId)) {
-                        resultsDiv.innerHTML += `<h2 id="${headerId}">${category.replace(/([A-Z])/g, ' $1').trim()} Therapies</h2>`;
-                    }
-                    resultsDiv.innerHTML += categories[category].join('');
-                    sectionAdded = true;
-                }
-            }
+        // --- Functions ---
 
-            // Handle case where only summary + avoid/general categories show up or nothing matched
-            const essentialCategoriesDisplayed = categories['Foundational']?.length > 0 || categories['Symptom Management']?.length > 0 || categories['Add-on']?.length > 0 || categories['Device']?.length > 0 || categories['Advanced']?.length > 0;
-
-            if (!essentialCategoriesDisplayed && (categories['General']?.length > 0 || categories['Avoid']?.length > 0)) {
-                // Only summary + General/Avoid displayed
-                // No extra message needed, as the summary covers the basics.
-            } else if (!essentialCategoriesDisplayed && !categories['General']?.length && !categories['Avoid']?.length) {
-                // Truly nothing matched beyond summary (e.g., invalid inputs leading to no rules matching)
-                 resultsDiv.innerHTML += '<p>No specific therapies strongly matched the selected criteria based on these simplified rules beyond the initial summary. Review guidelines or check inputs.</p>';
-            }
+        function resetForm() {
+            form.reset(); // Resets the form element itself
+            resultDiv.style.display = 'none'; // Hide results
+            classificationDisplay.textContent = '';
+            managementFocusDisplay.innerHTML = ''; // Clear list items
+            notesDisplay.innerHTML = ''; // Clear list items
         }
+
+        function interpretHeartFailure() {
+            // Get selected values
+            const lvef = lvefSelect.value;
+            const congestion = congestionSelect.value;
+            const perfusion = perfusionSelect.value;
+            const nyha = nyhaSelect.value; // Optional
+            const bnp = bnpSelect.value; // Optional
+
+            // --- Basic Input Validation ---
+            if (!lvef || !congestion || !perfusion) {
+                alert('Please select LVEF category, Congestion status, and Perfusion status.');
+                return;
+            }
+
+            // --- Core Logic ---
+            let classification = '';
+            let managementFocus = [];
+            let notes = [];
+
+            // Determine HF Type
+            let hfType = '';
+            let lvefText = '';
+            if (lvef === 'lte40') {
+                hfType = 'HFrEF';
+                lvefText = '≤ 40%';
+            } else if (lvef === '41_49') {
+                hfType = 'HFmrEF';
+                lvefText = '41-49%';
+            } else if (lvef === 'gte50') {
+                hfType = 'HFpEF';
+                lvefText = '≥ 50%';
+            }
+
+            // Determine Hemodynamic Profile
+            let profile = '';
+            let profileText = '';
+            if (congestion === 'yes' && perfusion === 'no') {
+                profile = 'Wet & Warm';
+                profileText = 'Congested (Wet) & Well-Perfused (Warm)';
+            } else if (congestion === 'yes' && perfusion === 'yes') {
+                profile = 'Wet & Cold';
+                profileText = 'Congested (Wet) & Hypoperfused (Cold)';
+            } else if (congestion === 'no' && perfusion === 'no') {
+                profile = 'Dry & Warm';
+                profileText = 'Euvolemic (Dry) & Well-Perfused (Warm)';
+            } else if (congestion === 'no' && perfusion === 'yes') {
+                profile = 'Dry & Cold';
+                profileText = 'Euvolemic (Dry) & Hypoperfused (Cold)';
+            }
+
+            classification = `<strong>${hfType} (LVEF ${lvefText})</strong> - Hemodynamic Profile: <span class="highlight">${profileText}</span>`;
+
+            // Add NYHA class if selected
+            if (nyha) {
+                 classification += ` (Chronic NYHA Class ${nyha})`;
+            }
+             // Add BNP note if selected
+            if (bnp === 'elevated' || bnp === 'markedly_elevated') {
+                 notes.push(`Elevated natriuretic peptides support the diagnosis of HF.`);
+            } else if (bnp === 'normal') {
+                 notes.push(`Normal natriuretic peptides make HF less likely, especially in acute settings, but do not rule it out (consider obesity, flash pulmonary edema, constrictive physiology).`);
+            }
+
+
+            // --- Tailor Management and Notes based on Profile & Type ---
+
+             // General Notes Applicable to Most
+             notes.push("Confirm LVEF and assess cardiac structure/function with formal TTE if not already done.");
+             notes.push("Evaluate for and address potential triggers/precipitants of exacerbation (e.g., ischemia, arrhythmia, infection, non-adherence).");
+             notes.push("Assess and manage comorbidities (HTN, DM, CKD, Anemia, Sleep Apnea).");
+             notes.push("Monitor volume status (weight, I/Os), electrolytes (esp. K+, Mg++), and renal function closely.");
+             notes.push("Provide patient education on diet (sodium/fluid restriction as appropriate), medications, symptom monitoring, and follow-up.");
+
+            // Wet Profiles (Congestion Management)
+            if (congestion === 'yes') {
+                managementFocus.push("<strong>Diuresis:</strong> Initiate/adjust IV loop diuretics (e.g., Furosemide, Bumetanide). Consider dose escalation or adding thiazide (sequential nephron blockade) if response is poor.");
+                notes.push("Target appropriate negative fluid balance based on severity of congestion and patient stability.");
+                 notes.push("Replete Potassium (>4.0 mEq/L) and Magnesium (>2.0 mg/dL) aggressively during diuresis.");
+                 notes.push("Do not hold diuretics solely for asymptomatic mild hypotension or initial creatinine rise if patient remains clinically congested.");
+            }
+
+             // Cold Profiles (Perfusion Management)
+            if (perfusion === 'yes') {
+                 managementFocus.push("<strong>Assess for Shock:</strong> If severe hypoperfusion/hypotension (Cardiogenic Shock), requires urgent stabilization, likely ICU care, consideration of inotropes/vasopressors, and potentially mechanical circulatory support.");
+                 managementFocus.push("<strong>Optimize Preload/Afterload:</strong> Careful fluid management (may need gentle fluid challenge if 'Dry & Cold' and low filling pressures suspected, or continued diuresis if 'Wet & Cold'). If BP allows, consider vasodilators (carefully!) for 'Wet & Cold' to reduce afterload.");
+                 notes.push("Identify and treat reversible causes of hypoperfusion.");
+                 notes.push("Consider invasive hemodynamic monitoring (e.g., arterial line, PAC) in refractory shock.");
+                  if (profile === 'Wet & Cold') {
+                     managementFocus.push("<strong>Inotropes/Inodilators:</strong> Consider if persistent hypoperfusion despite optimizing volume/afterload (e.g., Dobutamine, Milrinone). Use lowest effective dose.");
+                     notes.push("<span class='contraindication'>Avoid beta-blockers or use very cautiously in decompensated 'Wet & Cold' state until stabilized.</span>");
+                 }
+                  if (profile === 'Dry & Cold') {
+                      notes.push("Evaluate for causes of low cardiac output other than volume depletion (e.g., severe valve disease, RV failure). Careful fluid assessment is critical.");
+                       managementFocus.push("Consider inotropes if low output state persists despite volume optimization.");
+                 }
+            }
+
+
+            // --- Specific Management based on HF Type (focus on stable/improving state or Dry/Warm) ---
+            if (hfType === 'HFrEF' || hfType === 'HFmrEF') {
+                 if (profile === 'Dry & Warm' || congestion === 'no') { // Stable or near-stable
+                      managementFocus.push(`<strong>Initiate/Titrate Guideline-Directed Medical Therapy (GDMT) for ${hfType}:</strong> Prioritize foundational pillars as tolerated:`);
+                      managementFocus.push(`<ul><li><strong>RAAS Inhibitor:</strong> ARNI (preferred), ACEi, or ARB.</li><li><strong>Beta-Blocker:</strong> Evidence-based (e.g., Metoprolol Succinate, Carvedilol, Bisoprolol). Start low, go slow once stable.</li><li><strong>MRA:</strong> (Spironolactone/Eplerenone) if LVEF ≤ 35% (or ≤40% post-MI) and no contraindications (monitor K+, renal function).</li><li><strong>SGLT2 Inhibitor:</strong> (e.g., Dapagliflozin, Empagliflozin) regardless of diabetes status (check eGFR).</li></ul>`);
+                      notes.push(`Continue home GDMT if patient was already on it, unless contraindicated by acute presentation (e.g., shock).`);
+                      notes.push(`Defer initiating or uptitrating beta-blockers until euvolemic and stable.`);
+                      notes.push(`Evaluate need for ICD/CRT based on guidelines (typically after ≥3 months of optimal GDMT, LVEF ≤35%, specific QRS/NYHA criteria).`);
+                 } else { // Still managing acute issues (Wet +/- Cold)
+                     managementFocus.push(`<strong>Plan for GDMT:</strong> Prepare to initiate/resume/titrate foundational GDMT (${hfType}) once patient is stabilized and approaching euvolemia.`);
+                     notes.push(`Continue home beta-blocker if hemodynamically stable ('Wet & Warm'). Hold/reduce if 'Wet & Cold' or shock.`);
+                 }
+                 notes.push("Consider Hydralazine/Isosorbide Dinitrate, Ivabradine, Digoxin, Vericiguat in specific patient subsets based on guidelines.");
+                  notes.push("Assess for iron deficiency (Ferritin, TSAT) and consider IV iron if indicated.");
+            }
+            else if (hfType === 'HFpEF') {
+                 managementFocus.push("<strong>Manage Congestion:</strong> Diuretics remain mainstay for symptom relief from volume overload.");
+                 managementFocus.push("<strong>Treat Underlying Causes & Comorbidities:</strong> Aggressively manage hypertension (target <130/80 mmHg), AFib (rate/rhythm control), obesity, diabetes, CAD, sleep apnea.");
+                 managementFocus.push("<strong>Consider Specific Therapies:</strong>");
+                 managementFocus.push("<ul><li><strong>SGLT2 Inhibitors:</strong> Strong evidence for reducing HF hospitalizations/CV death.</li><li><strong>MRA:</strong> May reduce hospitalizations (consider based on phenotype, monitor K+/renal function).</li><li><strong>ARNI:</strong> May be considered, particularly in lower-LVEF range of HFpEF.</li></ul>");
+                 notes.push("Evidence for traditional HFrEF therapies (Beta-blockers, ACEi/ARB beyond BP control) is less robust for mortality benefit in HFpEF, but often used for comorbidities.");
+                 notes.push("Focus on lifestyle modifications (exercise, weight management).");
+            }
+
+
+            // --- Display Results ---
+            classificationDisplay.innerHTML = classification; // Use innerHTML for bold tags etc.
+            managementFocusDisplay.innerHTML = managementFocus.map(item => `<li>${item}</li>`).join('');
+            notesDisplay.innerHTML = notes.map(item => `<li>${item}</li>`).join('');
+
+            resultDiv.style.display = 'block'; // Show results section
+            resultDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results
+        }
+
+        // Initialize form (optional, good practice)
+        resetForm();
+
     </script>
 
 </body>
+
 </html>
