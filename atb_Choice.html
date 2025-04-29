@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title specific to the new condition -->
+    <title>Antibiotic Spectrum Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Basic Reset & Global Styles (Reused) --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: #f1f5f9; /* bg-slate-100 */
+            color: #334155; /* text-slate-700 */
+            padding: 1rem; /* p-4 */
+        }
+
+        /* --- Main Container (Reused) --- */
+        .main-container {
+            max-width: 1152px; /* max-w-6xl */
+            margin: 20px auto;
+            background: linear-gradient(to bottom, white, #f8fafc); /* bg-gradient-to-b from-white to-slate-50 */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 12px; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg approximation */
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
+        }
+
+        /* --- Title Styling (Reused) --- */
+        .main-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+            padding-bottom: 0.75rem; /* pb-3 */
+            border-bottom: 1px solid #e2e8f0; /* border-b border-slate-200 */
+        }
+        .sub-title {
+            font-size: 1rem; /* text-base */
+            color: #475569; /* text-slate-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+
+        /* --- Informational Text Section (Structure Reused) --- */
+        .info-section {
+            margin-bottom: 2rem; /* mb-8 */
+            padding: 1.25rem; /* p-5 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border: 1px dashed #cbd5e1; /* border border-dashed border-slate-300 */
+            border-radius: 8px; /* rounded-lg */
+            font-size: 0.9rem;
+            color: #334155; /* text-slate-700 */
+        }
+        .info-section h2 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 0.75rem; /* mb-3 */
+            text-align: center;
+        }
+        .info-section h3 {
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #334155; /* text-slate-700 */
+            margin-top: 1rem; /* mt-4 */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .info-section p {
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .info-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem; /* ml-6 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .info-section li {
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .info-section strong {
+            font-weight: 600; /* font-semibold */
+            color: #0f172a; /* text-slate-900 */
+        }
+
+        /* --- Form Styling (Reused) --- */
+        form {
+             margin-bottom: 1.5rem; /* mb-6 */
+        }
+        fieldset {
+            border: 1px solid #e2e8f0; /* border border-slate-200 */
+            padding: 1.25rem; /* p-5 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            background-color: white; /* bg-white */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        legend {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            padding: 0 0.5rem; /* px-2 */
+            margin-left: 0.5rem; /* ml-2 */
+        }
+
+        /* --- Input Group & Select Styling (Adapted/Reused) --- */
+        /* Mode Selection (Radio Buttons) */
+        .mode-selection {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem; /* space-x-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            margin-top: 0.5rem; /* mt-2 */
+            flex-wrap: wrap;
+        }
+        .mode-selection label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95em;
+            color: #334155; /* text-slate-700 */
+        }
+         .mode-selection input[type="radio"] {
+            margin-right: 0.5rem; /* mr-2 */
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            accent-color: #2563eb; /* Make radio button blue */
+         }
+
+        .input-group {
+             /* Wrapper for label + select */
+             max-width: 512px; /* max-w-lg */
+             margin-left: auto;
+             margin-right: auto;
+             margin-bottom: 1rem; /* mb-4 */
+        }
+
+        label.select-label {
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #334155; /* text-slate-700 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+
+        select {
+            margin-top: 0.25rem; /* mt-1 */
+            display: block;
+            width: 100%;
+            border-radius: 6px; /* rounded-md */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            padding: 0.625rem 1rem; /* py-2.5 px-4 */
+            background-color: white; /* bg-white */
+            color: #0f172a; /* text-slate-900 */
+            font-size: 0.875rem; /* sm:text-sm */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center; /* pr-3 */
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em; /* size-5 */
+            padding-right: 2.75rem; /* Make space for arrow */
+        }
+
+        select:focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring approximation */
+        }
+        select option:first-child {
+            color: #64748b; /* text-slate-500 */
+        }
+
+        /* --- Button Container & Buttons (Reused) --- */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* space-x-4 */
+            margin-top: 1.5rem; /* mt-6 */
+            padding-top: 1rem; /* pt-4 */
+            border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+        }
+        button {
+            padding: 0.625rem 1.5rem; /* py-2.5 px-6 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            border-radius: 6px; /* rounded-md */
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        button:focus {
+            outline: 2px solid transparent; /* focus:outline-none */
+            outline-offset: 2px; /* focus:ring-offset-2 */
+        }
+        button:disabled {
+            opacity: 0.6; /* disabled:opacity-60 */
+            cursor: not-allowed; /* disabled:cursor-not-allowed */
+        }
+        /* Specific button styles */
+        button#interpret-btn { /* Renamed for consistency, functionality remains */
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white; /* text-white */
+        }
+        button#interpret-btn:hover { background-color: #1d4ed8; /* hover:bg-blue-700 */ }
+        button#interpret-btn:focus { box-shadow: 0 0 0 2px #f8fafc, 0 0 0 4px #3b82f6; } /* focus:ring-2 focus:ring-offset-white focus:ring-blue-500 */
+
+        button#reset-btn {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            color: #1e293b; /* text-slate-800 */
+        }
+        button#reset-btn:hover { background-color: #cbd5e1; /* hover:bg-slate-300 */ }
+        button#reset-btn:focus { box-shadow: 0 0 0 2px #f8fafc, 0 0 0 4px #94a3b8; } /* focus:ring-2 focus:ring-offset-white focus:ring-slate-400 */
+
+        /* --- Result Area Styling (Adapted for Table Display) --- */
+        #result {
+            margin-top: 2rem; /* mt-8 */
+            padding: 1.5rem; /* p-6 */
+            background-color: white; /* bg-white */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            display: none; /* Initially hidden */
+        }
+        .result-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .overflow-x-auto { overflow-x: auto; } /* For horizontal scroll on small screens */
+
+        /* Result Table Styling */
+        .result-table {
+            width: 100%;
+            min-width: 600px; /* Ensure some minimum width for table structure */
+            border-collapse: collapse;
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .result-table th, .result-table td {
+            padding: 0.75rem 1rem; /* px-4 py-3 */
+            text-align: left;
+            white-space: nowrap; /* Keep cells from wrapping excessively */
+            font-size: 0.875rem; /* text-sm */
+            border: 1px solid #e2e8f0; /* Divide lines */
+            vertical-align: middle;
+        }
+        .result-table th {
+            background-color: #f8fafc; /* bg-slate-50 */
+            font-weight: 600; /* font-semibold */
+            color: #475569; /* text-slate-600 */
+            font-size: 0.8rem; /* text-xs */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* tracking-wider */
+            position: sticky; /* Keep header visible when scrolling horizontally */
+            top: 0; /* Stick to the top of the scroll container */
+            z-index: 10; /* Ensure header stays above content */
+        }
+         /* Organism name cell (first column) styling */
+        .result-table tbody td:first-child {
+            font-weight: 500; /* font-medium */
+            color: #0f172a; /* text-slate-900 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            /* Make first column sticky for horizontal scroll */
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            border-right-width: 2px; /* Emphasize column boundary */
+            border-right-color: #cbd5e1;
+        }
+         /* Activity cell styling */
+        .activity-cell {
+            text-align: center; /* Center the check/cross marks */
+            font-weight: 600; /* font-semibold */
+            font-size: 1.1em;
+        }
+        .activity-good { background-color: #dcfce7; /* green-100 */ color: #166534; /* green-800 */ }
+        .activity-some { background-color: #fef9c3; /* yellow-100 */ color: #854d0e; /* yellow-800 */ }
+        .activity-poor { background-color: #fee2e2; /* red-100 */ color: #991b1b; /* red-800 */ }
+        .activity-unknown { background-color: #f3f4f6; /* gray-100 */ color: #4b5563; /* gray-600 */ }
+
+
+        /* Legend Styling */
+        .legend-box {
+            margin-top: 1.5rem; /* mt-6 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem; /* space-x-4 */
+            padding: 0.75rem; /* p-3 */
+            background-color: #f8fafc; /* bg-slate-50 */
+            border-radius: 6px; /* rounded */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem; /* text-xs */
+            color: #334155; /* text-slate-700 */
+        }
+        .legend-color {
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            border-radius: 4px; /* rounded */
+            border: 1px solid #94a3b8; /* default border */
+            margin-right: 0.375rem; /* mr-1.5 */
+            display: inline-block; /* Ensure it takes space */
+        }
+        .legend-color-good { background-color: #dcfce7; border-color: #86efac; }
+        .legend-color-some { background-color: #fef9c3; border-color: #fde047; }
+        .legend-color-poor { background-color: #fee2e2; border-color: #fca5a5; }
+
+        /* Disclaimer Styling (Reused) */
+        .disclaimer {
+            margin-top: 2rem; /* mt-8 */
+            font-size: 0.75rem; /* text-xs */
+            color: #64748b; /* text-slate-500 */
+            border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+            padding-top: 1rem; /* pt-4 */
+            font-style: italic;
+            text-align: center;
+        }
+        .disclaimer strong {
+            font-weight: 600; /* font-semibold */
+            color: #475569; /* text-slate-600 */
+            font-style: normal;
+        }
+
+        /* Utility to hide elements (Reused) */
+        .hidden { display: none; }
+
+        /* Responsive Styles (Reused) */
+        @media (min-width: 768px) {
+             body { padding: 2rem; /* md:p-8 */ }
+             .main-container { padding: 2rem; /* md:p-8 */ }
+             .main-title { font-size: 2.25rem; /* md:text-4xl */ }
+             legend { margin-left: -0.5rem; /* -ml-2 */ } /* Align legend better on larger screens */
+        }
+        @media (max-width: 640px) {
+            .button-container { flex-direction: column; gap: 0.5rem; align-items: stretch;}
+            button { width: 100%; }
+            .legend-box { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            /* Adjust sticky column background if needed on small screens */
+            .result-table tbody td:first-child { background-color: #f1f5f9; } /* Slightly different bg to stand out */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Updated Title -->
+        <h1 class="main-title">Antibiotic Spectrum Guide</h1>
+        <p class="sub-title">Select an organism or an antibiotic to view general activity patterns.</p>
+
+        <!-- Informational Text specific to Antibiotic Spectra -->
+        <div class="info-section">
+            <h2>Understanding Antibiotic Spectra</h2>
+            <p>An antibiotic's <strong>spectrum of activity</strong> refers to the range of bacterial species against which it is generally effective. Understanding these spectra is crucial for selecting appropriate empiric therapy before specific susceptibility results are available.</p>
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li><strong>Broad-spectrum antibiotics</strong> are active against a wide range of bacteria (both Gram-positive and Gram-negative).</li>
+                <li><strong>Narrow-spectrum antibiotics</strong> target a limited range of bacteria (e.g., primarily Gram-positives or specific species).</li>
+                <li><strong>Empiric Therapy:</strong> Initial antibiotic choice based on the likely pathogen(s) for a given infection site and patient factors, guided by general spectrum knowledge and local resistance patterns.</li>
+                <li><strong>Definitive Therapy:</strong> Antibiotic choice tailored based on culture and sensitivity (C&S) results.</li>
+                <li><strong>Antibiogram:</strong> A summary of antimicrobial susceptibility patterns of local bacterial isolates, essential for guiding empiric therapy. <strong>This tool does NOT replace local antibiograms.</strong></li>
+            </ul>
+            <h3>Parameters Used in this Guide:</h3>
+            <ul>
+                <li><strong>Organism/Group:</strong> Common bacterial pathogens or groups with similar susceptibility patterns.</li>
+                <li><strong>Antibiotic:</strong> Selected antimicrobial agents.</li>
+                <li><strong>Activity Level:</strong> A simplified representation (Good, Some, Poor) of expected activity based on common wild-type spectra.</li>
+            </ul>
+             <h3>Important Considerations:</h3>
+             <ul>
+                <li><strong>Resistance is Variable:</strong> Patterns change over time and vary significantly by geographic location and healthcare setting (e.g., community vs. hospital).</li>
+                <li><strong>Simplified Grouping:</strong> Organism groups (e.g., "Enterococcus") may contain species with differing susceptibilities (e.g., E. faecalis vs E. faecium/VRE). MRSA/MSSA are separated, but other resistance mechanisms (ESBL, AmpC) are broad categories.</li>
+                <li><strong>Clinical Context is Key:</strong> Factors like infection site, drug penetration, patient allergies, renal/hepatic function, and potential drug interactions are NOT considered here.</li>
+             </ul>
+        </div>
+
+        <!-- Form structure reused, inputs adapted -->
+        <form id="spectrum-form">
+            <fieldset>
+                <!-- Updated Legend -->
+                <legend>Select Mode & Option</legend>
+
+                <!-- Mode Selection Radios -->
+                <div class="mode-selection">
+                    <label>
+                        <input type="radio" name="viewMode" value="organism" checked> View by Organism
+                    </label>
+                    <label>
+                        <input type="radio" name="viewMode" value="antibiotic"> View by Antibiotic
+                    </label>
+                </div>
+
+                <!-- Organism Dropdown (Initially Visible) -->
+                 <div class="input-group" id="organism-selector-group">
+                    <label for="organism-select" class="select-label">Organism / Group:</label>
+                    <select id="organism-select" name="organism-select">
+                        <option value="" disabled selected>-- Select an Organism --</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Antibiotic Dropdown (Initially Hidden) -->
+                 <div class="input-group hidden" id="antibiotic-selector-group">
+                    <label for="antibiotic-select" class="select-label">Antibiotic:</label>
+                    <select id="antibiotic-select" name="antibiotic-select">
+                        <option value="" disabled selected>-- Select an Antibiotic --</option>
+                         <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Button container reused -->
+            <div class="button-container">
+                <!-- Updated Button Text -->
+                <button type="button" id="interpret-btn">Show Coverage</button>
+                <button type="reset" id="reset-btn">Reset Form</button>
+            </div>
+        </form>
+
+        <!-- Results area reused, content structure adapted for table -->
+        <div id="result" class="hidden">
+            <h3 id="result-title" class="result-title">Antibiotic Activity Spectrum</h3>
+            <div class="overflow-x-auto">
+                 <div id="result-table-container">
+                     <!-- JS will populate the table here -->
+                     <!-- Example Placeholder Structure (will be replaced by JS)
+                     <table class="result-table">
+                         <thead>
+                             <tr><th>Organism</th><th>Antibiotic 1</th><th>Antibiotic 2</th></tr>
+                         </thead>
+                         <tbody>
+                             <tr><td>Example Org</td><td class="activity-cell activity-good">✓✓</td><td class="activity-cell activity-poor">✕</td></tr>
+                         </tbody>
+                     </table>
+                     -->
+                 </div>
+            </div>
+
+            <!-- Legend for activity symbols -->
+            <div class="legend-box">
+                 <div class="legend-item"><span class="legend-color legend-color-good"></span>Good Activity (✓✓)</div>
+                 <div class="legend-item"><span class="legend-color legend-color-some"></span>Some Activity (✓)</div>
+                 <div class="legend-item"><span class="legend-color legend-color-poor"></span>Little/No Activity (✕)</div>
+            </div>
+
+             <!-- Updated Disclaimer -->
+             <p class="disclaimer">
+                <strong>Disclaimer:</strong> This tool provides a <strong>general, simplified guide</strong> based on typical antibiotic spectra. It is intended for educational purposes only and is <strong>NOT a substitute for local antibiograms, current clinical guidelines, susceptibility testing, infectious disease consultation, or professional clinical judgment.</strong> Antibiotic resistance patterns vary significantly by region, institution, and over time. This guide does not account for specific resistance mechanisms (e.g., VRE, specific ESBL types), patient allergies, drug interactions, pharmacokinetics, specific infection sites, dosing, or other critical clinical factors. <strong>Always consult definitive resources and clinical experts for patient care decisions.</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript adapted for Antibiotic Spectrum Logic -->
+    <script>
+        // --- COVERAGE DATA ---
+        // Simplified representation. 'good'/'some'/'poor' map to general expected activity.
+        // This data needs to be curated and validated against reliable sources.
+        const coverageData = {
+            // Gram Positives
+            "Enterococcus (general)": {
+                "Vancomycin": "good", "Ampicillin": "some", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "some", "Amox/Clav (Augmentin)": "some", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Pip/Tazo (Zosyn)": "some",
+                "Meropenem": "some", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "some", "Clindamycin": "poor", "Metronidazole": "poor", "Linezolid": "good", "Daptomycin": "good"
+            },
+             "Staph aureus (MRSA)": {
+                "Vancomycin": "good", "Ampicillin": "poor", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "poor", "Amox/Clav (Augmentin)": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Pip/Tazo (Zosyn)": "poor",
+                "Meropenem": "poor", "Ertapenem": "poor", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "poor",
+                "TMP/SMX (Bactrim)": "good", "Doxycycline": "good", "Clindamycin": "good", "Metronidazole": "poor", "Linezolid": "good", "Daptomycin": "good"
+            },
+            "Staph aureus (MSSA)": {
+                "Vancomycin": "good", "Ampicillin": "poor", "Nafcillin/Oxacillin": "good", "Amp/Sulbactam (Unasyn)": "good", "Amox/Clav (Augmentin)": "good", "Cefazolin": "good",
+                "Ceftriaxone": "good", "Ceftazidime": "some", "Cefepime": "good", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "some", "Ciprofloxacin": "some", "Levofloxacin": "some",
+                "TMP/SMX (Bactrim)": "good", "Doxycycline": "good", "Clindamycin": "good", "Metronidazole": "poor", "Linezolid": "good", "Daptomycin": "good"
+            },
+             "Streptococcus pneumoniae": {
+                "Vancomycin": "good", "Ampicillin": "some", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "some", "Amox/Clav (Augmentin)": "good", "Cefazolin": "some", // Depends on penicillin resistance
+                "Ceftriaxone": "good", "Ceftazidime": "poor", "Cefepime": "good", "Pip/Tazo (Zosyn)": "some",
+                "Meropenem": "good", "Ertapenem": "some", "Azithromycin": "some", "Ciprofloxacin": "poor", "Levofloxacin": "good", // Respiratory FQ
+                "TMP/SMX (Bactrim)": "some", "Doxycycline": "some", "Clindamycin": "some", "Metronidazole": "poor", "Linezolid": "good", "Daptomycin": "good"
+            },
+             "Beta-hemolytic Strep (Groups A, B, C, G)": {
+                "Vancomycin": "good", "Ampicillin": "good", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "good", "Amox/Clav (Augmentin)": "good", "Cefazolin": "good",
+                "Ceftriaxone": "good", "Ceftazidime": "poor", "Cefepime": "good", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "some", // Resistance common
+                "Ciprofloxacin": "poor", "Levofloxacin": "some",
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "poor", "Clindamycin": "good", "Metronidazole": "poor", "Linezolid": "good", "Daptomycin": "good"
+            },
+            // Gram Negatives
+            "Enterobacterales (Community - E.coli, Klebsiella, Proteus)": {
+                "Vancomycin": "poor", "Ampicillin": "some", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "some", "Amox/Clav (Augmentin)": "some", "Cefazolin": "some",
+                "Ceftriaxone": "good", "Ceftazidime": "good", "Cefepime": "good", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "good", "Levofloxacin": "good",
+                "TMP/SMX (Bactrim)": "good", // High resistance in some areas
+                "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor", "Linezolid": "poor", "Daptomycin": "poor"
+            },
+             "Enterobacterales (Hospital/Resistant - incl some ESBL/AmpC)": { // Broad/Simplified category
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "poor", "Amox/Clav (Augmentin)": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "some", "Cefepime": "good", // Cefepime often retains activity vs AmpC
+                "Pip/Tazo (Zosyn)": "some", // Variable vs ESBL/AmpC
+                "Meropenem": "good", "Ertapenem": "some", // Ertapenem less reliable vs some resistant GNRs
+                "Azithromycin": "poor", "Ciprofloxacin": "some", "Levofloxacin": "some", // Resistance common
+                "TMP/SMX (Bactrim)": "some", // Resistance common
+                "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor", "Linezolid": "poor", "Daptomycin": "poor"
+            },
+             "Pseudomonas aeruginosa": {
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "poor", "Amox/Clav (Augmentin)": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "good", "Cefepime": "good", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", // Often requires specific anti-pseudomonal carbapenem like Meropenem/Imipenem
+                "Ertapenem": "poor",
+                "Azithromycin": "poor", "Ciprofloxacin": "good", "Levofloxacin": "good", // Anti-pseudomonal FQ
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "poor", "Clindamycin": "poor", "Metronidazole": "poor", "Linezolid": "poor", "Daptomycin": "poor"
+            },
+            // Anaerobes
+            "Anaerobes (Oral/Above diaphragm)": { // e.g., Peptostreptococcus, Prevotella (oral)
+                "Vancomycin": "good", // Gram+ anaerobes
+                "Ampicillin": "good", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "good", "Amox/Clav (Augmentin)": "good", "Cefazolin": "some",
+                "Ceftriaxone": "some", "Ceftazidime": "poor", "Cefepime": "some", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "some",
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "some", "Clindamycin": "good", "Metronidazole": "good", // Metro better for below diaphragm
+                "Linezolid": "good", "Daptomycin": "poor" // Dapto poor lung penetration
+            },
+            "Anaerobes (Gut/Below diaphragm)": { // e.g., Bacteroides fragilis
+                "Vancomycin": "poor", // B. fragilis is Gram Negative
+                "Ampicillin": "poor", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "good", "Amox/Clav (Augmentin)": "good", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Pip/Tazo (Zosyn)": "good",
+                "Meropenem": "good", "Ertapenem": "good", "Azithromycin": "poor", "Ciprofloxacin": "poor", "Levofloxacin": "some", // Limited activity
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "poor", "Clindamycin": "some", // Resistance increasing for B. fragilis
+                "Metronidazole": "good",
+                "Linezolid": "poor", "Daptomycin": "poor"
+            },
+            // Atypicals
+            "Atypicals": { // e.g., Mycoplasma, Chlamydia, Legionella
+                "Vancomycin": "poor", "Ampicillin": "poor", "Nafcillin/Oxacillin": "poor", "Amp/Sulbactam (Unasyn)": "poor", "Amox/Clav (Augmentin)": "poor", "Cefazolin": "poor",
+                "Ceftriaxone": "poor", "Ceftazidime": "poor", "Cefepime": "poor", "Pip/Tazo (Zosyn)": "poor",
+                "Meropenem": "poor", "Ertapenem": "poor", "Azithromycin": "good", // Macrolides active
+                "Ciprofloxacin": "some", "Levofloxacin": "good", // Respiratory FQ active
+                "TMP/SMX (Bactrim)": "poor", "Doxycycline": "good", // Tetracyclines active
+                "Clindamycin": "poor", "Metronidazole": "poor", "Linezolid": "poor", "Daptomycin": "poor"
+            }
+        };
+
+        // --- Derive Organism and Antibiotic Lists from Data ---
+        const allOrganisms = Object.keys(coverageData).sort();
+        // Get a union of all antibiotics mentioned across all organisms
+        const allAntibioticsSet = new Set();
+        allOrganisms.forEach(org => {
+            Object.keys(coverageData[org]).forEach(abx => allAntibioticsSet.add(abx));
+        });
+        const antibiotics = Array.from(allAntibioticsSet).sort();
+
+
+        // --- Get references to form elements (Reused variable names) ---
+        const form = document.getElementById('spectrum-form');
+        const modeRadios = document.querySelectorAll('input[name="viewMode"]');
+        const organismSelectorGroup = document.getElementById('organism-selector-group');
+        const antibioticSelectorGroup = document.getElementById('antibiotic-selector-group');
+        const organismSelect = document.getElementById('organism-select');
+        const antibioticSelect = document.getElementById('antibiotic-select');
+        const interpretBtn = document.getElementById('interpret-btn'); // Changed ID for consistency
+        const resetBtn = document.getElementById('reset-btn');
+        const resultContainer = document.getElementById('result'); // Use the container div ID
+        const resultTitle = document.getElementById('result-title');
+        const resultTableContainer = document.getElementById('result-table-container');
+
+        // --- Populate Dropdowns ---
+        function populateDropdowns() {
+            // Clear existing options first, keeping the disabled placeholder
+            organismSelect.innerHTML = '<option value="" disabled selected>-- Select an Organism --</option>';
+            antibioticSelect.innerHTML = '<option value="" disabled selected>-- Select an Antibiotic --</option>';
+
+            // Populate Organisms
+            allOrganisms.forEach(orgKey => {
+                const option = document.createElement('option');
+                option.value = orgKey;
+                option.textContent = orgKey; // Use the key directly as it's user-friendly now
+                organismSelect.appendChild(option);
+            });
+
+            // Populate Antibiotics
+            antibiotics.forEach(abx => {
+                const option = document.createElement('option');
+                option.value = abx;
+                option.textContent = abx;
+                antibioticSelect.appendChild(option);
+            });
+        }
+
+        // --- Mode Switching Logic ---
+        function handleModeChange() {
+            const selectedMode = document.querySelector('input[name="viewMode"]:checked').value;
+            if (selectedMode === 'organism') {
+                organismSelectorGroup.classList.remove('hidden');
+                antibioticSelectorGroup.classList.add('hidden');
+                antibioticSelect.value = ""; // Reset other dropdown
+            } else { // antibiotic mode
+                organismSelectorGroup.classList.add('hidden');
+                antibioticSelectorGroup.classList.remove('hidden');
+                organismSelect.value = ""; // Reset other dropdown
+            }
+            // Hide results when mode changes or selection is cleared
+            hideResults();
+        }
+
+        // --- Hide Results ---
+        function hideResults() {
+             resultContainer.classList.add('hidden');
+             resultTableContainer.innerHTML = ''; // Clear previous table
+             resultTitle.textContent = 'Antibiotic Activity Spectrum'; // Reset title
+        }
+
+        // --- Display Logic (Renamed interpret function) ---
+        function displayCoverage() {
+            const selectedMode = document.querySelector('input[name="viewMode"]:checked').value;
+            let tableHTML = '';
+            let currentTitle = '';
+            let isValidSelection = false;
+
+            if (selectedMode === 'organism') {
+                // --- VIEW BY ORGANISM ---
+                const selectedOrganism = organismSelect.value;
+                if (selectedOrganism && coverageData[selectedOrganism]) {
+                    isValidSelection = true;
+                    currentTitle = `Antibiotic Activity vs. ${selectedOrganism}`;
+                    const organismData = coverageData[selectedOrganism];
+
+                    // Build Table Header (Antibiotics as columns)
+                    // Use <wbr> tag for potential line breaks in long antibiotic names
+                    tableHTML = '<table class="result-table"><thead><tr><th>Antibiotic</th><th>Activity</th></tr></thead><tbody>';
+
+                    // Build Table Body Rows (one row per antibiotic)
+                    antibiotics.forEach(abx => {
+                        const activity = organismData[abx] || 'unknown';
+                        const { activityClass, activityText } = getActivityStyling(activity);
+                        tableHTML += `<tr><td>${abx.replace(/\//g, '/<wbr>')}</td><td class="activity-cell ${activityClass}">${activityText}</td></tr>`;
+                    });
+                    tableHTML += '</tbody></table>';
+                } else if (selectedOrganism) {
+                     // Handle case where organism might be selected but data is missing (shouldn't happen with current setup)
+                     resultTableContainer.innerHTML = '<p style="color: red; text-align: center;">Error: Coverage data not found for the selected organism.</p>';
+                     resultContainer.classList.remove('hidden');
+                     return;
+                } else {
+                    alert("Please select an organism.");
+                    return;
+                }
+
+            } else {
+                 // --- VIEW BY ANTIBIOTIC ---
+                const selectedAntibiotic = antibioticSelect.value;
+                 if (selectedAntibiotic) {
+                    isValidSelection = true;
+                    currentTitle = `Spectrum of Activity for ${selectedAntibiotic}`;
+
+                    // Build Table Header
+                    tableHTML = '<table class="result-table"><thead><tr><th>Organism / Group</th><th>Activity</th></tr></thead><tbody>';
+
+                    // Build Table Body Rows (one per organism)
+                    allOrganisms.forEach(orgKey => {
+                        const organismData = coverageData[orgKey];
+                        // Use optional chaining ?. in case an antibiotic isn't listed for a specific organism
+                        const activity = organismData?.[selectedAntibiotic] || 'unknown';
+                        const { activityClass, activityText } = getActivityStyling(activity);
+
+                        tableHTML += '<tr>';
+                        tableHTML += `<td>${orgKey}</td>`; // First cell is organism name
+                        tableHTML += `<td class="activity-cell ${activityClass}">${activityText}</td>`; // Second cell is activity
+                        tableHTML += '</tr>';
+                    });
+
+                    tableHTML += '</tbody></table>';
+                } else {
+                    alert("Please select an antibiotic.");
+                    return;
+                }
+            }
+
+            // Update and show results only if a valid selection was processed
+            if (isValidSelection) {
+                resultTitle.textContent = currentTitle;
+                resultTableContainer.innerHTML = tableHTML;
+                resultContainer.classList.remove('hidden'); // Show results container
+                // Scroll results into view
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                hideResults(); // Ensure results are hidden if selection wasn't valid
+            }
+        }
+
+         // Helper function for table cell styling and text
+         function getActivityStyling(activity) {
+            let activityClass = 'activity-unknown';
+            let activityText = '?'; // Default for unknown/not specified
+
+            switch (String(activity).toLowerCase()) { // Ensure comparison is case-insensitive
+                case 'good':
+                    activityClass = 'activity-good';
+                    activityText = '✓✓';
+                    break;
+                case 'some':
+                    activityClass = 'activity-some';
+                    activityText = '✓';
+                    break;
+                case 'poor':
+                    activityClass = 'activity-poor';
+                    activityText = '✕';
+                    break;
+            }
+             return { activityClass, activityText };
+         }
+
+        // --- Form Reset Logic (Reused) ---
+        function resetForm() {
+            form.reset();
+             // Set radio button back to default and trigger mode change
+            document.querySelector('input[name="viewMode"][value="organism"]').checked = true;
+            handleModeChange(); // Ensure correct dropdown shows and results are hidden
+            // Explicitly hide results and clear table content
+            hideResults();
+            // Reset dropdowns to placeholder
+            organismSelect.value = "";
+            antibioticSelect.value = "";
+            // Scroll form back into view (optional)
+             try {
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) { /* ignore scroll errors if element not fully visible */ }
+        }
+
+        // --- Event Listeners (Adapted) ---
+        modeRadios.forEach(radio => radio.addEventListener('change', handleModeChange));
+        interpretBtn.addEventListener('click', displayCoverage); // Use updated button ID
+        resetBtn.addEventListener('click', resetForm);
+
+        // Hide result if dropdown selection changes after showing results
+        organismSelect.addEventListener('change', hideResults);
+        antibioticSelect.addEventListener('change', hideResults);
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdowns(); // Populate the dropdowns on load
+            resetForm(); // Initialize form state and hide results
+        });
+
+    </script>
+
+</body>
+</html>
