@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benzodiazepine Dosage Converter</title>
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #0056b3; /* Deep Blue */
+            --secondary-color: #f8f9fa; /* Light Gray */
+            --accent-color: #17a2b8; /* Teal */
+            --text-color: #333;
+            --border-color: #ced4da;
+            --background-color: #ffffff;
+            --hover-color: #004494;
+            --focus-ring-color: rgba(0, 86, 179, 0.25);
+            --result-bg-color: #e9ecef;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align top */
+            min-height: 100vh;
+        }
+
+        /* Main Container */
+        .main-container {
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Headings */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.75em;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1em;
+            font-size: 2em; /* Adjust size */
+        }
+        h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
+            font-size: 1.5em; /* Adjust size */
+        }
+        h3 {
+            color: var(--accent-color);
+            font-size: 1.2em; /* Adjust size */
+            margin-top: 1em;
+        }
+
+        /* Paragraphs and Lists */
+        p, li {
+            margin-bottom: 0.8em;
+            color: var(--text-color);
+        }
+        ul {
+            padding-left: 20px;
+            margin-top: 0.5em;
+        }
+        strong {
+            color: var(--primary-color);
+        }
+
+        /* Information Section */
+        .info-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Form Styles */
+        form {
+            margin-top: 20px;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: var(--background-color); /* Keep form background white */
+        }
+
+        legend {
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            align-items: center; /* Vertically align items */
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 1em;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        select:focus, input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem var(--focus-ring-color);
+        }
+        /* Style for number input arrows (Webkit) */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        /* Button Styles */
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center buttons */
+            gap: 15px; /* Space between buttons */
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            min-width: 120px; /* Minimum width */
+        }
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        button[type="submit"]:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+        }
+        button[type="reset"] {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        button[type="reset"]:hover {
+            background-color: #138496; /* Darker teal */
+            transform: translateY(-1px);
+        }
+
+        /* Result Section */
+        #result {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: var(--result-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: none; /* Initially hidden */
+        }
+        .result-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+        }
+        #classificationDisplay,
+        #differentialDisplay,
+        #notesDisplay {
+            margin-bottom: 1em;
+            padding-left: 10px; /* Indent content slightly */
+            border-left: 3px solid var(--primary-color); /* Add a visual marker */
+        }
+        #classificationDisplay {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        #differentialDisplay ul,
+        #notesDisplay ul {
+            list-style-type: disc; /* Use standard bullets */
+            padding-left: 25px; /* Indent bullet points */
+            margin-top: 0.5em;
+        }
+         #differentialDisplay li,
+         #notesDisplay li {
+             margin-bottom: 0.5em;
+         }
+
+        /* Disclaimer */
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.85em;
+            color: #6c757d; /* Gray text */
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .main-container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.4em;
+            }
+            .form-grid {
+                grid-template-columns: 1fr; /* Stack form elements */
+            }
+            .button-container {
+                flex-direction: column; /* Stack buttons */
+                align-items: center;
+            }
+            button {
+                width: 80%; /* Make buttons wider */
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            .main-container {
+                padding: 15px;
+            }
+             h1 {
+                 font-size: 1.6em;
+             }
+             h2 {
+                 font-size: 1.3em;
+             }
+             h3 {
+                 font-size: 1.1em;
+             }
+            select, input[type="number"], button {
+                font-size: 0.95em; /* Slightly smaller text on small devices */
+            }
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Benzodiazepine Dosage Converter</h1>
+
+        <div class="info-section">
+            <h2>Background Information</h2>
+            <p>This tool provides approximate dose equivalencies between different oral benzodiazepines based on commonly referenced clinical data. Benzodiazepines differ significantly in potency, pharmacokinetics (half-life, onset of action), and sedative effects, making direct conversion complex.</p>
+
+            <h3>Key Considerations:</h3>
+            <ul>
+                <li><strong>Approximate Equivalents:</strong> Conversions are estimates. Individual patient response can vary significantly.</li>
+                <li><strong>Potency:</strong> Major differences exist (e.g., clonazepam and alprazolam are highly potent compared to diazepam).</li>
+                <li><strong>Pharmacokinetics:</strong> Drugs with long half-lives (e.g., Diazepam, Chlordiazepoxide, Flurazepam) can accumulate, while short-acting agents (e.g., Lorazepam, Oxazepam, Alprazolam) may lead to more fluctuations and potential inter-dose withdrawal.</li>
+                <li><strong>Clinical Judgment is Essential:</strong> Always use clinical judgment when switching benzodiazepines. Consider the patient's age, renal and hepatic function, comorbidities, concurrent medications, indication for use, and risk of withdrawal or over-sedation.</li>
+                <li><strong>Tapering:</strong> When switching, especially to a lower equivalent dose or when discontinuing, a gradual taper is often necessary.</li>
+                <li><strong>Hepatic Impairment:</strong> Dose reductions (e.g., 50%) may be needed in mild-moderate liver disease, and many benzodiazepines should be avoided in severe impairment. Refer to specific drug information.</li>
+            </ul>
+
+            <h3>Mechanism of Action:</h3>
+            <p>Benzodiazepines enhance the effect of the neurotransmitter gamma-aminobutyric acid (GABA) at the GABA<sub>A</sub> receptor, resulting in sedative, hypnotic (sleep-inducing), anxiolytic (anti-anxiety), anticonvulsant, and muscle relaxant properties.</p>
+
+             <h3>Approximate Oral Equivalencies (Based on Diazepam 5mg):</h3>
+             <p>The following commonly cited equivalencies are used in this calculator (sources may vary slightly):</p>
+             <ul>
+                 <li>Alprazolam: 0.25 mg</li>
+                 <li>Bromazepam: 3 mg</li>
+                 <li>Chlordiazepoxide: 12.5 mg</li>
+                 <li>Clonazepam: 0.25 mg</li>
+                 <li>Clorazepate: 3.75 mg</li>
+                 <li>Diazepam: 5 mg</li>
+                 <li>Flurazepam: 7.5 mg</li>
+                 <li>Lorazepam: 0.5 mg</li>
+                 <li>Oxazepam: 10 mg</li>
+                 <li>Temazepam: 10 mg</li>
+             </ul>
+              <p><em>Note: These are for comparison purposes; always consult prescribing information and clinical guidelines.</em></p>
+        </div>
+
+        <form id="benzoForm">
+            <fieldset>
+                <legend>Benzodiazepine Conversion Calculator</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="convertFromDrug">Convert From:</label>
+                        <select id="convertFromDrug" name="convertFromDrug" required>
+                            <option value="">-- Select Drug --</option>
+                            <option value="Alprazolam">Alprazolam (Xanax®)</option>
+                            <option value="Bromazepam">Bromazepam</option>
+                            <option value="Chlordiazepoxide">Chlordiazepoxide (Librium®)</option>
+                            <option value="Clonazepam">Clonazepam (Klonopin®)</option>
+                            <option value="Clorazepate">Clorazepate (Tranxene®)</option>
+                            <option value="Diazepam">Diazepam (Valium®)</option>
+                            <option value="Flurazepam">Flurazepam (Dalmane®)</option>
+                            <option value="Lorazepam">Lorazepam (Ativan®)</option>
+                            <option value="Oxazepam">Oxazepam (Serax®)</option>
+                            <option value="Temazepam">Temazepam (Restoril®)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fromDose">Current Total Daily Dose (mg):</label>
+                        <input type="number" id="fromDose" name="fromDose" min="0" step="any" placeholder="e.g., 2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="convertToDrug">Convert To:</label>
+                        <select id="convertToDrug" name="convertToDrug" required>
+                             <option value="">-- Select Drug --</option>
+                            <option value="Alprazolam">Alprazolam (Xanax®)</option>
+                            <option value="Bromazepam">Bromazepam</option>
+                            <option value="Chlordiazepoxide">Chlordiazepoxide (Librium®)</option>
+                            <option value="Clonazepam">Clonazepam (Klonopin®)</option>
+                            <option value="Clorazepate">Clorazepate (Tranxene®)</option>
+                            <option value="Diazepam">Diazepam (Valium®)</option>
+                            <option value="Flurazepam">Flurazepam (Dalmane®)</option>
+                            <option value="Lorazepam">Lorazepam (Ativan®)</option>
+                            <option value="Oxazepam">Oxazepam (Serax®)</option>
+                            <option value="Temazepam">Temazepam (Restoril®)</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="button-container">
+                <button type="submit">Convert Dose</button>
+                <button type="reset">Reset</button>
+            </div>
+        </form>
+
+        <div id="result">
+            <p class="result-label">Conversion Result:</p>
+            <div id="classificationDisplay"></div>
+
+            <p class="result-label">Calculation Basis:</p>
+            <div id="differentialDisplay"></div>
+
+            <p class="result-label">Important Clinical Notes:</p>
+            <div id="notesDisplay"></div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides approximate benzodiazepine dose conversions based on commonly accepted equivalency ratios. It is intended for educational and informational purposes only and should <strong>NOT</strong> replace clinical judgment, patient assessment, or professional medical advice. Dose equivalencies are estimates; individual responses vary. Always consider patient-specific factors (age, organ function, indication, etc.) and consult official prescribing information, clinical guidelines (like the Ashton Manual), and expert opinion when switching or adjusting benzodiazepine therapy. Start low and titrate carefully based on clinical response. The creators of this tool are not responsible for clinical decisions made based on its output.
+        </div>
+    </div>
+
+    <script>
+        // Get DOM Elements
+        const form = document.getElementById('benzoForm');
+        const convertFromDrugSelect = document.getElementById('convertFromDrug');
+        const fromDoseInput = document.getElementById('fromDose');
+        const convertToDrugSelect = document.getElementById('convertToDrug');
+        const resultDiv = document.getElementById('result');
+        const classificationDisplay = document.getElementById('classificationDisplay');
+        const differentialDisplay = document.getElementById('differentialDisplay');
+        const notesDisplay = document.getElementById('notesDisplay');
+        const resetButton = form.querySelector('button[type="reset"]');
+
+        // Store Equivalency Factors (mg equivalent to 5mg Diazepam)
+        const benzoEquivalents = {
+            // Value represents mg equivalent to 5mg Diazepam
+            'Alprazolam': 0.25,
+            'Bromazepam': 3, // Approximate
+            'Chlordiazepoxide': 12.5,
+            'Clonazepam': 0.25,
+            'Clorazepate': 3.75, // Based on phenobarbital table ratio (~7.5mg Clorazepate ~ 10mg Diazepam)
+            'Diazepam': 5,
+            'Flurazepam': 7.5, // Lower end of range often cited (7.5-15mg ~ 5mg Diazepam)
+            'Lorazepam': 0.5,
+            'Oxazepam': 10,
+            'Temazepam': 10
+        };
+
+        // --- Event Listeners ---
+
+        // Handle form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            calculateConversion();
+        });
+
+        // Handle form reset
+        resetButton.addEventListener('click', resetForm);
+
+        // Hide results if any input changes after calculation
+        [convertFromDrugSelect, fromDoseInput, convertToDrugSelect].forEach(input => {
+            input.addEventListener('change', hideResult);
+            input.addEventListener('input', hideResult); // For number input changes
+        });
+
+
+        // --- Functions ---
+
+        // Hide the result display
+        function hideResult() {
+            resultDiv.style.display = 'none';
+        }
+
+        // Reset the form and hide results
+        function resetForm() {
+            form.reset(); // Resets form fields to default
+            hideResult();
+        }
+
+        // Calculate and display the conversion
+        function calculateConversion() {
+            // Get input values
+            const fromDrug = convertFromDrugSelect.value;
+            const toDrug = convertToDrugSelect.value;
+            const fromDoseValue = parseFloat(fromDoseInput.value);
+
+            // Clear previous results
+            classificationDisplay.textContent = '';
+            differentialDisplay.innerHTML = ''; // Use innerHTML for lists
+            notesDisplay.innerHTML = '';
+
+            // Validation
+            if (!fromDrug || !toDrug || isNaN(fromDoseValue) || fromDoseValue <= 0) {
+                classificationDisplay.textContent = 'Error: Please select both drugs and enter a valid positive dose.';
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // Get equivalency factors
+            const fromFactor = benzoEquivalents[fromDrug];
+            const toFactor = benzoEquivalents[toDrug];
+
+            if (!fromFactor || !toFactor) {
+                classificationDisplay.textContent = 'Error: Equivalency data not found for selected drug(s).';
+                 resultDiv.style.display = 'block';
+                 resultDiv.scrollIntoView({ behavior: 'smooth' });
+                 return;
+            }
+
+            let toDose = 0;
+            let diazepamEquivalent = 0;
+
+            // Perform calculation
+            if (fromDrug === toDrug) {
+                toDose = fromDoseValue;
+                diazepamEquivalent = (fromDoseValue / fromFactor) * 5; // Still useful to show
+            } else {
+                // Calculate equivalent dose in Diazepam first
+                diazepamEquivalent = (fromDoseValue / fromFactor) * 5;
+                // Then calculate the target dose from the Diazepam equivalent
+                toDose = (diazepamEquivalent / 5) * toFactor;
+            }
+
+            // Round the result (e.g., to 1 or 2 decimal places, adjust as needed)
+            const roundedToDose = Math.round(toDose * 100) / 100; // Round to 2 decimal places
+            const roundedDiazepamEq = Math.round(diazepamEquivalent * 100) / 100;
+
+            // --- Display Results ---
+
+            // Main Conversion Result
+            classificationDisplay.textContent = `${fromDoseValue} mg ${fromDrug} is approximately equivalent to ${roundedToDose} mg ${toDrug} (total daily dose).`;
+
+            // Calculation Basis / Details
+            let differentialHTML = '<ul>';
+            differentialHTML += `<li>Calculation based on approximate equivalency ratios relative to Diazepam 5mg:</li>`;
+            differentialHTML += `<ul><li>${fromFactor} mg ${fromDrug} ≈ 5 mg Diazepam</li>`;
+            differentialHTML += `<li>${toFactor} mg ${toDrug} ≈ 5 mg Diazepam</li></ul>`;
+            differentialHTML += `<li>Intermediate Diazepam Equivalent Dose: Approx. ${roundedDiazepamEq} mg/day</li>`;
+            differentialHTML += '</ul>';
+            differentialDisplay.innerHTML = differentialHTML;
+
+            // Important Clinical Notes
+            let notesHTML = '<ul>';
+            notesHTML += `<li><strong>Crucial:</strong> Equivalencies are estimates. Individual patient response varies greatly.</li>`;
+            notesHTML += `<li>This conversion does NOT account for differences in half-life, onset, duration, or specific clinical use cases.</li>`;
+            notesHTML += `<li><strong>Clinical judgment is paramount.</strong> Consider patient factors (age, comorbidities, hepatic/renal function, indication).</li>`;
+            if (fromDrug !== 'Diazepam' && toDrug !== 'Diazepam' && (benzoEquivalents[fromDrug] > 5 || benzoEquivalents[toDrug] > 5)) {
+                 notesHTML += `<li>Conversion involves drugs with potentially large dose differences relative to Diazepam; extra caution advised.</li>`;
+            }
+            if (fromDrug === 'Flurazepam' || toDrug === 'Flurazepam' || fromDrug === 'Clorazepate' || toDrug === 'Clorazepate' || fromDrug === 'Chlordiazepoxide' || toDrug === 'Chlordiazepoxide' || fromDrug === 'Diazepam' || toDrug === 'Diazepam') {
+                notesHTML += `<li>Switching to/from long half-life agents (e.g., Diazepam, Chlordiazepoxide, Clorazepate, Flurazepam) requires careful consideration of accumulation or withdrawal potential.</li>`;
+            }
+            if (fromDrug === 'Alprazolam' || toDrug === 'Alprazolam' || fromDrug === 'Lorazepam' || toDrug === 'Lorazepam' || fromDrug === 'Oxazepam' || toDrug === 'Oxazepam') {
+                notesHTML += `<li>Switching to/from short/intermediate half-life agents (e.g., Alprazolam, Lorazepam, Oxazepam) may require more frequent dosing or careful management of inter-dose symptoms.</li>`;
+            }
+            notesHTML += `<li>Always start with a conservative dose when switching, especially if unsure or in vulnerable patients, and titrate based on clinical response and tolerance.</li>`;
+            notesHTML += `<li>Consult official drug prescribing information and established clinical guidelines (e.g., Ashton Manual) for comprehensive details.</li>`;
+            notesHTML += `<li>This tool is for informational purposes ONLY and does not substitute for professional medical evaluation and decision-making.</li>`;
+            notesHTML += '</ul>';
+            notesDisplay.innerHTML = notesHTML;
+
+            // Show the result section and scroll to it
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll result into view smoothly
+        }
+
+    </script>
+</body>
+</html>
