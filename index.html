@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Tools - Hammy252</title>
+    <style>
+        /* Reset and Base Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5; /* Light gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Main Container */
+        .main-container {
+            background-color: #ffffff; /* White background for the card */
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto; /* Center container */
+        }
+
+        /* Headings */
+        h1 {
+            color: #1a53a0; /* Primary blue color */
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2em; /* Larger main heading */
+            border-bottom: 2px solid #e0e0e0; /* Subtle separator */
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #2c7ab5; /* Secondary blue color */
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        /* Paragraphs and Informational Text */
+        .info-section p {
+            margin-bottom: 15px;
+            color: #555; /* Slightly lighter text color */
+            font-size: 1.05em;
+            text-align: justify; /* Justify intro text */
+        }
+
+        /* List of Tools */
+        .tool-list {
+            list-style: none; /* Remove default bullet points */
+            padding-left: 0;
+            margin-top: 20px;
+        }
+
+        .tool-list li {
+            margin-bottom: 15px; /* Space between list items */
+            background-color: #f8f9fa; /* Slight background for each item */
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .tool-list li:hover {
+             background-color: #e9ecef; /* Hover effect */
+             transform: translateX(5px); /* Slight move on hover */
+        }
+
+        .tool-list a {
+            display: block; /* Make the whole area clickable */
+            padding: 12px 18px;
+            text-decoration: none;
+            color: #0056b3; /* Link color */
+            font-weight: 500; /* Slightly bolder links */
+            font-size: 1.1em;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .tool-list a:hover,
+        .tool-list a:focus {
+            color: #003d80; /* Darker link color on hover/focus */
+            outline: none; /* Remove default focus outline */
+        }
+
+        .tool-list a::before {
+           content: '➔ '; /* Arrow symbol before link */
+           color: #6c757d; /* Gray color for arrow */
+           margin-right: 8px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #6c757d; /* Gray text color */
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .info-section p,
+            .tool-list a {
+                 font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+             body {
+                padding: 10px;
+             }
+            .main-container {
+                padding: 15px 20px;
+                margin: 10px auto;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+    <!-- Favicon Placeholder (Optional) -->
+    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Clinical Decision Support Tools</h1>
+
+        <section class="info-section">
+            <p>
+                Welcome to this collection of clinical calculators and diagnostic aids. These tools are designed to assist healthcare professionals by streamlining common calculations, interpreting complex data, and providing guidance based on established protocols and guidelines.
+            </p>
+            <p>
+                Select a tool from the list below to begin.
+            </p>
+        </section>
+
+        <section>
+            <h2>Available Tools</h2>
+            <ul class="tool-list">
+                <li><a href="acid_base.html">Acid-Base Interpretation Aid</a></li>
+                <li><a href="acs_protocol.html">ACS Protocol Guidance</a></li>
+                <li><a href="atb_Choice.html">Antibiotic Choice Helper</a></li>
+                <li><a href="bzd_conversion.html">Benzodiazepine Conversion Calculator</a></li>
+                <li><a href="cirrhosis_assessment.html">Cirrhosis Assessment Tool</a></li>
+                <li><a href="colonoscopy_interval.html">Colonoscopy Surveillance Interval Calculator</a></li>
+                <li><a href="gdmt_Medication.html">GDMT Medication Guide</a></li>
+                <li><a href="hepB_serology.html">Hepatitis B Serology Interpreter</a></li>
+                <li><a href="hyponatremia.html">Hyponatremia Diagnostic Aid</a></li>
+                <li><a href="medication_list.html">Medication List Tool</a></li>
+                <li><a href="opioid_conversion.html">Opioid Conversion Calculator</a></li>
+                <!-- Add more tools here as needed -->
+            </ul>
+        </section>
+
+        <footer>
+            <p><strong>Disclaimer:</strong> These tools are intended for educational and informational purposes only and should not replace clinical judgment or professional medical advice. Always consult relevant guidelines and consider individual patient factors. No patient data is stored or transmitted.</p>
+            <p>© 2024 - Hosted on GitHub Pages</p>
+        </footer>
+
+    </div> <!-- /main-container -->
+
+    <!-- No JavaScript needed for this static homepage -->
+
+</body>
+</html>
