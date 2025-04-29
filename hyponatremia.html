@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- MODIFIED TITLE -->
-    <title>Hyponatremia Diagnostic Aid</title>
+    <title>Hyponatremia Diagnostic Aid & Information</title> <!-- Updated Title -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,6 +20,7 @@
             line-height: 1.6;
             background-color: #f1f5f9; /* Equivalent to bg-slate-100 */
             padding: 20px; /* Replaces body p-4 */
+            color: #334155; /* Default text color - text-slate-700 */
         }
 
         /* Main Container */
@@ -44,18 +44,93 @@
             padding-bottom: 10px;
              border-bottom: 1px solid #eee;
         }
+         /* Added styles for informational text headings */
+         h2 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0; /* border-slate-200 */
+         }
+         h3 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+         }
+         h4 {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+         }
+          h5 {
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* text-slate-800 */
+            margin-top: 0.8rem;
+            margin-bottom: 0.3rem;
+         }
 
         .subtitle {
             font-size: 1rem; /* text-base */
             color: #475569; /* text-slate-600 */
-            margin-bottom: 2rem; /* mb-8 */
+            margin-bottom: 1rem; /* Reduced margin */
             text-align: center;
         }
 
-        /* Form Styling */
-        form {
-            /* space-y-6 handled by fieldset margin */
+        /* Style for the new informational section */
+        .info-section {
+            margin-bottom: 2.5rem; /* Increased spacing before form */
+            padding: 1.5rem; /* p-6 */
+            background-color: #f8fafc; /* bg-slate-50 - slightly different from main gradient */
+            border: 1px solid #e2e8f0; /* border-slate-200 */
+            border-radius: 8px; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow */
         }
+        .info-section p, .info-section li {
+             margin-bottom: 0.65rem; /* space-y-2.5 approx */
+        }
+         .info-section ul {
+            list-style-position: outside;
+            list-style-type: disc;
+            padding-left: 1.5rem; /* Indent lists */
+            margin-top: 0.5rem;
+         }
+         .info-section ul ul {
+             list-style-type: circle;
+             margin-left: 1.5rem;
+             margin-top: 0.25rem;
+         }
+         .info-section code {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 3px;
+            font-family: monospace;
+         }
+          .info-section blockquote {
+            border-left: 4px solid #94a3b8; /* border-l-4 border-slate-400 */
+            padding-left: 1rem; /* pl-4 */
+            margin: 1rem 0;
+            font-style: italic;
+            color: #475569; /* text-slate-600 */
+         }
+         .info-section strong {
+             font-weight: 600; /* font-semibold */
+         }
+         .info-section em {
+            font-style: italic;
+         }
+
+
+        /* Form Styling */
+        form { } /* Kept empty */
 
         fieldset {
             border: 1px solid #e2e8f0; /* border-slate-200 */
@@ -285,16 +360,223 @@
 <body>
 
     <div class="main-container">
-        <!-- MODIFIED HEADINGS -->
-        <h1>Hyponatremia Diagnostic Aid</h1>
-        <p class="subtitle">Enter clinical and lab parameters to help differentiate causes of hyponatremia.</p>
+        <h1>Hyponatremia Diagnostic Aid & Information</h1>
+        <p class="subtitle">Review the information below and use the tool to help interpret parameters.</p>
 
-        <form id="hyponatremia-form"> <!-- MODIFIED ID -->
+        <!-- START: ADDED INFORMATIONAL SECTION -->
+        <div class="info-section">
+            <h2>Understanding Hyponatremia</h2>
+
+            <h3>Definition</h3>
+            <p>Hyponatremia is defined as a serum [Na+] <135 mmol/L and can be acute or chronic. The treatment of hyponatremia is guided by severity, chronicity, and etiology – so determination of all of these factors is paramount.</p>
+            <ul>
+                <li><strong>Acute:</strong> <48 hours since development of hyponatremia.</li>
+                <li><strong>Chronic:</strong> >48 hours since development of hyponatremia.</li>
+            </ul>
+            <p><em>Note: hyponatremia should be considered chronic whenever the duration is unknown.</em></p>
+            <p><strong>Severity Levels:</strong></p>
+            <ul>
+                <li><strong>Mild:</strong> serum [Na+] 130-134 mmol/L.</li>
+                <li><strong>Moderate:</strong> serum [Na+] 120-129 mmol/L.</li>
+                <li><strong>Severe:</strong> serum [Na+] <120 mmol/L.</li>
+            </ul>
+            <p>Hyponatremia is the most common electrolyte abnormality in hospitalized patients (estimated to occur in 10-30% of all hospitalized patients). Recognition and safe treatment are extremely important. Hyponatremia and its mismanagement can cause serious, sudden, and irreversible neurological problems and is associated with increased mortality.</p>
+
+            <h3>Etiology</h3>
+            <p>Hyponatremia represents an excess of free water and should be considered a disorder of water balance.</p>
+            <p>Excess free water can result from:</p>
+            <ul>
+                <li>High intake (e.g. polydipsia).</li>
+                <li>Impaired free water excretion.</li>
+                <li>Low GFR or diminished diluting capacity of the kidney (e.g. dialysis patients).</li>
+                <li>High ADH (e.g. heart failure, SIADH).</li>
+                <li>Inadequate solute intake (e.g. tea and toast diet).</li>
+                <li>A combination of high intake & low excretion.</li>
+            </ul>
+
+            <h3>Evaluation</h3>
+            <blockquote>
+                <strong>Helpful tips:</strong>
+                <ul>
+                    <li>Remember that free water balance (urine osmolality) is regulated by ADH.</li>
+                    <li>Sodium excretion (urine sodium) is regulated by aldosterone.</li>
+                    <li>If a patient has end-stage kidney disease, the cause of hyponatremia is excess free water intake in the setting of impaired kidney water excretion, and is not mediated by ADH.</li>
+                 </ul>
+             </blockquote>
+
+             <h4>Step 1: Differentiate true hyponatremia from pseudohyponatremia.</h4>
+             <p>A normal or elevated effective serum osmolality (≥280 mOsm/kg) suggests pseudohyponatremia or hypertonic hyponatremia.</p>
+             <p><strong>Hypertonic states</strong>, like hyperglycemia or mannitol use, can cause hyponatremia by drawing water extracellularly and lowering serum sodium concentration. This is technically a true (not pseudo) hyponatremia. Serum osmolality will be high; sodium should normalize with correction of hypertonic state (insulin for hyperglycemia, excretion of mannitol, etc.).</p>
+             <p>Correction formula for hyperglycemia: <code>corrected Na = measured Na + [(serum glucose – 100)/100] * 1.6</code> (Note: factor may vary, 2.4 is also commonly used).</p>
+             <p><strong>Hyperlipidemia or increased protein</strong> can also cause a lab error that results in a falsely low sodium result (pseudohyponatremia). Blood gas analyzers are typically not subject to this error.</p>
+
+             <h4>Step 2: Is ADH high or low? Compare serum osmolality to urine osmolality (for Hypotonic Hyponatremia).</h4>
+             <p>If <strong>Serum Osm > Urine Osm</strong> (or Urine Osm <100 mOsm/kg), then ADH is appropriately suppressed (kidneys are maximizing water excretion, i.e. maximally dilute urine). The problem is excess water intake or inadequate solute intake.</p>
+             <ul>
+                <li>Check for iatrogenesis: are there high rates of hypotonic solution infusing?</li>
+                <li>Look at what medications are mixed in (e.g. IV bactrim in 500 ml D5W 4x/day = 2L of free water).</li>
+                <li>Check volume of free water flushes in patients getting tube feeds or other hypotonic oral intake.</li>
+                <li>Consider primary polydipsia (formerly known as “psychogenic polydipsia”).</li>
+                <li>Consider causes of inadequate solute intake: include "tea and toast" diet and "beer potomania" (high alcohol intake relative to solute intake).</li>
+                 <ul>
+                    <li>Because urine osm cannot be 0, there is always some obligate solute excreted with urine. Even if maximally dilute at 50 mOsm/L, if a person only eats 100 mOsm and drinks 3L of water in a day, they can only eliminate 100/50 = 2L of that water and 1L is retained. This dilutes the serum sodium.</li>
+                    <li>Carbohydrates and fat metabolize to water and CO2, so do not count as solute. Protein and electrolytes (e.g., sodium) are solutes. Hence, diets like toast and beer contain insufficient solute.</li>
+                 </ul>
+             </ul>
+             <p>If <strong>Serum Osm < Urine Osm</strong> (or Urine Osm >100-150 mOsm/kg), then ADH effect is present (inappropriately high for the serum osmolality, or appropriately high due to non-osmotic stimuli). Proceed to Step 3.</p>
+
+             <h4>Step 3: If ADH effect is present, what is the volume status?</h4>
+              <blockquote>
+                <strong>Tips:</strong>
+                <ul>
+                    <li>If ADH is activated, urine osmolality is usually >100 mOsm/kg.</li>
+                    <li>Urine sodium can help determine RAAS activation, which can narrow your differential in cases where volume status is not clear. A low urine sodium (<20-30 mEq/L) suggests RAAS activation (seen in hyper- or hypovolemia); a high urine sodium (>40 mEq/L) may suggest SIADH (in the absence of diuretics or salt wasting).</li>
+                </ul>
+             </blockquote>
+
+             <h5>Hypervolemic:</h5>
+             <p>ADH is released in response to low effective arterial blood volume (EABV) due to third spacing or poor forward flow.</p>
+             <ul>
+                <li><strong>Ddx:</strong> CHF, nephrotic syndrome, liver failure (cirrhosis).</li>
+                <li><strong>Urine Na</strong> will typically be low (<20-30 mEq/L), since the RAAS system is also activated in response to low EABV (unless on diuretics).</li>
+             </ul>
+
+             <h5>Hypovolemic:</h5>
+             <p>ADH is being released in response to low EABV due to fluid loss.</p>
+             <ul>
+                <li><strong>Extrarenal losses</strong> (e.g., GI loss, sweat, burns): Urine Na will be low (<20-30 mEq/L), since aldosterone is also active.</li>
+                <li><strong>Renal salt wasting:</strong> Urine Na will be high (>40 mEq/L). Causes include intrinsic salt-wasting nephropathy, primary adrenal insufficiency, cerebral salt wasting (CSW), and thiazide diuretic use.</li>
+             </ul>
+
+             <h5>Euvolemic:</h5>
+             <ul>
+                <li><strong>Hypothyroidism:</strong> check TSH (usually severe hypothyroidism).</li>
+                <li><strong>Glucocorticoid deficiency</strong> (Secondary Adrenal Insufficiency): check AM cortisol or perform ACTH stimulation test.</li>
+                <li><strong>SIADH:</strong> inappropriate release of ADH independent of EABV/osmolality or release of ADH at a lower osm level (“reset osmostat”). Urine Na will typically be high (>40 mEq/L), since aldosterone is suppressed by normal/high effective volume.
+                    <ul>
+                        <li><strong>Etiology:</strong> pain/nausea, pulmonary disease (pneumonia, TB), CNS disease (stroke, hemorrhage, infection), malignancy (esp. small cell lung cancer), drugs (SSRIs, MDMA/ecstasy, opioids, chemotherapy [e.g. cyclophosphamide, vincristine]).</li>
+                        <li>SIADH is a diagnosis of exclusion with the following features:
+                            <ul>
+                                <li>Clinical euvolemia.</li>
+                                <li>Normal thyroid and adrenal function, no recent diuretic use.</li>
+                                <li><strong>Lab findings:</strong>
+                                    <ul>
+                                        <li>Urine osmolality >100-150 mOsm/kg (often > Serum osmolality).</li>
+                                        <li>Serum osmolality <275 mOsm/kg.</li>
+                                        <li>Urine Na >20-40 mmol/L with normal dietary salt intake.</li>
+                                    </ul>
+                                 </li>
+                                <li><strong>Corroborating features (sometimes but not always present):</strong>
+                                    <ul>
+                                        <li>Serum uric acid <4mg/dl.</li>
+                                        <li>BUN <10 mg/dL.</li>
+                                        <li>FENa >1-2% or FEUrea >45-55%.</li>
+                                        <li>Refractory or worsening hyponatremia after isotonic fluid infusion.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+             </ul>
+
+            <h3>Management</h3>
+            <p><strong>Evaluate and treat severe symptoms emergently in all patients.</strong></p>
+            <ul>
+                <li>Check for signs of cerebral edema: visual changes, neurologic deficits, encephalopathy, and seizures. The presence of these signs suggests cerebral edema and necessitates rapid treatment.</li>
+                <li>To acutely relieve cerebral edema, sodium can be raised using <strong>3% hypertonic saline (100 mL bolus given over 10 minutes, may be repeated up to 2 times)</strong>.</li>
+                <li>Goal is resolution of severe symptoms, typically with [Na+] rise of 4-6 mEq/L.</li>
+                <li>Usual rate limit of correction still applies, i.e. if the goal is 6 mEq/L/day, and acute treatment for severe symptoms has already increased [Na+] by 6 mEq/L, then that level of sodium should be maintained for the following 24 hours.</li>
+            </ul>
+
+            <p><strong>Calculate desired rate of correction.</strong></p>
+            <ul>
+                <li>The brain adapts to hypotonic hyponatremia with intracellular osmolar shifts over approximately 48 hours.</li>
+                <li>For <strong>acute hyponatremia (<48 hours)</strong>, rapid correction is appropriate and generally safe.</li>
+                <li><strong>Chronic hyponatremia (>48 hours or unknown duration)</strong> requires slower correction (<strong>no more than 6-8 mEq/L/day</strong>) to minimize the risk of osmotic demyelination syndrome (ODS). If the duration of hyponatremia is unknown, always assume it is chronic and use slower correction goals.</li>
+                <li><strong>Risk factors for ODS:</strong> lower sodium (<105 mEq/L), hypokalemia, malnutrition, alcohol use disorder, liver disease.</li>
+            </ul>
+
+            <p><strong>Select treatment approach based on volume status, severity, and etiology.</strong></p>
+            <ul>
+                <li><strong>Hypovolemia:</strong> The cornerstone of treatment is volume expansion with isotonic crystalloid (0.9% NaCl) to restore EABV.
+                    <ul><li><strong>Caution:</strong> Once volume status is corrected, ADH stimulus is removed, and a brisk aquaresis (water diuresis) may ensue, causing overcorrection. Strict urine output monitoring and frequent sodium checks are critical. The earliest sign of impending overcorrection is often a rapid increase in urine output and/or a decrease in urine osmolality. For patients at high risk of ODS, consider preemptive strategies like DDAVP (see below) - nephrology consultation recommended.</li></ul>
+                </li>
+                <li><strong>SIADH:</strong>
+                    <ul>
+                        <li>Treat underlying cause/withdraw causative agents if possible.</li>
+                        <li>Start with <strong>fluid restriction 1-1.5 L/day</strong>. Restriction alone is often inadequate, especially if Uosm is very high. Do not restrict beyond 1L without clear benefit, as it can cause significant discomfort.</li>
+                        <li>Use urine electrolytes (UNa + UK) to guide therapy:
+                            <ul>
+                                <li>Based on the concept of electrolyte free water clearance (EFWC). Compare UNa + UK to plasma Na.</li>
+                                <li><strong>UNa + UK < serum Na:</strong> Positive free water clearance. Kidneys are excreting some free water. Fluid restriction is likely to be effective.</li>
+                                <li><strong>UNa + UK > serum Na:</strong> Negative free water clearance. All free water is reabsorbed; urination concentrates the body further. Fluid restriction alone is unlikely to work. Osmole supplementation (e.g., salt tabs, urea, hypertonic saline) is needed.</li>
+                                <li>Any IV fluids with Na content less than UNa + UK will result in worsening hyponatremia (desalination). If UNa + UK > 154 (Na content of NS), NS infusion will worsen hyponatremia.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Additional therapies for SIADH:</strong>
+                            <ul>
+                                <li><strong>Hypertonic saline (3%):</strong> Effective (513 mEq/L), necessary when UNa + UK is very high or for severe/symptomatic hyponatremia. Requires careful monitoring and good venous access (central line often preferred for sustained infusions). Not a long-term therapy.</li>
+                                <li><strong>Loop diuretics:</strong> Can help excrete free water by impairing medullary concentration, but efficacy is variable. May be useful as an adjunct to NaCl tabs to manage volume if needed.</li>
+                                <li><strong>NaCl tabs</strong> (1g NaCl tab = 17 mEq Na+): Requires high pill burden (e.g., 2-3g TID). Can stimulate thirst and cause GI upset.</li>
+                                <li><strong>Oral urea</strong> (powder or tabs): 15g = 250 mOsm. Acts as an osmotic diuretic to eliminate free water. Efficient osmole load, less likely to cause volume overload, good safety margin.</li>
+                             </ul>
+                        </li>
+                     </ul>
+                </li>
+                <li><strong>Hypervolemia:</strong>
+                    <ul>
+                        <li><strong>Free water restriction (1-1.5 L/day).</strong></li>
+                        <li><strong>Loop diuretics</strong> to optimize volume status and promote water/sodium excretion.</li>
+                        <li>Hypertonic saline and salt tabs generally <strong>NOT</strong> recommended as they will worsen volume overload.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>Role of DDAVP (Desmopressin, ADH analog) for management of hyponatremia</strong></p>
+            <ul>
+                <li>DDAVP (dosed 1-2mcg IV or SC q6h-q8h) provides a constant maximal ADH effect, preventing unpredictable water excretion ("aquaresis") and thus preventing overly rapid correction of serum sodium, especially when the underlying ADH stimulus resolves. This facilitates controlled correction, often used with hypertonic saline ("DDAVP clamp").</li>
+                <li>Typically DDAVP is considered as a <strong>proactive measure</strong> when ODS risk is high and brisk aquaresis is expected, such as in:
+                    <ul>
+                        <li>Hypovolemic hyponatremia after fluid resuscitation.</li>
+                        <li>Hyponatremia due to poor solute intake after solute is provided (e.g., NS infusion).</li>
+                        <li>SIADH when the stimulus for ADH may resolve suddenly (e.g., stopping an offending drug).</li>
+                    </ul>
+                </li>
+                <li>DDAVP may also be used as a <strong>reactive measure</strong> to "put the brakes" on established overcorrection, often along with D5W infusion.</li>
+                <li><strong>Do NOT use DDAVP</strong> in patients with volume overload (CHF, cirrhosis) or patients who may continue to drink water/hypotonic fluids uncontrolled (e.g., primary polydipsia), as this can worsen fluid retention and hyponatremia.</li>
+            </ul>
+
+            <p><strong>If the serum sodium has been overcorrected:</strong></p>
+            <ul>
+                <li>Administer IV D5W (5% Dextrose in Water - provides free water).</li>
+                <li>Consider adding DDAVP (as above) to prevent further renal water loss.</li>
+                <li>Can estimate D5W rate: ~3mL/kg/hour D5W might lower [Na+] by approximately 1 mEq/L/hour (individual response varies).</li>
+                <li>Pay attention to ongoing losses: If urine output is brisk (>150 mL/hour) and dilute (low Uosm), the patient is losing free water rapidly, driving serum [Na+] up quickly. Reactive boluses of D5W may be inadequate. Urgent nephrology consultation is advised for safe correction strategies (e.g., titrating D5W drip based on urine output, using DDAVP).</li>
+            </ul>
+
+            <h3>Key Points</h3>
+            <ul>
+                <li>Hypotonic hyponatremia is due to excess free water, which may be a result of excess water intake and/or impaired water excretion.</li>
+                <li>Severe symptoms of hyponatremia represent an emergency and should be treated with hypertonic saline to immediately raise [Na+] by 4-6 mEq/L to resolve symptoms.</li>
+                <li>The recommended correction rate is <strong>6-8 mEq/L per 24 hours</strong> for chronic hyponatremia (or unknown duration) to prevent ODS.</li>
+                <li>If there is high risk for ODS or if considering DDAVP, sustained hypertonic infusion (beyond emergent use), or vaptan therapy, a nephrology consult is advised.</li>
+                <li>Hypovolemic, low solute, and hypervolemic hyponatremia are primarily treated by correcting the underlying cause and managing volume/solute balance. Urine output monitoring is critical as it is the earliest sign of potentially overly rapid correction.</li>
+                <li>SIADH is treated by addressing the underlying cause (if possible) but often requires specific therapy (fluid restriction, salt/urea supplementation) to manage water balance. Urine Na + K can be used to assess severity and guide therapy.</li>
+            </ul>
+
+             <p style="margin-top: 1.5rem; font-style: italic; text-align: center; color: #1d4ed8;">Use the interactive tool below to apply these evaluation principles based on specific lab parameters.</p>
+
+        </div>
+        <!-- END: ADDED INFORMATIONAL SECTION -->
+
+
+        <form id="hyponatremia-form"> <!-- Interactive Form Starts Here -->
 
             <fieldset>
                 <legend>Diagnostic Parameters</legend>
                 <div class="input-grid">
-                    <!-- NEW INPUTS FOR HYPONATREMIA -->
+                    <!-- Inputs for Hyponatremia -->
                     <div>
                         <label for="serum_osm">Serum Osmolality (Sosm):</label>
                         <select id="serum_osm" name="serum_osm">
@@ -355,7 +637,6 @@
 
             <div class="button-container">
                 <div class="button-wrapper">
-                    <!-- MODIFIED BUTTON ID -->
                     <button type="button" id="interpret-btn">Interpret Parameters</button>
                     <button type="reset" id="reset-btn">Reset Form</button>
                 </div>
@@ -363,7 +644,7 @@
 
         </form>
 
-        <!-- MODIFIED RESULT AREA -->
+        <!-- Result Area -->
         <div id="result">
             <div>
                 <p class="result-label">Classification:</p>
@@ -376,39 +657,37 @@
                  </div>
              </div>
              <div>
-                 <p class="result-label">Key Findings & Notes:</p>
+                 <p class="result-label">Key Findings & Notes (Based on Input):</p>
                  <div id="notes-display">
                     {/* Notes will be inserted here by JS */}
                  </div>
              </div>
              <!-- MODIFIED DISCLAIMER -->
              <p class="disclaimer">
-                <strong>Disclaimer:</strong> This tool provides potential interpretations based on common diagnostic algorithms for hyponatremia. Results <strong>must</strong> be interpreted in the full clinical context (history, medications, physical exam) by a qualified healthcare professional. This tool does not replace clinical judgment, consider atypical presentations, or account for all possible causes or medication effects. Always refer to current clinical practice guidelines.
+                <strong>Disclaimer:</strong> This tool provides potential interpretations based on common diagnostic algorithms for hyponatremia, derived from the information presented above and general clinical knowledge. Results <strong>must</strong> be interpreted in the full clinical context (history, symptoms, medications, physical exam) by a qualified healthcare professional. This tool does not replace clinical judgment, consider atypical presentations, or account for all possible causes or medication effects. Always refer to current clinical practice guidelines and consult experts (e.g., Nephrology) when indicated, especially for severe hyponatremia or complex cases. The provided informational text is for educational purposes and based on common clinical approaches but should be cross-referenced with institutional protocols and updated guidelines.
             </p>
         </div>
     </div>
 
-    <!-- START OF UPDATED SCRIPT SECTION -->
+    <!-- START OF SCRIPT SECTION (No changes needed here from previous version) -->
     <script>
-        // Get references to form elements (MODIFIED IDs)
+        // Get references to form elements
         const form = document.getElementById('hyponatremia-form');
         const serumOsmSelect = document.getElementById('serum_osm');
         const volumeStatusSelect = document.getElementById('volume_status');
         const urineOsmSelect = document.getElementById('urine_osm');
         const urineNaSelect = document.getElementById('urine_na');
         const urineSgSelect = document.getElementById('urine_sg');
-        const diureticUseSelect = document.getElementById('diuretic_use'); // Added diuretic input
+        const diureticUseSelect = document.getElementById('diuretic_use');
 
         const interpretBtn = document.getElementById('interpret-btn');
         const resetBtn = document.getElementById('reset-btn');
         const resultDiv = document.getElementById('result');
-        // MODIFIED RESULT DISPLAY IDs
         const classificationDisplay = document.getElementById('classification-display');
         const differentialDisplay = document.getElementById('differential-display');
         const notesDisplay = document.getElementById('notes-display');
 
         // --- Interpretation Logic ---
-        // RENAMED FUNCTION
         function interpretHyponatremia() {
             // Read input values
             const sosm = serumOsmSelect.value;
@@ -419,8 +698,8 @@
             const diureticUse = diureticUseSelect.value;
 
             let classification = 'Requires Assessment';
-            let differential = ['<ul><li>Unable to determine differential with provided data.</li></ul>']; // Start with default list
-            let notes = ['<ul><li>Clinical correlation is essential. Evaluate patient history, medications, and perform a thorough physical exam.</li>']; // Start with default list
+            let differential = ['<ul><li>Unable to determine differential with provided data.</li></ul>'];
+            let notes = ['<ul><li>Clinical correlation is essential. Evaluate patient history, symptoms, medications, and perform a thorough physical exam.</li>'];
 
             // --- Core Logic based on Diagnostic Algorithm ---
 
@@ -428,120 +707,113 @@
             if (sosm === 'na') {
                 classification = 'Serum Osmolality Required';
                 differential = ['<ul><li>Cannot classify hyponatremia type without Serum Osmolality.</li></ul>'];
-                notes.push('<li>Measure Serum Osmolality to confirm true hypotonic hyponatremia vs. pseudohyponatremia or hypertonic hyponatremia.</li>');
+                notes.push('<li>Measure Serum Osmolality to confirm true hypotonic hyponatremia vs. pseudohyponatremia or hypertonic hyponatremia (see info above).</li>');
             } else if (sosm === 'normal_275_295') {
-                classification = 'Isotonic Hyponatremia (Pseudohyponatremia)';
+                classification = 'Isotonic Hyponatremia (Likely Pseudohyponatremia)';
                 differential = ['<ul><li>Severe Hyperlipidemia</li><li>Severe Hyperproteinemia (e.g., IVIG, Multiple Myeloma)</li><li>Lab artifact possible with indirect ISE methods</li></ul>'];
-                notes.push('<li>This occurs when high levels of lipids or proteins displace water in the plasma sample using certain lab methods (indirect ISE).</li>');
-                notes.push('<li>The actual plasma tonicity and cell volume are normal.</li>');
-                notes.push('<li>Confirm with direct ion-selective electrode (ISE) sodium measurement, lipid panel, or serum protein electrophoresis if suspected.</li>');
+                notes.push('<li>Occurs when high lipids/proteins displace water in plasma samples (indirect ISE methods). True plasma tonicity is normal.</li>');
+                notes.push('<li>Confirm with direct ISE Na+, lipid panel, or SPEP if suspected.</li>');
             } else if (sosm === 'high_gt_295') {
                 classification = 'Hypertonic Hyponatremia';
-                differential = ['<ul><li>Hyperglycemia (e.g., DKA, HHS) - Most common</li><li>Recent administration of hypertonic Mannitol</li><li>Recent administration of IVIG (sucrose-containing)</li><li>Recent high-osmolar IV contrast</li><li>Ingestion of other osmotically active substances (e.g., ethylene glycol, methanol - causing osmolar gap)</li></ul>'];
-                notes.push('<li>Sodium is diluted by an osmotic shift of water from intracellular to extracellular space due to presence of other effective osmoles.</li>');
-                notes.push('<li>Check blood glucose. Calculate corrected sodium for hyperglycemia: Corrected Na = Measured Na + [2.4 * (Glucose - 100) / 100].</li>');
-                notes.push('<li>Consider calculating the osmolal gap if ingestion is suspected.</li>');
-                notes.push('<li>Treatment involves addressing the underlying cause (e.g., managing hyperglycemia, stopping offending agent).</li>');
+                differential = ['<ul><li>Hyperglycemia (DKA, HHS) - Most common</li><li>Recent hypertonic Mannitol</li><li>Recent IVIG (sucrose-containing)</li><li>Recent high-osmolar IV contrast</li><li>Toxic alcohol ingestion (check osmolar gap)</li></ul>'];
+                notes.push('<li>Sodium is diluted by osmotic water shift from cells due to other effective osmoles.</li>');
+                notes.push('<li>Check blood glucose. Calculate corrected Na+ if hyperglycemic (see formula in info above).</li>');
+                notes.push('<li>Treatment involves addressing the underlying cause (e.g., managing hyperglycemia).</li>');
             } else if (sosm === 'low_lt_275') {
-                // This is TRUE HYPOTONIC HYPONATREMIA - Proceed to Volume Status
-                classification = 'Hypotonic Hyponatremia'; // Base classification
+                // TRUE HYPOTONIC HYPONATREMIA
+                classification = 'Hypotonic Hyponatremia';
                 notes.push('<li>True hypotonic hyponatremia confirmed (Serum Osm < 275 mOsm/kg). Water excess relative to solute.</li>');
-                notes.push('<li>Further differentiation depends on clinical volume status and urine studies.</li>');
+                notes.push('<li>Further differentiation depends on clinical volume status and urine studies (Steps 2 & 3 above).</li>');
 
-                // Step 2: Assess Volume Status (within Hypotonic Hyponatremia)
+                // Step 2/3: Assess Volume Status and Urine Studies
                 if (volume === 'na') {
                     classification = 'Hypotonic Hyponatremia - Volume Status Needed';
                     differential = ['<ul><li>Cannot determine cause without clinical volume assessment.</li></ul>'];
-                    notes.push('<li>Assess patient for signs of hypovolemia (orthostasis, tachycardia, dry mucous membranes, decreased skin turgor) or hypervolemia (edema, JVD, pulmonary rales, ascites).</li>');
+                    notes.push('<li>Assess patient for signs/symptoms of hypo-, eu-, or hypervolemia.</li>');
                 } else if (volume === 'Hypovolemic') {
                     classification = 'Hypotonic Hypovolemic Hyponatremia';
-                     notes.push('<li>Patient has both water and sodium deficit, with sodium deficit being relatively greater OR significant hypotonic fluid replacement after losses.</li>');
-                    notes.push('<li>ADH is appropriately stimulated by low effective circulating volume, leading to water retention and concentrated urine (Uosm usually > 300-450 mOsm/kg).</li>');
+                     notes.push('<li>Suggests deficit of both water and Na+, with relative Na+ deficit greater, OR hypotonic fluid replacement after losses.</li>');
+                    notes.push('<li>ADH is appropriately stimulated by low volume, leading to water retention. Expect concentrated urine (Uosm usually > 300-450 mOsm/kg).</li>');
                     if (uosm === 'low_lt_100'){
-                         notes.push('<li><strong style="color:orange;">Warning:</strong> Low Uosm (<100) is UNEXPECTED in true hypovolemia unless other factors are present (e.g., recent large water intake just prior to testing, resolving obstruction, potential primary polydipsia concurrent with volume loss). Re-evaluate volume status and context carefully.</li>');
+                         notes.push('<li><strong style="color:orange;">Warning:</strong> Low Uosm (<100) is UNEXPECTED in true hypovolemia. Re-evaluate volume status, consider recent large water intake or concurrent polydipsia/low solute intake.</li>');
                     } else if (uosm === 'na') {
-                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention. High Uosm is expected.</li>');
+                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention (high Uosm expected).</li>');
                     }
 
                     // Differentiate based on Urine Sodium
                     if (una === 'na') {
-                         differential = ['<ul><li>Urine Na+ needed to differentiate renal vs. extra-renal source of sodium loss.</li></ul>'];
-                         notes.push('<li>If diuretic use is recent/current, Urine Na+ interpretation is difficult (will be high). Consider stopping diuretic (if safe) and repeating labs, or use Fractional Excretion of Urea (FEUrea < 35% suggests hypovolemia even with diuretics).</li>');
-                    } else if (una === 'low_lt_20' || una === 'intermediate_20_40') { // Grouping low/intermediate for extra-renal
+                         differential = ['<ul><li>Urine Na+ needed to differentiate renal vs. extra-renal sodium loss.</li></ul>'];
+                         notes.push('<li>If recent diuretic use, UNa interpretation is unreliable (will be high). Consider FEUrea (<35% suggests volume depletion).</li>');
+                    } else if (una === 'low_lt_20' || una === 'intermediate_20_40') {
                         classification = 'Hypotonic Hypovolemic Hyponatremia (Suggests Extra-renal Na+ Loss)';
-                        differential = ['<ul><li><strong>Extra-renal Losses (Kidneys Conserving Na+):</strong><ul><li>Gastrointestinal losses (vomiting, diarrhea, NG suction)</li><li>Skin losses (significant sweat, burns)</li><li>Third spacing (e.g., pancreatitis, crush injury, hypoalbuminemia leading to capillary leak)</li><li>Remote diuretic or vomiting effect (after stimulus removed, but volume still low)</li></ul></li></ul>'];
-                        notes.push('<li>Low UNa (<20-40 mEq/L) suggests kidneys are appropriately conserving sodium in response to volume depletion.</li>');
-                         if(diureticUse === 'yes') notes.push('<li>Note: Recent diuretic use typically causes HIGH UNa. If UNa is low despite reported diuretic use, consider timing, adherence, or alternative cause of hypovolemia.</li>');
-                         notes.push('<li>Treatment typically involves volume repletion with isotonic saline (0.9% NaCl). Address underlying cause of loss.</li>');
+                        differential = ['<ul><li><strong>Extra-renal Losses (Kidneys Conserving Na+):</strong><ul><li>GI losses (vomiting, diarrhea)</li><li>Skin losses (sweat, burns)</li><li>Third spacing (pancreatitis, etc.)</li><li>Remote losses (vomiting/diuretics stopped)</li></ul></li></ul>'];
+                        notes.push('<li>Low UNa (<20-40 mEq/L) indicates appropriate renal Na+ conservation via RAAS activation.</li>');
+                         if(diureticUse === 'yes') notes.push('<li>Note: If UNa is low despite recent diuretic use, consider timing, adherence, or alternative cause.</li>');
+                         notes.push('<li>Treatment: Volume repletion (e.g., 0.9% NaCl), address underlying loss. Monitor for overcorrection post-resuscitation.</li>');
                     } else if (una === 'high_gt_40') {
                         classification = 'Hypotonic Hypovolemic Hyponatremia (Suggests Renal Na+ Loss)';
-                        differential = ['<ul><li><strong>Renal Losses (Kidneys Losing Na+):</strong><ul><li><strong>Extrinsic Drivers of Renal Loss:</strong><ul><li>Diuretic Use (especially thiazides) - Very common</li><li>Primary Adrenal Insufficiency (Addison\'s: Mineralocorticoid deficiency)</li><li>Cerebral Salt Wasting (CSW - often post-neurosurgery/SAH)</li></ul></li><li><strong>Intrinsic Renal Problems:</strong><ul><li>Salt-losing nephropathies (e.g., tubulointerstitial disease, resolving ATN, post-obstructive diuresis)</li><li>Bicarbonaturia (e.g., Renal Tubular Acidosis type 2, metabolic alkalosis with vomiting)</li></ul></li></ul></li></ul>'];
-                        notes.push('<li>High UNa (>40 mEq/L) in a hypovolemic state indicates kidneys are inappropriately losing sodium.</li>');
+                        differential = ['<ul><li><strong>Renal Losses (Kidneys Losing Na+):</strong><ul><li><strong>Extrinsic Drivers:</strong><ul><li>Diuretic Use (esp. thiazides)</li><li>Primary Adrenal Insufficiency (Addison\'s)</li><li>Cerebral Salt Wasting (CSW)</li></ul></li><li><strong>Intrinsic Renal Problems:</strong><ul><li>Salt-losing nephropathies</li><li>Bicarbonaturia (RTA Type 2)</li><li>Post-ATN/obstruction diuresis</li></ul></li></ul></li></ul>'];
+                        notes.push('<li>High UNa (>40 mEq/L) indicates inappropriate renal Na+ loss despite hypovolemia.</li>');
                         if(diureticUse === 'yes') {
-                            notes.push('<li>Diuretic use is a very common cause. Consider this first if applicable.</li>');
+                            notes.push('<li>Diuretic use is a very common cause.</li>');
                         } else {
-                             notes.push('<li>If NO diuretic use, strongly consider mineralocorticoid deficiency (Primary Adrenal Insufficiency - check cortisol/ACTH/renin/aldosterone, potassium often high) or CSW (clinical context of CNS event).</li>');
-                             notes.push('<li>Intrinsic salt-losing nephropathies are less common but possible, often associated with underlying kidney disease.</li>');
+                             notes.push('<li>If NO diuretic use, consider adrenal insufficiency (check cortisol/ACTH/K+) or CSW (CNS context).</li>');
                         }
-                         notes.push('<li>Treatment involves volume repletion (usually isotonic saline) AND addressing the underlying cause (e.g., stopping diuretic, hormone replacement for AI, specific management for CSW/renal disease).</li>');
+                         notes.push('<li>Treatment: Volume repletion (e.g., 0.9% NaCl) AND address underlying cause. Monitor for overcorrection post-resuscitation.</li>');
                     }
 
                 } else if (volume === 'Euvolemic') {
                     classification = 'Hypotonic Euvolemic Hyponatremia';
-                    notes.push('<li>Patient appears clinically volume neutral (no significant edema or dehydration). Total body sodium is relatively normal, but there is an excess of total body water.</li>');
+                    notes.push('<li>Patient appears clinically volume neutral. Normal total body Na+, but excess total body water.</li>');
 
                     // Differentiate based on Urine Osmolality
                     if (uosm === 'na') {
                         differential = ['<ul><li>Urine Osmolality is crucial for differentiating euvolemic causes.</li></ul>'];
-                        notes.push('<li>If Uosm < 100: Suggests ADH suppression (water overload / low solute states).</li>');
-                        notes.push('<li>If Uosm > 100: Suggests ADH effect (SIADH or other endocrine causes).</li>');
+                        notes.push('<li>Uosm < 100 suggests ADH suppression (water overload / low solute states).</li>');
+                        notes.push('<li>Uosm > 100-150 suggests ADH effect (SIADH, endocrine causes).</li>');
                     } else if (uosm === 'low_lt_100') {
                          classification = 'Hypotonic Euvolemic Hyponatremia (Dilute Urine - ADH Appropriately Suppressed)';
-                         differential = ['<ul><li>Primary Polydipsia (psychogenic or dipsogenic)</li><li>Low Solute Intake ("Beer Potomania", very low protein/salt diets like "Tea and Toast")</li><li>Reset Osmostat (rare variant, maintain lower baseline Na+)</li></ul>'];
-                         notes.push('<li>Maximally dilute urine (Uosm < 100 mOsm/kg, USG often < 1.003) indicates appropriate ADH suppression by the kidneys.</li>');
-                         notes.push('<li>The issue is either excessive water intake overwhelming excretion capacity (Polydipsia) OR insufficient solute intake limiting the kidney\'s ability to excrete free water (Low Solute Intake).</li>');
-                         notes.push(`<li>Urine Na+ is often low (${una === 'low_lt_20' ? 'as reported' : 'typically < 20 mEq/L'}) reflecting low dietary intake, but can be variable in polydipsia depending on intake.</li>`);
-                         notes.push('<li>Treatment involves addressing the underlying cause (e.g., water restriction for polydipsia, increased solute intake for low solute states).</li>');
+                         differential = ['<ul><li>Primary Polydipsia</li><li>Low Solute Intake (Beer Potomania, Tea/Toast)</li></ul>'];
+                         notes.push('<li>Maximally dilute urine (Uosm < 100 mOsm/kg) indicates appropriate ADH suppression.</li>');
+                         notes.push('<li>Issue is excess water intake or insufficient solute limiting free water excretion.</li>');
+                         notes.push(`<li>UNa often low (${una === 'low_lt_20' ? 'as reported' : 'typically < 20'}) due to low intake, but variable.</li>`);
+                         notes.push('<li>Treatment: Water restriction (polydipsia) or increased solute intake (low solute).</li>');
                     } else if (uosm === 'intermediate_100_300' || uosm === 'high_gt_300' || uosm === 'high_gt_sosm') {
                         classification = 'Hypotonic Euvolemic Hyponatremia (Inappropriately Concentrated Urine - ADH Effect)';
-                        differential = ['<ul><li><strong>SIADH (Syndrome of Inappropriate ADH secretion) - Diagnosis of Exclusion</strong><ul><li>Causes: CNS disorders, Pulmonary diseases, Malignancy, Drugs (SSRIs, TCAs, Carbamazepine, NSAIDs, Ecstasy etc.), Post-operative state, Pain/Nausea</li></ul></li><li><strong>Extrinsic Endocrine Causes Affecting Renal Water Handling:</strong><ul><li>Secondary Adrenal Insufficiency (ACTH deficiency - Glucocorticoid deficiency increases ADH)</li><li>Hypothyroidism (Severe - Myxedema Coma)</li></ul></li><li><strong>Other:</strong><ul><li>Exercise-associated hyponatremia (often multifactorial including ADH)</li><li>Reset Osmostat (can sometimes present with Uosm > 100)</li></ul></li></ul>'];
-                        notes.push('<li>Urine is inappropriately concentrated (Uosm > 100 mOsm/kg, often > Sosm) despite low serum osmolality and euvolemia, indicating ongoing ADH effect preventing water excretion.</li>');
-                        notes.push('<li><strong>SIADH is the most common cause in this category but requires excluding other possibilities.</strong></li>');
-                        notes.push('<li>Must rule out secondary adrenal insufficiency (check AM cortisol / ACTH stimulation test) and severe hypothyroidism (check TSH/FT4).</li>');
-                         notes.push(`<li>Urine Na+ is typically > 30-40 mEq/L (${una === 'high_gt_40' ? 'as reported' : (una === 'intermediate_20_40' ? 'intermediate, check context' : 'typically expected to be higher')}) reflecting normal volume status and sodium intake, *unless* patient is concurrently volume depleted or on a very low salt diet.</li>`);
-                         if (diureticUse === 'yes') notes.push('<li><strong style="color:orange;">Caution:</strong> Thiazide diuretics can cause a euvolemic hyponatremia picture mimicking SIADH. If feasible and safe, stop thiazide and reassess labs after several days.</li>');
-                        notes.push('<li>Treatment involves fluid restriction (<800-1000 mL/day often needed), addressing the underlying cause of SIADH if found, +/- salt tabs, urea, or vaptans in select cases.</li>');
-                         if (uosm === 'intermediate_100_300') notes.push('<li>Uosm 100-300 mOsm/kg can be borderline; consider clinical context. It usually indicates some ADH effect but less intense than higher values. Could be resolving polydipsia or mild SIADH/endocrine issues.</li>');
+                        differential = ['<ul><li><strong>SIADH (Diagnosis of Exclusion)</strong> - See causes above</li><li>Secondary Adrenal Insufficiency (Glucocorticoid deficiency)</li><li>Hypothyroidism (Severe)</li><li>Drugs (See SIADH causes)</li><li>Exercise-associated hyponatremia</li><li>Reset Osmostat (less common)</li></ul>'];
+                        notes.push('<li>Urine is inappropriately concentrated (Uosm > 100-150 mOsm/kg) despite hypotonicity, indicating ADH effect.</li>');
+                        notes.push('<li><strong>Exclude secondary AI (cortisol) & severe hypothyroidism (TSH) before diagnosing SIADH.</strong></li>');
+                         notes.push(`<li>UNa typically > 30-40 mEq/L (${una === 'high_gt_40' ? 'as reported' : (una === 'intermediate_20_40' ? 'intermediate' : 'typically >40')}) unless patient is volume depleted or Na+ restricted.</li>`);
+                         if (diureticUse === 'yes') notes.push('<li><strong style="color:orange;">Caution:</strong> Thiazides can mimic SIADH. Stop if possible and reassess.</li>');
+                        notes.push('<li>Treatment (SIADH): Fluid restriction, address cause, +/- salt/urea/vaptans. See management section above.</li>');
                     }
 
                 } else if (volume === 'Hypervolemic') {
                     classification = 'Hypotonic Hypervolemic Hyponatremia';
-                     notes.push('<li>Patient has excess total body water AND excess total body sodium, but water excess is relatively greater, leading to dilution.</li>');
-                    notes.push('<li>Clinical signs of fluid overload (edema, JVD, pulmonary congestion, ascites).</li>');
-                    notes.push('<li>Mechanism often involves low effective arterial blood volume (EABV) despite total volume overload, leading to non-osmotic ADH release and RAAS activation, causing impaired water excretion and sodium retention. Urine is typically concentrated (Uosm > 100-300 mOsm/kg).</li>');
+                     notes.push('<li>Excess total body water AND excess total body sodium, but water excess is relatively greater. Clinical fluid overload.</li>');
+                    notes.push('<li>Often due to low EABV stimulating ADH/RAAS. Expect concentrated urine (Uosm > 100-300 mOsm/kg).</li>');
                      if (uosm === 'low_lt_100'){
-                         notes.push('<li><strong style="color:orange;">Warning:</strong> Low Uosm (<100) is UNEXPECTED in typical hypervolemic states (CHF, Cirrhosis, Nephrotic Syndrome) as ADH should be active. Consider concurrent excessive free water intake (e.g., polydipsia) or alternative diagnoses. Could occur in renal failure if diluting ability preserved but concentrating ability lost.</li>');
+                         notes.push('<li><strong style="color:orange;">Warning:</strong> Low Uosm (<100) is UNEXPECTED in typical edematous states (CHF, Cirrhosis, Nephrosis). Consider concurrent polydipsia or advanced renal failure with loss of concentrating ability.</li>');
                     } else if (uosm === 'na') {
-                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention (should be >100-300 mOsm/kg unless severe renal failure).</li>');
+                         notes.push('<li>Urine osmolality needed to confirm expected renal water retention (high Uosm expected unless advanced CKD).</li>');
                     }
 
                     // Differentiate based on Urine Sodium
                      if (una === 'na') {
-                         differential = ['<ul><li><strong>Causes with Avid Renal Na+ Retention (typically low UNa):</strong><ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li></ul></li><li><strong>Causes with Impaired Renal Na+ Excretion (typically high UNa):</strong><ul><li>Kidney Disease (Acute Kidney Injury - AKI, or Chronic Kidney Disease - CKD)</li></ul></li></ul>'];
-                         notes.push('<li>Urine Na+ helps differentiate between states where kidneys avidly retain sodium (CHF, Cirrhosis, Nephrosis) vs. states where intrinsic kidney damage prevents sodium excretion (AKI/CKD).</li>');
-                     } else if (una === 'low_lt_20' || una === 'intermediate_20_40') { // Grouping low/intermediate for non-renal sodium retention
+                         differential = ['<ul><li><strong>Causes w/ Avid Renal Na+ Retention (Low UNa):</strong><ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li></ul></li><li><strong>Causes w/ Impaired Renal Na+ Excretion (High UNa):</strong><ul><li>Kidney Disease (AKI/CKD)</li></ul></li></ul>'];
+                         notes.push('<li>UNa differentiates avid Na+ retention states from intrinsic renal failure.</li>');
+                     } else if (una === 'low_lt_20' || una === 'intermediate_20_40') {
                          classification = 'Hypotonic Hypervolemic Hyponatremia (Low UNa - Suggests Avid Na+ Retention)';
-                         differential = ['<ul><li><strong>States with Low Effective Arterial Blood Volume:</strong><ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li></ul></li></ul>'];
-                         notes.push('<li>Low UNa (<20-40 mEq/L) indicates kidneys are maximally conserving sodium due to perceived low effective circulating volume (RAAS activation), characteristic of these conditions.</li>');
-                          if(diureticUse === 'yes') notes.push('<li><strong style="color:orange;">Caution:</strong> Diuretics (especially loop diuretics used in these conditions) will significantly increase UNa, masking this finding. Low UNa *despite* diuretic use suggests poor diuretic response or non-adherence. FEUrea may be helpful (<35% supports prerenal state).</li>');
-                          notes.push('<li>Treatment involves fluid and sodium restriction, appropriate diuretic therapy, and management of the underlying condition (CHF, cirrhosis, nephrosis).</li>');
+                         differential = ['<ul><li><strong>States with Low EABV:</strong><ul><li>Heart Failure (CHF)</li><li>Cirrhosis</li><li>Nephrotic Syndrome</li></ul></li></ul>'];
+                         notes.push('<li>Low UNa (<20-40 mEq/L) indicates renal Na+ conservation due to perceived low EABV (RAAS active).</li>');
+                          if(diureticUse === 'yes') notes.push('<li><strong style="color:orange;">Caution:</strong> Diuretics increase UNa, masking this. Low UNa despite diuretics suggests poor response/adherence.</li>');
+                          notes.push('<li>Treatment: Fluid/Na+ restriction, diuretics, manage underlying condition.</li>');
                      } else if (una === 'high_gt_40') {
                          classification = 'Hypotonic Hypervolemic Hyponatremia (High UNa - Suggests Impaired Renal Excretion)';
                          differential = ['<ul><li><strong>Intrinsic Renal Disease:</strong><ul><li>Acute Kidney Injury (AKI)</li><li>Chronic Kidney Disease (CKD stages 4-5)</li></ul></li></ul>'];
-                         notes.push('<li>High UNa (>40 mEq/L) in a hypervolemic state suggests the kidneys themselves are damaged and cannot effectively excrete the excess sodium and water.</li>');
-                         if(diureticUse === 'yes') notes.push('<li>Diuretic use also causes high UNa. Distinguishing diuretic effect from underlying renal failure requires clinical context (baseline renal function, diuretic dose/response). In advanced CKD/AKI, UNa is often high even without diuretics due to damaged tubules.</li>');
-                         notes.push('<li>Urine osmolality in advanced CKD may be fixed near plasma osmolality (~300 mOsm/kg) or lower, as concentrating/diluting ability is lost (isosthenuria).</li>');
-                         notes.push('<li>Treatment focuses on managing the renal failure (addressing cause if AKI, supportive care for CKD), strict fluid/sodium restriction, often requiring dialysis.</li>');
+                         notes.push('<li>High UNa (>40 mEq/L) suggests intrinsic kidney damage preventing Na+/water excretion.</li>');
+                         if(diureticUse === 'yes') notes.push('<li>Diuretic use also causes high UNa. Context (baseline renal function) is key.</li>');
+                         notes.push('<li>Treatment: Manage renal failure, strict fluid/Na+ restriction, possibly dialysis.</li>');
                      }
                 }
             } // End of Hypotonic Logic
@@ -551,19 +823,19 @@
                  let sg_uosm_match = 'consistent';
                  if ((usg === 'low_lt_1005' && uosm !== 'low_lt_100') || (usg === 'high_gt_1010' && uosm === 'low_lt_100')) {
                      sg_uosm_match = 'potentially inconsistent';
-                     notes.push(`<li><strong style="color:orange;">Note:</strong> Urine Specific Gravity (${usg}) seems ${sg_uosm_match} with Urine Osmolality (${uosm}). Uosm is generally the more accurate measure of urine concentration. Discrepancies can occur with large molecules in urine (glucose, protein, contrast) which affect USG more than Uosm.</li>`);
+                     notes.push(`<li><strong style="color:orange;">Note:</strong> Urine Specific Gravity (${usg}) seems ${sg_uosm_match} with Urine Osmolality (${uosm}). Uosm is generally more accurate. Discrepancies can occur with large molecules in urine (glucose, protein, contrast).</li>`);
                  } else {
                       notes.push(`<li>Urine Specific Gravity (${usg}) reported is generally consistent with the Urine Osmolality (${uosm}).</li>`);
                  }
              } else if (usg !== 'na') {
-                  notes.push(`<li>Urine Specific Gravity reported: ${usg}. (Urine Osmolality provides more precise information on urine concentration).</li>`);
+                  notes.push(`<li>Urine Specific Gravity reported: ${usg}. (Urine Osmolality provides more precise information).</li>`);
              }
 
 
-             // Final assembly of results - Use map to add inline style for list indentation
-             differentialDisplay.innerHTML = differential.join(''); // Display as is, rely on CSS for list styling
+             // Final assembly of results
+             differentialDisplay.innerHTML = differential.join('');
              notes.push('</ul>'); // Close the main UL for notes
-             notesDisplay.innerHTML = notes.join(''); // Display as is, rely on CSS for list styling
+             notesDisplay.innerHTML = notes.join('');
 
 
              // Display results
@@ -584,7 +856,7 @@
         }
 
         // --- Event Listeners ---
-        interpretBtn.addEventListener('click', interpretHyponatremia); // Use renamed function
+        interpretBtn.addEventListener('click', interpretHyponatremia);
         resetBtn.addEventListener('click', resetForm);
 
         // Hide results if form inputs change after interpretation
@@ -595,7 +867,7 @@
         });
 
     </script>
-    <!-- END OF UPDATED SCRIPT SECTION -->
+    <!-- END OF SCRIPT SECTION -->
 
 </body>
 </html>
