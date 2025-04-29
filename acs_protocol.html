@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACS Management Aid</title>
+    <style>
+        :root {
+            --primary-color: #0056b3; /* Darker Blue */
+            --secondary-color: #f0f4f8; /* Light Gray-Blue */
+            --accent-color: #e9ecef; /* Lighter Gray */
+            --text-color: #333;
+            --border-color: #ccc;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding: 1rem;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            border: 1px solid var(--accent-color);
+        }
+
+        form {
+            margin-bottom: 2rem;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        legend {
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 0 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.2s ease-in-out;
+            appearance: none; /* Removes default dropdown arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.7em top 50%;
+            background-size: 0.65em auto;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+        }
+
+        select:required:invalid {
+            color: #6c757d; /* Placeholder color */
+        }
+
+        option[value=""][disabled] {
+            color: #999;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            flex-grow: 1; /* Make buttons share space */
+        }
+
+        button[type="button"] {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button[type="button"]:hover {
+            background-color: #004085; /* Darker blue on hover */
+            transform: translateY(-1px);
+        }
+
+        button[type="reset"] {
+            background-color: #6c757d; /* Gray */
+            color: white;
+        }
+
+        button[type="reset"]:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            display: none; /* Initially hidden */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        #result h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #result ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+
+        #result li {
+             margin-bottom: 0.3rem;
+        }
+        
+        /* Style for medication/order sections */
+        .medication-orders {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background-color: #e9f5ff; /* Light blue background */
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+        }
+        .medication-orders h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+         .medication-orders ul {
+            margin-left: 1rem; /* Indent list */
+         }
+         .medication-orders li {
+             font-size: 0.95rem;
+         }
+         .medication-orders strong { /* Highlight drug names */
+             color: #004085;
+         }
+         .dose-warning {
+             font-size: 0.8rem;
+             font-style: italic;
+             color: var(--danger-color);
+             margin-top: 0.5rem;
+         }
+
+        .disclaimer {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 1rem;
+                margin: 1rem auto;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+             select {
+                padding: 0.6rem;
+             }
+
+             button {
+                 padding: 0.7rem 1rem;
+             }
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>ACS Management Aid</h1>
+
+        <div class="info-section">
+            <h2>Background Information on Acute Coronary Syndrome (ACS)</h2>
+
+            <p><strong>Definition:</strong> Acute Coronary Syndrome (ACS) refers to a spectrum of conditions associated with sudden, reduced blood flow to the heart muscle. It encompasses ST-elevation myocardial infarction (STEMI), non-ST-elevation myocardial infarction (NSTEMI), and unstable angina (UA - now less common with high-sensitivity troponins).</p>
+            <ul>
+                <li><strong>Myocardial Infarction (MI):</strong> Myocardial cell death due to prolonged ischemia. Diagnosed by a rise and/or fall of cardiac troponin values with at least one value above the 99th percentile upper reference limit, plus evidence of ischemia (symptoms, ECG changes, imaging).</li>
+                <li><strong>Type 1 MI (ACS):</strong> MI caused by acute atherothrombotic coronary artery plaque event (rupture, erosion).</li>
+                <li><strong>Type 2 MI:</strong> MI secondary to an oxygen supply/demand mismatch (e.g., severe anemia, tachyarrhythmia, shock) not due to plaque rupture.</li>
+                <li><strong>Chronic Myocardial Injury:</strong> Chronically elevated troponin without acute rise/fall.</li>
+                <li><strong>STEMI:</strong> Type 1 MI with characteristic ST-segment elevation on ECG, indicating complete coronary occlusion.</li>
+                <li><strong>NSTEMI:</strong> Type 1 MI without ST-segment elevation, often with ST depression or T-wave inversion, indicating partial occlusion or distal embolization.</li>
+            </ul>
+
+            <h3>Typical Symptoms</h3>
+            <p>Symptoms suggestive of ACS often include:</p>
+            <ul>
+                <li>Chest pressure, heaviness, burning, tightness, or pain (retrosternal or left-sided).</li>
+                <li>Radiation to the arm(s) (especially left), neck, jaw, or back.</li>
+                <li>Associated symptoms like dyspnea, diaphoresis (sweating), nausea, or vomiting.</li>
+                <li>Symptoms worsened by exertion and potentially relieved by rest or nitrates.</li>
+                <li>Pain similar to prior ischemic events.</li>
+            </ul>
+            <p><strong>Note:</strong> Atypical presentations (e.g., epigastric pain, fatigue, syncope) are common, especially in women, the elderly, and individuals with diabetes. Absence of typical features does not rule out ACS.</p>
+
+            <h3>Key Diagnostic Parameters</h3>
+            <ul>
+                <li><strong>Clinical Presentation:</strong> Nature, location, radiation, timing, and associated symptoms.</li>
+                <li><strong>Electrocardiogram (ECG):</strong> Crucial for identifying ST elevation (STEMI), ST depression, T-wave inversion (NSTE-ACS), new LBBB, Q waves, or arrhythmias. A normal ECG does not exclude ACS.</li>
+                <li><strong>Cardiac Troponin:</strong> Highly sensitive and specific biomarker for myocardial injury. A dynamic rise and/or fall is key for diagnosing acute MI.</li>
+            </ul>
+
+             <h3>Differential Diagnosis</h3>
+             <p>Consider other serious causes of chest pain:</p>
+             <ul>
+                 <li>Aortic dissection (tearing pain, BP differential)</li>
+                 <li>Pulmonary embolism (pleuritic pain, dyspnea, hypoxia)</li>
+                 <li>Pericarditis (sharp, positional pain, friction rub, diffuse ST elevation)</li>
+                 <li>Pneumothorax (sudden unilateral pleuritic pain, diminished breath sounds)</li>
+                 <li>Esophageal rupture (severe pain, subcutaneous emphysema)</li>
+                 <li>Pneumonia, musculoskeletal pain, GI causes (GERD, PUD), anxiety.</li>
+             </ul>
+
+            <h3>Evaluation Approach</h3>
+            <p>Rapid evaluation includes:</p>
+            <ol>
+                <li>Immediate 12-lead ECG (within 10 minutes of presentation).</li>
+                <li>Targeted history and physical examination.</li>
+                <li>Vital signs and oxygen saturation.</li>
+                <li>Establish IV access.</li>
+                <li>Blood tests: Cardiac troponin (serial measurements), CBC, BMP, coagulation studies.</li>
+                <li>Chest X-ray.</li>
+                <li>Risk stratification (e.g., TIMI, GRACE scores for NSTE-ACS).</li>
+            </ol>
+        </div>
+
+        <form id="acsForm">
+            <fieldset>
+                <legend>Diagnostic Parameters for Suspected ACS</legend>
+
+                <div class="input-group">
+                    <label for="ecg_findings">1. ECG Findings:</label>
+                    <select id="ecg_findings" required>
+                        <option value="" disabled selected>Select ECG Interpretation...</option>
+                        <option value="stemi">STE-ACS Criteria Met (incl. STEMI equivalents like new LBBB w/ Sgarbossa, posterior/RV MI)</option>
+                        <option value="nstemi">NSTE-ACS Criteria Met (New ST depression ≥0.5mm or T-wave inversion >1mm in ≥2 contiguous leads)</option>
+                        <option value="normal_nonspecific">Normal / Non-specific Changes / Other (e.g., pre-existing LBBB, LVH, paced rhythm)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="troponin_status">2. Cardiac Troponin:</label>
+                    <select id="troponin_status" required>
+                        <option value="" disabled selected>Select Troponin Status...</option>
+                        <option value="dynamic_rise_fall">Elevated with Dynamic Rise and/or Fall (above 99th %ile URL)</option>
+                        <option value="elevated_chronic">Elevated without Dynamic Change (Chronic Injury)</option>
+                        <option value="normal">Normal / Undetectable</option>
+                    </select>
+                </div>
+
+                 <div class="input-group">
+                    <label for="symptom_status">3. Typical Anginal Symptoms:</label>
+                    <select id="symptom_status" required>
+                        <option value="" disabled selected>Select Symptom Status...</option>
+                        <option value="present">Present (Chest pain/pressure/discomfort, dyspnea, etc., concerning for ischemia)</option>
+                        <option value="absent_atypical">Absent or Clearly Atypical / Non-cardiac</option>
+                    </select>
+                </div>
+
+            </fieldset>
+
+            <div class="button-container">
+                <button type="button" id="interpretBtn">Interpret & Show Initial Orders</button>
+                <button type="reset" id="resetBtn">Reset</button>
+            </div>
+        </form>
+
+        <div id="result">
+            <h2>Interpretation Results</h2>
+            <p class="result-label">Classification:</p>
+            <p id="classificationDisplay"></p>
+            <p class="result-label">Potential Considerations / Differential:</p>
+            <ul id="differentialDisplay"></ul>
+            <p class="result-label">Clinical Notes:</p>
+            <ul id="notesDisplay"></ul>
+            <div id="ordersDisplay" class="medication-orders" style="display: none;"> <!-- Hidden by default -->
+                <h4>Example Initial Management Orders:</h4>
+                <ul id="ordersList"></ul>
+                <p class="dose-warning"><strong>Warning:</strong> These are EXAMPLE doses and strategies. Actual orders MUST be tailored to the individual patient (weight, renal function, bleeding risk, allergies, contraindications), institutional protocols, specific P2Y12 inhibitor choice, and the chosen reperfusion/invasive strategy. This is NOT a substitute for clinical judgment or guideline adherence.</p>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides a preliminary interpretation and SUGGESTED initial management considerations based on simplified inputs according to standard ACS definitions (e.g., 4th Universal Definition of MI). It is intended for educational purposes and as a clinical aid only. It does <strong>not</strong> replace thorough clinical evaluation, expert interpretation of ECGs and troponin trends, consideration of the full clinical context, or professional medical judgment. Example doses and timing are illustrative and require verification and individualization. Always correlate findings with the patient's history, physical exam, and other investigations. Management decisions require comprehensive assessment and adherence to current clinical guidelines (e.g., ACC/AHA). Consult cardiology for definitive diagnosis and management.
+        </div>
+    </div>
+
+    <script>
+        // Get DOM Elements
+        const acsForm = document.getElementById('acsForm');
+        const ecgSelect = document.getElementById('ecg_findings');
+        const troponinSelect = document.getElementById('troponin_status');
+        const symptomsSelect = document.getElementById('symptom_status');
+        const interpretBtn = document.getElementById('interpretBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultDiv = document.getElementById('result');
+        const classificationDisplay = document.getElementById('classificationDisplay');
+        const differentialDisplay = document.getElementById('differentialDisplay');
+        const notesDisplay = document.getElementById('notesDisplay');
+        const ordersDiv = document.getElementById('ordersDisplay'); // New element for orders
+        const ordersList = document.getElementById('ordersList');   // New element for orders list
+        const allInputs = [ecgSelect, troponinSelect, symptomsSelect];
+
+        // --- Event Listeners ---
+        interpretBtn.addEventListener('click', interpretACS);
+        resetBtn.addEventListener('click', resetForm);
+
+        // Hide results if inputs change after interpretation
+        allInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (resultDiv.style.display !== 'none') {
+                    resultDiv.style.display = 'none';
+                }
+            });
+        });
+
+        // --- Functions ---
+
+        /**
+         * Resets the form inputs and hides the result display.
+         */
+        function resetForm() {
+            acsForm.reset();
+            resultDiv.style.display = 'none';
+            classificationDisplay.innerHTML = '';
+            differentialDisplay.innerHTML = '';
+            notesDisplay.innerHTML = '';
+            ordersList.innerHTML = ''; // Clear orders
+            ordersDiv.style.display = 'none'; // Hide orders section
+        }
+
+        /**
+         * Reads input values, performs interpretation logic, displays results, and shows relevant orders.
+         */
+        function interpretACS() {
+            // Get selected values
+            const ecg = ecgSelect.value;
+            const troponin = troponinSelect.value;
+            const symptoms = symptomsSelect.value;
+
+            // Basic validation
+            if (!ecg || !troponin || !symptoms) {
+                alert('Please select an option for all parameters.');
+                return;
+            }
+
+            // --- Interpretation Logic ---
+            let classification = 'Interpretation Pending...';
+            let differentials = [];
+            let notes = [];
+            let orders = []; // Array to hold initial order suggestions
+            let showOrders = false; // Flag to control display of the orders section
+
+            // --- STEMI Logic ---
+            if (ecg === 'stemi') {
+                classification = "Suggestive of STE-ACS (STEMI)";
+                differentials = [
+                    "Acute atherothrombotic plaque event causing complete coronary occlusion (Type 1 MI)."
+                ];
+                notes = [
+                    "Requires IMMEDIATE reperfusion therapy (Primary PCI preferred, goal FMC-to-device time <90 min at PCI-capable center, <120 min if transfer needed).",
+                    "Activate cath lab / STEMI protocol.",
+                    "Assess for right ventricular (RV) or posterior involvement if indicated.",
+                    "Consider and rule out STEMI mimics if presentation is atypical.",
+                    troponin === 'normal' ? "Initial troponin may be normal early; serial testing indicated but should NOT delay reperfusion." : "",
+                    troponin === 'elevated_chronic' ? "Pre-existing chronic troponin elevation does not exclude acute STEMI; interpret ECG/clinical picture." : ""
+                ].filter(Boolean); // Remove empty strings
+
+                orders = [
+                    "<strong>Oxygen:</strong> Titrate to keep SpO2 ≥90% (Do not use routinely if not hypoxic).",
+                    "<strong>Aspirin:</strong> 162-325 mg chewed NOW (non-enteric coated).",
+                    "<strong>Nitroglycerin:</strong> 0.4 mg SL q5 min x3 PRN chest pain (Hold if SBP <90 mmHg, RV infarct suspected, or recent PDE5 inhibitor use). Consider IV NTG drip for persistent pain/HTN/HF.",
+                    "<strong>P2Y12 Inhibitor Load (Consult Cardiology/PCI team - choice/timing depends on strategy - PCI vs Fibrinolysis):</strong>",
+                    "   - <i>If Primary PCI planned:</i> <strong>Ticagrelor</strong> 180 mg PO x1 OR <strong>Prasugrel</strong> 60 mg PO x1 (Contraindicated if prior stroke/TIA; use Ticagrelor or Clopidogrel instead) OR <strong>Clopidogrel</strong> 600 mg PO x1.",
+                    "   - <i>If Fibrinolysis planned/given:</i> <strong>Clopidogrel</strong> 300 mg PO x1 (if <75 yrs) or 75 mg PO x1 (if ≥75 yrs).",
+                    "<strong>Anticoagulation (Consult Cardiology/PCI team - choice depends on reperfusion strategy):</strong>",
+                    "   - <i>If Primary PCI:</i> <strong>Heparin</strong> IV bolus (e.g., 60 U/kg, max 4000 U) + infusion (e.g., 12 U/kg/hr, max 1000 U/hr, target ACT/aPTT per protocol) OR <strong>Bivalirudin</strong>.",
+                    "   - <i>If Fibrinolysis:</i> <strong>Heparin</strong> IV bolus/infusion (weight-based, adjusted for lytic) OR <strong>Enoxaparin</strong> IV bolus + SC (age/renal adjusted) OR <strong>Fondaparinux</strong> (if low bleeding risk, not primary PCI candidate).",
+                    "<strong>High-Intensity Statin:</strong> <strong>Atorvastatin</strong> 80 mg PO or <strong>Rosuvastatin</strong> 20-40 mg PO as soon as possible.",
+                    "<strong>Beta-Blocker:</strong> Consider oral beta-blocker (e.g., <strong>Metoprolol tartrate</strong> 25 mg PO q6-12h) within 24h if no signs of HF, low output state, shock risk, or other contraindications. Avoid IV beta-blockers acutely if risk factors present.",
+                    "<strong>Morphine:</strong> 2-4 mg IV q5-15 min PRN for severe refractory pain (use judiciously, monitor BP/respirations)."
+                ];
+                showOrders = true;
+            }
+            // --- NSTE-ACS Logic (Ischemic ECG + Dynamic Troponin) ---
+            else if (ecg === 'nstemi' && troponin === 'dynamic_rise_fall') {
+                 classification = "Suggestive of NSTE-ACS (NSTEMI)";
+                 differentials = [
+                     "Atherothrombotic plaque event causing partial occlusion or distal embolization (Type 1 MI).",
+                     "Consider Type 2 MI if clinical context suggests severe supply/demand mismatch."
+                 ];
+                 notes = [
+                     "Diagnosis supported by ischemic ECG changes and dynamic troponin elevation.",
+                     "Requires risk stratification (e.g., TIMI, GRACE scores) to guide timing of intervention (early invasive vs. ischemia-guided).",
+                     "Manage ischemia with anti-anginals (nitrates, beta-blockers unless contraindicated).",
+                     symptoms === 'present' ? "Presence of typical symptoms strongly supports ACS diagnosis." : "Absence of typical symptoms warrants careful consideration of Type 2 MI or alternative diagnoses, but NSTEMI still possible."
+                 ];
+                 orders = [
+                     "<strong>Oxygen:</strong> Titrate to keep SpO2 ≥90% (if needed).",
+                     "<strong>Aspirin:</strong> 162-325 mg chewed NOW, then 81 mg PO daily.",
+                     "<strong>Nitroglycerin:</strong> 0.4 mg SL q5 min x3 PRN chest pain (check contraindications). Consider IV NTG drip for persistent pain/HTN/HF.",
+                    "<strong>P2Y12 Inhibitor Load (Consult Cardiology - choice/timing depends on invasive strategy):</strong>",
+                    "   - <i>Upstream/At Diagnosis:</i> <strong>Ticagrelor</strong> 180 mg PO x1 OR <strong>Clopidogrel</strong> 300-600 mg PO x1.",
+                    "   - <i>At time of PCI (if not given upstream):</i> <strong>Ticagrelor</strong> 180 mg PO x1 OR <strong>Prasugrel</strong> 60 mg PO x1 (if PCI planned, no contraindications) OR <strong>Clopidogrel</strong> 600 mg PO x1.",
+                    "<strong>Anticoagulation (Consult Cardiology - choice/duration depends on strategy):</strong>",
+                    "   - <strong>Heparin</strong> IV bolus + infusion OR <strong>Enoxaparin</strong> 1 mg/kg SC q12h (renal dose adjust) OR <strong>Fondaparinux</strong> 2.5 mg SC daily (often preferred if conservative strategy, needs additional anticoag if PCI) OR <strong>Bivalirudin</strong> (usually only if proceeding directly to PCI).",
+                    "<strong>High-Intensity Statin:</strong> <strong>Atorvastatin</strong> 80 mg PO or <strong>Rosuvastatin</strong> 20-40 mg PO as soon as possible/within 24h.",
+                    "<strong>Beta-Blocker:</strong> Initiate oral beta-blocker (e.g., <strong>Metoprolol tartrate</strong> 25 mg PO q6-12h) within 24h if no contraindications.",
+                    "<strong>Morphine:</strong> 2-4 mg IV q5-15 min PRN for severe refractory pain (use judiciously)."
+                 ];
+                 showOrders = true;
+            }
+             // --- Unstable Angina Logic (Ischemic ECG OR Symptoms, Normal Troponin) ---
+            else if ((ecg === 'nstemi' && troponin === 'normal') || (ecg === 'normal_nonspecific' && troponin === 'normal' && symptoms === 'present')) {
+                 // Note: This logic combines ECG changes without MI, or symptoms without ECG/MI evidence
+                 if (ecg === 'nstemi') {
+                     classification = "Ischemic ECG Changes without Myocardial Infarction (Consider Unstable Angina)";
+                     differentials = [
+                         "Unstable Angina (UA) - high risk feature if dynamic ECG changes.",
+                         "Non-ischemic causes of ST/T changes (e.g., electrolytes, LVH, pericarditis).",
+                         "Resolved ischemia.",
+                         "Prior MI with persistent ECG changes."
+                     ];
+                     notes = [
+                        "Absence of troponin elevation rules out MI by definition.",
+                        symptoms === 'present' ? "If typical anginal symptoms are present, strongly consider Unstable Angina (UA). Requires management similar to NSTE-ACS (risk stratification, anti-ischemic therapy, consider DAPT/anticoagulation, often angiography)." : "If symptoms are absent or atypical, investigate non-ischemic causes of ECG changes.",
+                        "Serial troponins are essential to ensure no late rise.",
+                        "Evaluate cardiac risk factors and consider non-invasive testing or angiography if suspicion for significant CAD remains."
+                    ];
+                 } else { // Normal ECG, Normal Trop, Symptoms Present
+                      classification = "Symptoms Concerning but No Objective Evidence of Acute MI (Consider Unstable Angina or Non-Cardiac Causes)";
+                      differentials = [
+                           "Unstable Angina (if symptoms are classic ischemic, crescendo, or rest angina).",
+                           "Non-cardiac chest pain (e.g., GERD, musculoskeletal, pulmonary, anxiety).",
+                           "Stable Angina (if symptoms are exertional, predictable).",
+                           "Pericarditis (may have subtle ECG changes initially).",
+                           "Aortic dissection / Pulmonary Embolism (consider if high-risk features)."
+                      ];
+                      notes = [
+                           "Acute MI is ruled out based on normal troponin.",
+                           "Evaluate the nature of symptoms and patient risk factors carefully.",
+                           "If high suspicion for UA (e.g. compelling symptoms, known CAD, high risk score): Manage similarly to NSTE-ACS initially (Aspirin, anti-anginals, consider DAPT/anticoagulation pending further eval/risk).",
+                           "If low suspicion for UA: Focus on ruling out other causes. Further cardiac investigation depends on clinical picture (e.g., stress testing)."
+                      ];
+                 }
+
+                 // Add orders if suspicion for UA is high (explicitly mentioned for clarity)
+                 if(symptoms === 'present'){
+                     orders = [
+                         "<strong>Aspirin:</strong> 162-325 mg chewed NOW, then 81 mg PO daily.",
+                         "<strong>Nitroglycerin:</strong> 0.4 mg SL q5 min x3 PRN chest pain (check contraindications).",
+                         "<strong>Consider P2Y12 Inhibitor:</strong> (e.g., Clopidogrel or Ticagrelor load) - Decision depends on risk stratification and planned strategy. Consult Cardiology.",
+                         "<strong>Consider Anticoagulation:</strong> (e.g., Enoxaparin or UFH) - Decision depends on risk stratification and planned strategy. Consult Cardiology.",
+                         "<strong>Consider Beta-Blocker:</strong> Initiate oral dose if no contraindications.",
+                         "<strong>Consider High-Intensity Statin:</strong> Initiate if not already on one.",
+                         "<strong>Observation & Serial Testing:</strong> Repeat ECG and Troponin."
+                    ];
+                    showOrders = true; // Show potential orders for high-risk UA
+                 }
+            }
+            // --- MI with Normal/Non-specific ECG (Non-specific ECG + Dynamic Troponin) ---
+            else if (ecg === 'normal_nonspecific' && troponin === 'dynamic_rise_fall') {
+                 classification = "Myocardial Infarction with Normal/Non-specific ECG (Consider NSTEMI / Type 2 MI)";
+                 differentials = [
+                     "NSTE-ACS (NSTEMI) - Type 1 MI.",
+                     "Type 2 MI (demand ischemia) - secondary to underlying stressor (e.g., sepsis, PE, tachyarrhythmia, severe anemia, hypotension)."
+                 ];
+                 notes = [
+                     "A normal or non-specific ECG does NOT rule out MI.",
+                     "Dynamic troponin rise/fall confirms acute myocardial injury/infarction.",
+                     symptoms === 'present' ? "Typical symptoms strongly suggest NSTE-ACS (Type 1 MI). Manage as high-risk ACS (risk stratify, initiate DAPT, anticoagulation, anti-ischemics, consider early invasive strategy)." : "Absence of typical symptoms increases likelihood of Type 2 MI. Identify and treat the underlying cause of supply/demand mismatch.",
+                     "Serial ECGs are important to monitor for evolving changes.",
+                     "Careful clinical assessment is required to differentiate Type 1 vs Type 2 MI, as management differs significantly."
+                 ];
+                  // Provide NSTEMI orders if symptoms are present, suggesting Type 1 MI
+                 if(symptoms === 'present'){
+                     orders = [ // Same as NSTEMI orders
+                        "<strong>Oxygen:</strong> Titrate to keep SpO2 ≥90% (if needed).",
+                        "<strong>Aspirin:</strong> 162-325 mg chewed NOW, then 81 mg PO daily.",
+                        "<strong>Nitroglycerin:</strong> 0.4 mg SL q5 min x3 PRN chest pain (check contraindications). Consider IV NTG drip for persistent pain/HTN/HF.",
+                        "<strong>P2Y12 Inhibitor Load (Consult Cardiology):</strong> Typically <strong>Ticagrelor</strong> 180 mg PO x1 OR <strong>Clopidogrel</strong> 300-600 mg PO x1.",
+                        "<strong>Anticoagulation (Consult Cardiology):</strong> Typically <strong>Heparin</strong> IV, <strong>Enoxaparin</strong> SC, or <strong>Fondaparinux</strong> SC.",
+                        "<strong>High-Intensity Statin:</strong> <strong>Atorvastatin</strong> 80 mg PO or <strong>Rosuvastatin</strong> 20-40 mg PO within 24h.",
+                        "<strong>Beta-Blocker:</strong> Initiate oral beta-blocker within 24h if no contraindications.",
+                        "<strong>Morphine:</strong> PRN for severe refractory pain."
+                     ];
+                     showOrders = true;
+                 } else {
+                     // Orders focused on finding Type 2 cause if symptoms absent
+                     orders = [
+                         "<strong>Investigate Underlying Cause:</strong> Check CBC, BMP, lactate, blood cultures, ABG, consider Echo, CT chest etc. based on clinical picture.",
+                         "<strong>Treat Underlying Cause:</strong> Address sepsis, arrhythmia, anemia, hypoxia, hypotension etc.",
+                         "<strong>Aspirin:</strong> Consider 81mg daily if underlying CAD suspected/known, but weigh against bleeding risk.",
+                         "<strong>Avoid routine aggressive antiplatelet/anticoagulation</strong> unless clear evidence of Type 1 MI or other indication exists."
+                     ];
+                      showOrders = true; // Show investigational orders for suspected Type 2 MI
+                 }
+            }
+             // --- Chronic Injury Scenarios ---
+            else if (troponin === 'elevated_chronic') {
+                 if (ecg === 'nstemi') {
+                     classification = "Chronic Myocardial Injury with Ischemic ECG Changes";
+                     differentials = [
+                        "Underlying condition causing chronic troponin elevation (e.g., CKD, HF) PLUS potentially unrelated ischemic ECG changes.",
+                        "Type 2 MI superimposed on chronic injury.",
+                        "Misinterpretation of ECG changes."
+                    ];
+                     notes = [
+                        "Requires careful assessment: Are ECG changes acute or chronic?",
+                        "Investigate cause of chronic troponin elevation.",
+                        "Serial troponins crucial to rule out acute-on-chronic event.",
+                        "Clinical correlation is paramount.",
+                        symptoms === 'present' ? "Symptoms raise concern for an acute event; investigate thoroughly." : "Lack of symptoms makes acute ACS less likely, but evaluate cause of ECG changes."
+                    ];
+                 } else { // Normal ECG or STEMI ECG (STEMI already handled) with Chronic Trop
+                      classification = "Chronic Myocardial Injury";
+                      differentials = [
+                        "Chronic Kidney Disease (CKD)", "Heart Failure (HF)", "Structural Heart Disease",
+                        "Pulmonary Hypertension/PE", "Sepsis / Critical Illness", "Infiltrative diseases"
+                    ];
+                     notes = [
+                        "Stable elevated troponin indicates ongoing, non-acute myocardial stress or injury.",
+                        "Focus on identifying and managing the underlying cause.",
+                        "This finding itself does not represent an acute coronary syndrome.",
+                        "Correlate with clinical presentation.",
+                        "Ensure no subtle dynamic change occurred."
+                    ];
+                 }
+                 orders = [
+                     "<strong>Investigate Cause:</strong> Focus on workup for CKD, HF, structural disease, PE, etc. Consider Echo, BNP, renal function.",
+                     "<strong>Manage Underlying Condition:</strong> Treat HF, control BP, manage CKD etc.",
+                     "<strong>Serial Troponins/ECG:</strong> Rule out acute-on-chronic process if clinical suspicion arises."
+                 ];
+                 showOrders = true; // Show investigational orders
+            }
+             // --- Normal Trop / Normal ECG / No Symptoms ---
+            else { // troponin === 'normal', ecg === 'normal_nonspecific', symptoms === 'absent_atypical'
+                 classification = "No Current Evidence Suggestive of Acute Coronary Syndrome";
+                 differentials = [
+                     "Evaluation likely prompted by non-specific findings or screening.",
+                     "Consider underlying reasons for presentation if applicable."
+                 ];
+                 notes = [
+                     "Based on provided inputs, ACS is unlikely.",
+                     "Interpret findings in the overall clinical context.",
+                     "No specific acute cardiac intervention indicated based solely on these parameters."
+                 ];
+                 orders = ["<strong>No acute ACS-specific orders indicated based on these inputs.</strong> Manage based on overall clinical presentation and other findings."];
+                 showOrders = true; // Show minimal orders
+            }
+
+
+            // --- Display Results ---
+            classificationDisplay.textContent = classification;
+            differentialDisplay.innerHTML = differentials.map(item => `<li>${item}</li>`).join('');
+            notesDisplay.innerHTML = notes.map(item => `<li>${item}</li>`).join('');
+
+            // Display Orders Section if relevant orders exist
+            if (showOrders && orders.length > 0) {
+                ordersList.innerHTML = orders.map(item => `<li>${item}</li>`).join('');
+                ordersDiv.style.display = 'block';
+            } else {
+                ordersList.innerHTML = '';
+                ordersDiv.style.display = 'none';
+            }
+
+            resultDiv.style.display = 'block'; // Show results container
+            resultDiv.scrollIntoView({ behavior: 'smooth' }); // Scroll to results
+        }
+
+    </script>
+</body>
+</html>
