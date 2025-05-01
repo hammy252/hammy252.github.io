@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Distribution Tool (DRIP System - G - v13)</title>
+    <title>Admission Distribution Tool (DRIP System - G - v14)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -96,7 +96,13 @@
         #status-board { margin-top: 1rem; padding: 1.5rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
         #status-board h2 { text-align: center; margin-bottom: 1.5rem; color: #334155; font-size: 1.25rem; font-weight: 600; }
         .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
-        .status-person { background-color: white; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .status-person { background-color: white; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        /* Highlight for Active On-Call Box */
+         .status-person.active-on-call {
+             border-color: #f59e0b; /* Amber-500 */
+             border-width: 2px;
+             box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+         }
         .status-person-name { font-weight: 600; color: #1e293b; margin-bottom: 8px; font-size: 0.85rem; display: block; min-height: 2.2em; line-height: 1.3; }
         .status-person-name .role-tag { font-size: 0.65rem; font-weight: 500; padding: 2px 5px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
         .role-gm { background-color: #dbeafe; color: #1e40af; } /* Blue */
@@ -167,6 +173,11 @@
          }
           .results-column li strong {
              color: #1e3a8a; /* blue-800 */
+         }
+         .results-column .team-label { /* Style for the team label */
+             font-size: 0.8em;
+             color: #475569; /* Slate-600 */
+             margin-left: 4px;
          }
          .results-column .cap-detail {
              font-size: 0.75rem;
@@ -383,7 +394,7 @@
                   <li><strong>Highlight Next 5:</strong> GM/Tele buttons highlight the slots for the next 5 potential admissions on the Status Board and display the list below.</li>
                    <li><strong>Highlight All:</strong> Shows highlights for GM, Tele, and Flex on the Status Board and displays the GM/Tele lists below.</li>
                   <li><strong>Time Context:</strong> Select "Before 1 PM" or "1 PM or Later" to determine the admission sequence.</li>
-                  <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8).</li>
+                  <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8). The active On-Call intern's box on the status board is highlighted with an amber border.</li>
                   <li><strong>Drip Sequence (Round-Robin):</strong> After the primary recipient is capped, subsequent admissions cycle through the remaining eligible team members (RI Res, Pre-Pre, Pre-Call, NCT) one by one. The tool finds the *next* person in the cycle who is below their base cap.</li>
                   <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence have reached their base caps. The increase is then applied round-robin to eligible members (excluding On-Call, NCT).</li>
                   <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Do not participate in cap increase to 9/10.</li>
@@ -467,7 +478,7 @@
         function handleTimeChange() {
             console.log("Time changed, resetting drip tracker.");
             lastDripAssignment = { gm: -1, tele: -1 };
-            updateStatusBoard();
+            updateStatusBoard(); // Update board immediately to potentially change On-Call highlight
             clearResultsList();
         }
 
@@ -478,7 +489,14 @@
             statusGrid.innerHTML = '';
             statusMessage.textContent = nextAdmissionInfo.message || '';
 
-            const currentCounts = {};
+            // Determine active On-Call based on time
+            const timeContext = document.querySelector('input[name="time-context"]:checked').value;
+            const isAfter1PM = timeContext === 'after';
+            const activeGmOnCallId = isAfter1PM ? 'gm_oncall' : null;
+            const activeTeleOnCallId = isAfter1PM ? 'tele_oncall' : null;
+
+
+            const currentCounts = {}; // Store current counts for reference if needed later
             statusBoardOrder.forEach(teamId => {
                  const teamInfo = getTeamInfo(teamId);
                  if (teamInfo) {
@@ -486,13 +504,18 @@
                      const personDiv = document.createElement('div');
                      personDiv.className = 'status-person';
 
+                     // Add highlight class if this is the active On-Call
+                     if (teamId === activeGmOnCallId || teamId === activeTeleOnCallId) {
+                         personDiv.classList.add('active-on-call');
+                     }
+
                      let roleClass = '';
                      switch(teamInfo.service) {
                          case 'gm': roleClass = 'role-gm'; break;
                          case 'tele': roleClass = 'role-tele'; break;
                          case 'shared': roleClass = 'role-ri'; break;
                          case 'flex': roleClass = 'role-flex'; break;
-                         case 'icu': roleClass = 'role-icu'; break;
+                         case 'icu': roleClass = 'role-icu'; break; // ICU style
                          default: roleClass = 'role-gm';
                      }
                       if (teamInfo.role === 'On-Call') roleClass = 'role-oncall';
@@ -607,6 +630,7 @@
                 let admissionAssignedThisIteration = false;
                 let assignedTo = null;
                 let capInfoText = '';
+                let teamLabel = ''; // To store the label for the results list
 
                 // 1. Check Primary Recipient
                 const primaryInfo = getTeamInfo(primaryRecipientId);
@@ -614,6 +638,7 @@
                 if (primaryInfo && primaryCurrentCount < primaryInfo.cap) {
                     assignedTo = primaryRecipientId;
                     capInfoText = `(Primary - Base Cap: ${primaryInfo.cap})`;
+                    teamLabel = primaryInfo.label; // Get label
                     admissionAssignedThisIteration = true;
                 }
 
@@ -628,6 +653,7 @@
                         if (teamInfo && currentCount < teamInfo.cap) {
                             assignedTo = currentDripTeamId;
                             capInfoText = `(Drip - Base Cap: ${teamInfo.cap})`;
+                            teamLabel = teamInfo.label; // Get label
                             currentDripIndex = checkIndex;
                             admissionAssignedThisIteration = true;
                             break;
@@ -653,6 +679,7 @@
                              if (teamInfo && teamInfo.eligibleForIncrease && currentCount < 9) {
                                  assignedTo = currentDripTeamId;
                                  capInfoText = `(Drip - Increased Cap: 9)`;
+                                 teamLabel = teamInfo.label; // Get label
                                  currentDripIndex = checkIndex;
                                  admissionAssignedThisIteration = true;
                                  break;
@@ -686,6 +713,7 @@
                                  if (teamInfo && teamInfo.eligibleForIncrease && currentCount < 10) {
                                      assignedTo = currentDripTeamId;
                                      capInfoText = `(Drip - Increased Cap: 10)`;
+                                     teamLabel = teamInfo.label; // Get label
                                      currentDripIndex = checkIndex;
                                      admissionAssignedThisIteration = true;
                                      break;
@@ -701,6 +729,7 @@
                      nextAdmissionsList.push({
                          id: assignedTo,
                          name: recipientInfo.name,
+                         label: teamLabel, // Store the label
                          countBefore: tempCounts[assignedTo],
                          capInfo: capInfoText
                      });
@@ -760,7 +789,8 @@
             if (gmSequence && gmSequence.length > 0) {
                 gmSequence.forEach(adm => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${adm.name}</strong> <span class="cap-detail">${adm.capInfo}</span>`;
+                    // Include the team label in parentheses
+                    li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     gmList.appendChild(li);
                 });
             } else {
@@ -770,7 +800,8 @@
              if (teleSequence && teleSequence.length > 0) {
                 teleSequence.forEach(adm => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${adm.name}</strong> <span class="cap-detail">${adm.capInfo}</span>`;
+                     // Include the team label in parentheses
+                    li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     teleList.appendChild(li);
                 });
             } else {
@@ -863,3 +894,4 @@
 
 </body>
 </html>
+
