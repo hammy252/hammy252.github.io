@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Distribution Tool (DRIP System - G - v15)</title>
+    <title>Admission Distribution Tool (DRIP System - G - v15.1)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -345,17 +345,16 @@
             'icu_intern_2': { nameId: 'name-icu-intern-2', countId: 'count-icu-intern-2', cap: 8, label: 'ICU Intern 2', increasesCap: false, role: 'ICU Intern', service: 'icu'}
         };
 
-        // Define eligibility based on rules
+        // Define eligibility based on rules (used for display and logic)
         for (const teamId in teams) {
             const team = teams[teamId];
-            if (serviceType === 'gm') {
-                 team.eligibleForIncrease = team.increasesCap && team.role !== 'On-Call'; // GM On-Call excluded
-            } else if (serviceType === 'tele') {
-                 // Only RI Res and Tele On-Call are eligible for Tele increase
-                 team.eligibleForIncrease = (team.role === 'RI Res' || teamId === 'tele_oncall');
-            } else {
-                 team.eligibleForIncrease = false; // Default for Flex, ICU etc.
-            }
+             // GM eligibility: cap >= 8 and not GM On-Call
+             const gmEligible = team.cap >= 8 && teamId !== 'gm_oncall';
+             // Tele eligibility: RI Res or Tele On-Call
+             const teleEligible = team.role === 'RI Res' || teamId === 'tele_oncall';
+
+             team.eligibleForIncreaseGM = gmEligible;
+             team.eligibleForIncreaseTele = teleEligible;
         }
 
 
@@ -384,16 +383,18 @@
                 count = countElement ? parseInt(countElement.value) || 0 : 0;
             }
              const cap = team.cap !== undefined ? team.cap : 99;
-             // Determine eligibility based on service context (needed for status board display)
-             const isEligible = (team.increasesCap && team.role !== 'On-Call') || (team.id === 'tele_oncall'); // Simplified check for display
-            return { ...team, id: teamId, name, count, cap, eligibleForIncrease: isEligible };
+            return { ...team, id: teamId, name, count, cap }; // Return all info including cap
         }
 
         function checkAllAtCap(teamIdList, capLevel, currentCounts) {
             for (const teamId of teamIdList) {
                 if (!currentCounts.hasOwnProperty(teamId)) continue;
                 const count = currentCounts[teamId];
-                const teamCap = teams[teamId]?.cap || capLevel;
+                const teamInfo = teams[teamId]; // Get full team info
+                if (!teamInfo) continue;
+                const teamCap = teamInfo.cap; // Use the team's actual cap
+
+                // Check if below the required capLevel OR below their own specific cap if it's lower
                 if (count < Math.min(capLevel, teamCap)) {
                     return false;
                 }
@@ -423,7 +424,7 @@
 
             const currentCounts = {};
             statusBoardOrder.forEach(teamId => {
-                 const teamInfo = getTeamInfo(teamId); // Gets eligibility info too
+                 const teamInfo = getTeamInfo(teamId);
                  if (teamInfo) {
                      currentCounts[teamId] = teamInfo.count;
                      const personDiv = document.createElement('div');
@@ -447,8 +448,9 @@
 
                      const capDisplay = teamInfo.service !== 'icu' ? `/ ${teamInfo.cap}` : '';
                      const cappedText = teamInfo.service !== 'icu' && teamInfo.count >= teamInfo.cap ? '<span class="status-person-capped"> (CAPPED)</span>' : '';
-                     // Use the eligibility determined by getTeamInfo
-                     const eligibleText = teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
+                     // Determine eligibility based on service context for display
+                     const isEligibleDisplay = teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele;
+                     const eligibleText = teamInfo.service !== 'icu' && isEligibleDisplay && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
 
 
                      personDiv.innerHTML = `
@@ -466,8 +468,8 @@
                      statusGrid.appendChild(personDiv);
 
                      const slotsContainer = document.getElementById(`slots-${teamId}`);
-                     // Use eligibility from getTeamInfo for slot display
-                     const maxSlotsToShow = teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease ? 10 : teamInfo.cap;
+                     // Show 10 slots if eligible for increase in *either* service context
+                     const maxSlotsToShow = teamInfo.service !== 'icu' && (teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele) ? 10 : teamInfo.cap;
 
 
                      for (let i = 0; i < maxSlotsToShow; i++) {
@@ -476,7 +478,8 @@
                          if (i < teamInfo.count) {
                              slot.classList.add('filled');
                          }
-                         if (teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease) {
+                         // Only add increase styles if eligible and relevant
+                         if (teamInfo.service !== 'icu' && (teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele)) {
                             if (i === 8) slot.classList.add('increase-9');
                             if (i === 9) slot.classList.add('increase-10');
                          }
@@ -535,6 +538,19 @@
                 dripOrder = teleDripOrder;
             }
 
+            // --- Determine Eligibility for Increase in this context ---
+            const isEligibleForIncrease = (teamId) => {
+                const team = teams[teamId];
+                if (!team) return false;
+                if (serviceType === 'gm') {
+                    // GM: Eligible if cap >= 8 and not GM On-Call
+                    return team.cap >= 8 && teamId !== 'gm_oncall';
+                } else { // Tele
+                    // Tele: Eligible only if RI Res or Tele On-Call
+                    return team.role === 'RI Res' || teamId === 'tele_oncall';
+                }
+            };
+
             let tempCounts = {};
             const allTeamIds = Object.keys(teams);
             allTeamIds.forEach(id => {
@@ -551,19 +567,6 @@
                 let assignedTo = null;
                 let capInfoText = '';
                 let teamLabel = '';
-
-                // --- Determine Eligibility for Increase in this context ---
-                const isEligibleForIncrease = (teamId) => {
-                    const team = teams[teamId];
-                    if (!team) return false;
-                    if (serviceType === 'gm') {
-                        // GM: Eligible if cap >= 8 and not On-Call
-                        return team.cap >= 8 && team.role !== 'On-Call';
-                    } else { // Tele
-                        // Tele: Eligible only if RI Res or Tele On-Call
-                        return team.role === 'RI Res' || teamId === 'tele_oncall';
-                    }
-                };
 
                 // 1. Check Primary Recipient
                 const primaryInfo = getTeamInfo(primaryRecipientId);
@@ -597,18 +600,17 @@
                 // 3. Check Cap Increase to 9
                 if (!admissionAssignedThisIteration) {
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
-                     const baseCapValue = teams[primaryRecipientId]?.cap || 8;
-                     const teamCaps = teamsToCheckBase.map(id => teams[id]?.cap || baseCapValue);
-                     const allAtBase = checkAllAtCap(teamsToCheckBase, Math.min(...teamCaps), tempCounts);
+                     // Check if all relevant teams are at their *specific* base caps
+                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Use 8 as the general base, checkAllAtCap handles lower caps like NCT
 
                      if (allAtBase) {
                           let initialDripIndex = currentDripIndex;
+                         // Check drip members first
                          for (let j = 0; j < dripOrder.length; j++) {
                              let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length;
                              const currentDripTeamId = dripOrder[checkIndex];
                              const teamInfo = getTeamInfo(currentDripTeamId);
                              const currentCount = tempCounts[currentDripTeamId];
-                             // Use the context-aware eligibility check
                              if (teamInfo && isEligibleForIncrease(currentDripTeamId) && currentCount < 9) {
                                  assignedTo = currentDripTeamId;
                                  capInfoText = `(Drip - Increased Cap: 9)`;
@@ -618,7 +620,7 @@
                                  break;
                              }
                          }
-                         // Also check primary recipient for increase to 9 if eligible
+                         // If no drip member found, check primary recipient for increase to 9
                          if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 9) {
                              assignedTo = primaryRecipientId;
                              capInfoText = `(Primary - Increased Cap: 9)`;
@@ -631,9 +633,7 @@
                  // 4. Check Cap Increase to 10
                  if (!admissionAssignedThisIteration) {
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
-                      const baseCapValue = teams[primaryRecipientId]?.cap || 8;
-                      const teamCaps = teamsToCheckBase.map(id => teams[id]?.cap || baseCapValue);
-                     const allAtBase = checkAllAtCap(teamsToCheckBase, Math.min(...teamCaps), tempCounts);
+                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Re-check base cap status
                      if (allAtBase) {
                          // Check if all *eligible* teams are at 9
                          const teamsEligibleForIncrease = teamsToCheckBase.filter(id => isEligibleForIncrease(id));
@@ -641,6 +641,7 @@
 
                          if (allEligibleAt9) {
                               let initialDripIndex = currentDripIndex;
+                             // Check drip members first
                              for (let j = 0; j < dripOrder.length; j++) {
                                  let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length;
                                  const currentDripTeamId = dripOrder[checkIndex];
@@ -655,7 +656,7 @@
                                      break;
                                  }
                              }
-                              // Also check primary recipient for increase to 10 if eligible
+                              // If no drip member found, check primary recipient for increase to 10
                              if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 10) {
                                  assignedTo = primaryRecipientId;
                                  capInfoText = `(Primary - Increased Cap: 10)`;
@@ -732,32 +733,36 @@
             // Update GM List
             const gmCol = document.getElementById('gm-results-col');
             if (gmSequence && gmSequence.length > 0) {
-                gmCol.style.display = 'block'; // Show column
+                gmCol.style.display = 'block';
+                gmList.parentElement.querySelector('h3').textContent = `Next ${gmSequence.length} GM Admissions`; // Update heading
                 gmSequence.forEach(adm => {
                     const li = document.createElement('li');
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     gmList.appendChild(li);
                 });
             } else {
-                 gmCol.style.display = 'block'; // Still show column to display message
+                 gmCol.style.display = 'block';
+                 gmList.parentElement.querySelector('h3').textContent = `Next GM Admissions`;
                  gmList.innerHTML = '<li class="no-results">No further GM admissions possible.</li>';
             }
 
              // Update Tele List
              const teleCol = document.getElementById('tele-results-col');
              if (teleSequence && teleSequence.length > 0) {
-                 teleCol.style.display = 'block'; // Show column
+                 teleCol.style.display = 'block';
+                 teleList.parentElement.querySelector('h3').textContent = `Next ${teleSequence.length} Tele Admissions`; // Update heading
                 teleSequence.forEach(adm => {
                     const li = document.createElement('li');
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     teleList.appendChild(li);
                 });
             } else {
-                 teleCol.style.display = 'block'; // Still show column to display message
+                 teleCol.style.display = 'block';
+                  teleList.parentElement.querySelector('h3').textContent = `Next Tele Admissions`;
                  teleList.innerHTML = '<li class="no-results">No further Tele admissions possible.</li>';
             }
 
-            // Show the main results container only if at least one list has content or a message
+            // Show the main results container only if at least one list was populated
             if ((gmSequence && gmSequence.length > 0) || (teleSequence && teleSequence.length > 0)) {
                  listContainer.style.display = 'block';
             } else {
