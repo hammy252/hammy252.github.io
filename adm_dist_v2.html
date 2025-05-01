@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Distribution Tool (DRIP System - G - v15.1)</title>
+    <title>Admission Distribution Tool (DRIP System - G - v16.2)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -161,7 +161,7 @@
                     <input type="text" id="name-gm-oncall" placeholder="Enter name" oninput="updateStatusBoard()">
                     <label for="count-gm-oncall">Current Count:</label>
                     <input type="number" id="count-gm-oncall" value="0" min="0" max="15" oninput="updateStatusBoard()">
-                    <span class="cap-info">(Cap: 8) - Takes admissions first <strong style='color:#0f766e;'>after 1 PM</strong> until capped.</span>
+                    <span class="cap-info">(Cap: 8, Increases to 9-10) - Takes admissions first <strong style='color:#0f766e;'>after 1 PM</strong> until capped.</span>
                 </div>
                  <div class="team-member">
                     <label for="name-gm-postcall">GM Post Call Intern Name:</label>
@@ -313,14 +313,13 @@
                   <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8). The active On-Call intern's box on the status board is highlighted with an amber border.</li>
                   <li><strong>Drip Sequence (Round-Robin):</strong> After the primary recipient is capped, subsequent admissions cycle through the remaining eligible team members (RI Res, Pre-Pre, Pre-Call, NCT) one by one. The tool finds the *next* person in the cycle who is below their base cap.</li>
                   <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence have reached their base caps. The increase is then applied round-robin to eligible members.</li>
-                  <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Tele On-Call *is* eligible for cap increase to 9/10 (after all Tele drip members are capped at base); GM On-Call is *not*.</li>
+                  <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Both GM and Tele On-Call *are* eligible for cap increase to 9/10 (after all respective drip members are capped at base).</li>
                   <li><strong>RI Residents (Combined Counts):</strong> Have a single total count. Base cap 8. Participate in cap increase to 9/10 based on service need.</li>
                  <li><strong>Gowda Patients:</strong> Distributed equally within the drip system (follow the standard drip).</li>
                  <li><strong>Weekend Distribution:</strong> Manual 'keep' logic applies (see PDF/local guidelines). This tool calculates the sequence based on time/caps.</li>
                  <li><strong>Flex/OBS Team:</strong> Two residents, each capped at 8 OBS patients. Next admission goes to the resident with the lower count.</li>
                  <li><strong>ICU:</strong> Displayed for status awareness only; not part of any admission drip logic in this tool.</li>
-                  <li><strong>Cap Increase Eligibility (GM):</strong> RI Res A, RI Res B, GM Post Call, GM Pre-Pre Call, GM Pre-Call.</li>
-                  <li><strong>Cap Increase Eligibility (Tele):</strong> RI Res A, RI Res B, Tele On-Call. (Tele Post-Call, Pre-Call, NCT excluded).</li>
+                  <li><strong>Cap Increase Eligibility:</strong> Generally applies to all drip members with a base cap of 8 (RI Res, Post-Call, Pre-Pre, Pre-Call, On-Call). NCT (cap 3) is excluded.</li>
              </ul>
         </div>
 
@@ -334,10 +333,10 @@
             'gm_prepre': { nameId: 'name-gm-prepre', countId: 'count-gm-prepre', cap: 8, label: 'GM Pre-Pre Call Intern', increasesCap: true, role: 'Intern', service: 'gm' },
             'gm_precall': { nameId: 'name-gm-precall', countId: 'count-gm-precall', cap: 8, label: 'GM Pre-Call Intern', increasesCap: true, role: 'Intern', service: 'gm' },
             'ri_b': { nameId: 'name-ri-b', countId: 'count-ri-b', cap: 8, label: 'RI Res B', increasesCap: true, role: 'RI Res', service: 'shared' },
-            'gm_oncall': { nameId: 'name-gm-oncall', countId: 'count-gm-oncall', cap: 8, label: 'GM On-Call Intern', increasesCap: false, role: 'On-Call', service: 'gm'}, // GM On-Call NOT eligible
-            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' },
-            'nct': { nameId: 'name-nct', countId: 'count-nct', cap: 3, label: 'NCT Resident', increasesCap: false, role: 'NCT Res', service: 'tele' },
-            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' },
+            'gm_oncall': { nameId: 'name-gm-oncall', countId: 'count-gm-oncall', cap: 8, label: 'GM On-Call Intern', increasesCap: true, role: 'On-Call', service: 'gm'}, // GM On-Call IS eligible
+            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' }, // Tele Post-Call NOT eligible
+            'nct': { nameId: 'name-nct', countId: 'count-nct', cap: 3, label: 'NCT Resident', increasesCap: false, role: 'NCT Res', service: 'tele' }, // NCT NOT eligible
+            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' }, // Tele Pre-Call NOT eligible
             'tele_oncall': { nameId: 'name-tele-oncall', countId: 'count-tele-oncall', cap: 8, label: 'Tele On-Call Intern', increasesCap: true, role: 'On-Call', service: 'tele'}, // Tele On-Call IS eligible
             'flex_res_1': { nameId: 'name-flex-res-1', countId: 'count-flex-res-1', cap: 8, label: 'Flex Resident 1', increasesCap: false, role: 'Flex Res', service: 'flex' },
             'flex_res_2': { nameId: 'name-flex-res-2', countId: 'count-flex-res-2', cap: 8, label: 'Flex Resident 2', increasesCap: false, role: 'Flex Res', service: 'flex' },
@@ -346,15 +345,10 @@
         };
 
         // Define eligibility based on rules (used for display and logic)
+        // This needs to be determined dynamically within the calculation based on serviceType
+        // We'll store the base eligibility from the `increasesCap` flag for display purposes
         for (const teamId in teams) {
-            const team = teams[teamId];
-             // GM eligibility: cap >= 8 and not GM On-Call
-             const gmEligible = team.cap >= 8 && teamId !== 'gm_oncall';
-             // Tele eligibility: RI Res or Tele On-Call
-             const teleEligible = team.role === 'RI Res' || teamId === 'tele_oncall';
-
-             team.eligibleForIncreaseGM = gmEligible;
-             team.eligibleForIncreaseTele = teleEligible;
+            teams[teamId].baseEligibleForIncrease = teams[teamId].increasesCap;
         }
 
 
@@ -390,11 +384,10 @@
             for (const teamId of teamIdList) {
                 if (!currentCounts.hasOwnProperty(teamId)) continue;
                 const count = currentCounts[teamId];
-                const teamInfo = teams[teamId]; // Get full team info
+                const teamInfo = teams[teamId];
                 if (!teamInfo) continue;
-                const teamCap = teamInfo.cap; // Use the team's actual cap
+                const teamCap = teamInfo.cap;
 
-                // Check if below the required capLevel OR below their own specific cap if it's lower
                 if (count < Math.min(capLevel, teamCap)) {
                     return false;
                 }
@@ -448,9 +441,8 @@
 
                      const capDisplay = teamInfo.service !== 'icu' ? `/ ${teamInfo.cap}` : '';
                      const cappedText = teamInfo.service !== 'icu' && teamInfo.count >= teamInfo.cap ? '<span class="status-person-capped"> (CAPPED)</span>' : '';
-                     // Determine eligibility based on service context for display
-                     const isEligibleDisplay = teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele;
-                     const eligibleText = teamInfo.service !== 'icu' && isEligibleDisplay && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
+                     // Use the base eligibility flag for display text
+                     const eligibleText = teamInfo.service !== 'icu' && teamInfo.baseEligibleForIncrease && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
 
 
                      personDiv.innerHTML = `
@@ -468,8 +460,9 @@
                      statusGrid.appendChild(personDiv);
 
                      const slotsContainer = document.getElementById(`slots-${teamId}`);
-                     // Show 10 slots if eligible for increase in *either* service context
-                     const maxSlotsToShow = teamInfo.service !== 'icu' && (teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele) ? 10 : teamInfo.cap;
+                     // Show 10 slots if base eligible OR if it's GM On-Call (special case from image)
+                     // Updated logic: Show 10 slots for everyone except ICU and NCT
+                     const maxSlotsToShow = (teamInfo.service !== 'icu' && teamInfo.cap !== 3) ? 10 : teamInfo.cap;
 
 
                      for (let i = 0; i < maxSlotsToShow; i++) {
@@ -478,8 +471,8 @@
                          if (i < teamInfo.count) {
                              slot.classList.add('filled');
                          }
-                         // Only add increase styles if eligible and relevant
-                         if (teamInfo.service !== 'icu' && (teamInfo.eligibleForIncreaseGM || teamInfo.eligibleForIncreaseTele)) {
+                         // Only add increase styles if maxSlotsToShow is 10
+                         if (maxSlotsToShow === 10) {
                             if (i === 8) slot.classList.add('increase-9');
                             if (i === 9) slot.classList.add('increase-10');
                          }
@@ -522,7 +515,7 @@
 
         // --- Functions to Determine Next Admission Sequence ---
 
-        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 10) { // Default to 10
+        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 10) { // Calculate 10
             console.log(`Calculating ${numToCalculate} for ${serviceType}. Initial tracker:`, JSON.stringify(lastDripAssignment));
             const timeContext = document.querySelector('input[name="time-context"]:checked').value;
             const isBefore1PM = timeContext === 'before';
@@ -541,10 +534,10 @@
             // --- Determine Eligibility for Increase in this context ---
             const isEligibleForIncrease = (teamId) => {
                 const team = teams[teamId];
-                if (!team) return false;
+                if (!team || teamId === 'nct') return false; // NCT never eligible
                 if (serviceType === 'gm') {
-                    // GM: Eligible if cap >= 8 and not GM On-Call
-                    return team.cap >= 8 && teamId !== 'gm_oncall';
+                    // GM: Eligible if cap >= 8 (includes PostCall, PrePre, PreCall, RI_A, RI_B, GM_OnCall)
+                    return team.cap >= 8;
                 } else { // Tele
                     // Tele: Eligible only if RI Res or Tele On-Call
                     return team.role === 'RI Res' || teamId === 'tele_oncall';
@@ -600,8 +593,7 @@
                 // 3. Check Cap Increase to 9
                 if (!admissionAssignedThisIteration) {
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
-                     // Check if all relevant teams are at their *specific* base caps
-                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Use 8 as the general base, checkAllAtCap handles lower caps like NCT
+                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Use 8 as general base
 
                      if (allAtBase) {
                           let initialDripIndex = currentDripIndex;
@@ -620,7 +612,7 @@
                                  break;
                              }
                          }
-                         // If no drip member found, check primary recipient for increase to 9
+                         // If no drip member found, check primary recipient
                          if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 9) {
                              assignedTo = primaryRecipientId;
                              capInfoText = `(Primary - Increased Cap: 9)`;
@@ -633,7 +625,7 @@
                  // 4. Check Cap Increase to 10
                  if (!admissionAssignedThisIteration) {
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
-                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Re-check base cap status
+                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts);
                      if (allAtBase) {
                          // Check if all *eligible* teams are at 9
                          const teamsEligibleForIncrease = teamsToCheckBase.filter(id => isEligibleForIncrease(id));
@@ -656,7 +648,7 @@
                                      break;
                                  }
                              }
-                              // If no drip member found, check primary recipient for increase to 10
+                              // If no drip member found, check primary recipient
                              if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 10) {
                                  assignedTo = primaryRecipientId;
                                  capInfoText = `(Primary - Increased Cap: 10)`;
