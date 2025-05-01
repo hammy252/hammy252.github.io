@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Distribution Tool (DRIP System - G - v14)</title>
+    <title>Admission Distribution Tool (DRIP System - G - v15)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,58 +13,19 @@
         body { font-family: 'Inter', sans-serif; line-height: 1.6; background-color: #f1f5f9; padding: 20px; }
 
         /* Main Container */
-        .main-container { max-width: 1440px; /* Wider for 5 columns potentially */ margin: 20px auto; background: linear-gradient(to bottom, white, #f8fafc); padding: 24px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
+        .main-container { max-width: 1440px; margin: 20px auto; background: linear-gradient(to bottom, white, #f8fafc); padding: 24px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
 
         /* Headings and Text */
         h1 { font-size: 1.875rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; text-align: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; }
         .subtitle { font-size: 1rem; color: #475569; margin-bottom: 1rem; text-align: center; }
 
         /* Improved Time Selection */
-        .time-selection {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 10px;
-            background-color: #f8fafc; /* Lighter background */
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            display: flex; /* Use flexbox for alignment */
-            justify-content: center; /* Center items horizontally */
-            align-items: center; /* Center items vertically */
-            gap: 15px; /* Space between elements */
-        }
-        .time-selection strong {
-            color: #1e293b; /* Darker text */
-            font-weight: 600;
-        }
-        .time-selection label {
-            display: inline-flex; /* Keep label and radio together */
-            align-items: center;
-            padding: 8px 15px;
-            border: 1px solid #cbd5e1; /* Default border */
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            background-color: white;
-            font-weight: 500;
-            color: #334155;
-            margin: 0; /* Remove default margins */
-        }
-        .time-selection input[type="radio"] {
-            display: none; /* Hide the actual radio button */
-        }
-        /* Style for the selected label */
-        .time-selection input[type="radio"]:checked + label {
-            background-color: #e0f2fe; /* Sky-100 */
-            border-color: #38bdf8; /* Sky-400 */
-            color: #0c4a6e; /* Sky-800 */
-            font-weight: 600;
-        }
-        /* Hover effect */
-        .time-selection label:hover {
-            background-color: #f0f9ff; /* Sky-50 */
-            border-color: #7dd3fc; /* Sky-300 */
-        }
-
+        .time-selection { text-align: center; margin-bottom: 2rem; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .time-selection strong { color: #1e293b; font-weight: 600; }
+        .time-selection label { display: inline-flex; align-items: center; padding: 8px 15px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; background-color: white; font-weight: 500; color: #334155; margin: 0; }
+        .time-selection input[type="radio"] { display: none; }
+        .time-selection input[type="radio"]:checked + label { background-color: #e0f2fe; border-color: #38bdf8; color: #0c4a6e; font-weight: 600; }
+        .time-selection label:hover { background-color: #f0f9ff; border-color: #7dd3fc; }
 
         /* Content Layout (Grid for Input Sections) */
         .input-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2rem; }
@@ -73,8 +34,8 @@
         fieldset.service-section { border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; margin-bottom: 1rem; }
         fieldset.ri-section { border-color: #1d4ed8; background-color: #eff6ff; }
         fieldset.ri-section legend { color: #1d4ed8; }
-         fieldset.icu-section { border-color: #7c3aed; background-color: #f5f3ff; } /* Violet */
-         fieldset.icu-section legend { color: #7c3aed; }
+        fieldset.icu-section { border-color: #7c3aed; background-color: #f5f3ff; }
+        fieldset.icu-section legend { color: #7c3aed; }
         legend { font-size: 1.125rem; font-weight: 600; color: #1e293b; padding: 0 8px; margin-left: -8px; margin-bottom: 15px; }
 
         /* Team Member / Input Group Styling */
@@ -97,21 +58,16 @@
         #status-board h2 { text-align: center; margin-bottom: 1.5rem; color: #334155; font-size: 1.25rem; font-weight: 600; }
         .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
         .status-person { background-color: white; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        /* Highlight for Active On-Call Box */
-         .status-person.active-on-call {
-             border-color: #f59e0b; /* Amber-500 */
-             border-width: 2px;
-             box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
-         }
+        .status-person.active-on-call { border-color: #f59e0b; border-width: 2px; box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
         .status-person-name { font-weight: 600; color: #1e293b; margin-bottom: 8px; font-size: 0.85rem; display: block; min-height: 2.2em; line-height: 1.3; }
         .status-person-name .role-tag { font-size: 0.65rem; font-weight: 500; padding: 2px 5px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
-        .role-gm { background-color: #dbeafe; color: #1e40af; } /* Blue */
-        .role-tele { background-color: #d1fae5; color: #065f46; } /* Emerald */
-        .role-ri { background-color: #e0e7ff; color: #3730a3; } /* Indigo */
-        .role-flex { background-color: #fef3c7; color: #92400e; } /* Amber */
-        .role-oncall { background-color: #fee2e2; color: #991b1b; } /* Red */
-        .role-postcall { background-color: #f3e8ff; color: #6b21a8; } /* Purple */
-        .role-icu { background-color: #ede9fe; color: #5b21b6; } /* Violet */
+        .role-gm { background-color: #dbeafe; color: #1e40af; }
+        .role-tele { background-color: #d1fae5; color: #065f46; }
+        .role-ri { background-color: #e0e7ff; color: #3730a3; }
+        .role-flex { background-color: #fef3c7; color: #92400e; }
+        .role-oncall { background-color: #fee2e2; color: #991b1b; }
+        .role-postcall { background-color: #f3e8ff; color: #6b21a8; }
+        .role-icu { background-color: #ede9fe; color: #5b21b6; }
         .slots-container { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; min-height: 22px; }
         .slot { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #cbd5e1; background-color: #f1f5f9; position: relative; display: flex; align-items: center; justify-content: center; }
         .slot.filled { background-color: #64748b; border-color: #475569; }
@@ -120,11 +76,11 @@
         .slot.next-admission-gm,
         .slot.next-admission-tele,
         .slot.next-admission-flex { border-width: 2px; box-shadow: 0 0 4px rgba(0,0,0, 0.2); transform: scale(1.15); z-index: 1; }
-        .slot.next-admission-gm { background-color: #93c5fd; border-color: #3b82f6; } /* Light Blue */
+        .slot.next-admission-gm { background-color: #93c5fd; border-color: #3b82f6; }
         .slot.next-admission-gm::after { color: #1e40af; }
-        .slot.next-admission-tele { background-color: #a7f3d0; border-color: #10b981; } /* Light Emerald */
+        .slot.next-admission-tele { background-color: #a7f3d0; border-color: #10b981; }
         .slot.next-admission-tele::after { color: #065f46; }
-        .slot.next-admission-flex { background-color: #fde047; border-color: #eab308; } /* Yellow */
+        .slot.next-admission-flex { background-color: #fde047; border-color: #eab308; }
         .slot.next-admission-flex::after { color: #854d0e; }
          .slot.next-admission-gm::after,
          .slot.next-admission-tele::after,
@@ -141,55 +97,15 @@
          #status-message { text-align: center; margin-top: 1rem; font-weight: bold; color: #991b1b; min-height: 1.5em; }
 
          /* --- Results List --- */
-         #results-list {
-             margin-top: 2rem;
-             padding: 1.5rem;
-             background-color: #f8fafc; /* slate-50 */
-             border: 1px solid #e2e8f0; /* slate-200 */
-             border-radius: 8px;
-         }
-         .results-columns {
-             display: flex;
-             flex-wrap: wrap;
-             gap: 2rem;
-             justify-content: space-around; /* Distribute space */
-         }
-         .results-column h3 {
-             font-size: 1.1rem;
-             font-weight: 600;
-             color: #1e3a8a; /* blue-800 */
-             margin-bottom: 0.75rem;
-             border-bottom: 1px solid #bfdbfe; /* blue-200 */
-             padding-bottom: 0.25rem;
-         }
-         .results-column ol {
-             list-style-type: decimal;
-             padding-left: 1.5rem;
-             font-size: 0.9rem;
-         }
-         .results-column li {
-             margin-bottom: 0.4rem;
-             color: #1e40af; /* blue-700 */
-         }
-          .results-column li strong {
-             color: #1e3a8a; /* blue-800 */
-         }
-         .results-column .team-label { /* Style for the team label */
-             font-size: 0.8em;
-             color: #475569; /* Slate-600 */
-             margin-left: 4px;
-         }
-         .results-column .cap-detail {
-             font-size: 0.75rem;
-             font-style: italic;
-             color: #64748b; /* slate-500 */
-             margin-left: 5px;
-         }
-         .results-column .no-results {
-             font-style: italic;
-             color: #64748b;
-         }
-
+         #results-list { margin-top: 2rem; padding: 1.5rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+         .results-columns { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-around; }
+         .results-column h3 { font-size: 1.1rem; font-weight: 600; color: #1e3a8a; margin-bottom: 0.75rem; border-bottom: 1px solid #bfdbfe; padding-bottom: 0.25rem; }
+         .results-column ol { list-style-type: decimal; padding-left: 1.5rem; font-size: 0.9rem; }
+         .results-column li { margin-bottom: 0.4rem; color: #1e40af; }
+         .results-column li strong { color: #1e3a8a; }
+         .results-column .team-label { font-size: 0.8em; color: #475569; margin-left: 4px; }
+         .results-column .cap-detail { font-size: 0.75rem; font-style: italic; color: #64748b; margin-left: 5px; }
+         .results-column .no-results { font-style: italic; color: #64748b; }
 
         /* Button Container */
         .button-container { margin-top: 2rem; padding: 1rem; background-color: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
@@ -204,7 +120,7 @@
         .btn-secondary { background-color: #e2e8f0; color: #1e293b; }
         .btn-secondary:hover { background-color: #cbd5e1; }
         .btn-secondary:focus { box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5); }
-         .btn-highlight-all { background-color: #10b981; color: white; } /* Emerald */
+         .btn-highlight-all { background-color: #10b981; color: white; }
          .btn-highlight-all:hover { background-color: #059669; }
          .btn-highlight-all:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5); }
 
@@ -268,7 +184,7 @@
                     <input type="number" id="count-gm-precall" value="0" min="0" max="15" oninput="updateStatusBoard()">
                     <span class="cap-info">(Cap: 8, Increases to 9-10)</span>
                 </div>
-                <button onclick="highlightNextAdmissionSequence('gm')" class="btn-primary" style="width:100%; margin-top: 10px;">Highlight Next 5 GM Admissions</button>
+                <button onclick="highlightNextAdmissionSequence('gm')" class="btn-primary" style="width:100%; margin-top: 10px;">Highlight Next 10 GM Admissions</button>
             </fieldset>
 
             <fieldset class="service-section">
@@ -279,7 +195,7 @@
                      <input type="text" id="name-tele-oncall" placeholder="Enter name" oninput="updateStatusBoard()">
                      <label for="count-tele-oncall">Current Count:</label>
                      <input type="number" id="count-tele-oncall" value="0" min="0" max="15" oninput="updateStatusBoard()">
-                     <span class="cap-info">(Cap: 8) - Takes admissions first <strong style='color:#0f766e;'>after 1 PM</strong> until capped.</span>
+                     <span class="cap-info">(Cap: 8, Increases to 9-10) - Takes admissions first <strong style='color:#0f766e;'>after 1 PM</strong> until capped.</span>
                  </div>
                  <div class="team-member">
                     <label for="name-tele-postcall">Tele Post Call Intern Name:</label>
@@ -302,7 +218,7 @@
                     <input type="number" id="count-tele-precall" value="0" min="0" max="15" oninput="updateStatusBoard()">
                      <span class="cap-info">(Cap: 8)</span>
                  </div>
-                <button onclick="highlightNextAdmissionSequence('tele')" class="btn-primary" style="width:100%; margin-top: 10px;">Highlight Next 5 Tele Admissions</button>
+                <button onclick="highlightNextAdmissionSequence('tele')" class="btn-primary" style="width:100%; margin-top: 10px;">Highlight Next 10 Tele Admissions</button>
             </fieldset>
 
              <fieldset class="service-section ri-section">
@@ -372,11 +288,11 @@
 
         <div id="results-list" style="display: none;"> <div class="results-columns">
                  <div class="results-column" id="gm-results-col">
-                     <h3>Next 5 GM Admissions</h3>
+                     <h3>Next 10 GM Admissions</h3>
                      <ol id="gm-results-list"></ol>
                  </div>
                  <div class="results-column" id="tele-results-col">
-                     <h3>Next 5 Tele Admissions</h3>
+                     <h3>Next 10 Tele Admissions</h3>
                      <ol id="tele-results-list"></ol>
                  </div>
              </div>
@@ -391,19 +307,20 @@
         <div class="notes">
              <h3>System Notes:</h3>
              <ul>
-                  <li><strong>Highlight Next 5:</strong> GM/Tele buttons highlight the slots for the next 5 potential admissions on the Status Board and display the list below.</li>
+                  <li><strong>Highlight Next 10:</strong> GM/Tele buttons highlight the slots for the next 10 potential admissions on the Status Board and display the list below.</li>
                    <li><strong>Highlight All:</strong> Shows highlights for GM, Tele, and Flex on the Status Board and displays the GM/Tele lists below.</li>
                   <li><strong>Time Context:</strong> Select "Before 1 PM" or "1 PM or Later" to determine the admission sequence.</li>
                   <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8). The active On-Call intern's box on the status board is highlighted with an amber border.</li>
                   <li><strong>Drip Sequence (Round-Robin):</strong> After the primary recipient is capped, subsequent admissions cycle through the remaining eligible team members (RI Res, Pre-Pre, Pre-Call, NCT) one by one. The tool finds the *next* person in the cycle who is below their base cap.</li>
-                  <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence have reached their base caps. The increase is then applied round-robin to eligible members (excluding On-Call, NCT).</li>
-                  <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Do not participate in cap increase to 9/10.</li>
+                  <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence have reached their base caps. The increase is then applied round-robin to eligible members.</li>
+                  <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Tele On-Call *is* eligible for cap increase to 9/10 (after all Tele drip members are capped at base); GM On-Call is *not*.</li>
                   <li><strong>RI Residents (Combined Counts):</strong> Have a single total count. Base cap 8. Participate in cap increase to 9/10 based on service need.</li>
                  <li><strong>Gowda Patients:</strong> Distributed equally within the drip system (follow the standard drip).</li>
                  <li><strong>Weekend Distribution:</strong> Manual 'keep' logic applies (see PDF/local guidelines). This tool calculates the sequence based on time/caps.</li>
                  <li><strong>Flex/OBS Team:</strong> Two residents, each capped at 8 OBS patients. Next admission goes to the resident with the lower count.</li>
                  <li><strong>ICU:</strong> Displayed for status awareness only; not part of any admission drip logic in this tool.</li>
-                  <li><strong>Cap Increase Eligibility:</strong> Generally applies to all drip members with a base cap of 8 (RI Res, Post-Call, Pre-Pre, Pre-Call). On-Call and NCT (cap 3) are excluded.</li>
+                  <li><strong>Cap Increase Eligibility (GM):</strong> RI Res A, RI Res B, GM Post Call, GM Pre-Pre Call, GM Pre-Call.</li>
+                  <li><strong>Cap Increase Eligibility (Tele):</strong> RI Res A, RI Res B, Tele On-Call. (Tele Post-Call, Pre-Call, NCT excluded).</li>
              </ul>
         </div>
 
@@ -412,25 +329,33 @@
     <script>
         // Define team structure and base parameters
         const teams = {
-            'gm_postcall': { nameId: 'name-gm-postcall', countId: 'count-gm-postcall', cap: 8, label: 'GM Post Call Intern', increasesCap: true, role: 'Post-Call', service: 'gm' }, // Eligible for increase
-            'ri_a': { nameId: 'name-ri-a', countId: 'count-ri-a', cap: 8, label: 'RI Res A', increasesCap: true, role: 'RI Res', service: 'shared' }, // Eligible for increase
-            'gm_prepre': { nameId: 'name-gm-prepre', countId: 'count-gm-prepre', cap: 8, label: 'GM Pre-Pre Call Intern', increasesCap: true, role: 'Intern', service: 'gm' }, // Eligible for increase
-            'gm_precall': { nameId: 'name-gm-precall', countId: 'count-gm-precall', cap: 8, label: 'GM Pre-Call Intern', increasesCap: true, role: 'Intern', service: 'gm' }, // Eligible for increase
-            'ri_b': { nameId: 'name-ri-b', countId: 'count-ri-b', cap: 8, label: 'RI Res B', increasesCap: true, role: 'RI Res', service: 'shared' }, // Eligible for increase
-            'gm_oncall': { nameId: 'name-gm-oncall', countId: 'count-gm-oncall', cap: 8, label: 'GM On-Call Intern', increasesCap: false, role: 'On-Call', service: 'gm'}, // NOT eligible
-            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' }, // NOT eligible for Tele increase
-            'nct': { nameId: 'name-nct', countId: 'count-nct', cap: 3, label: 'NCT Resident', increasesCap: false, role: 'NCT Res', service: 'tele' }, // NOT eligible
-            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' }, // NOT eligible for Tele increase
-            'tele_oncall': { nameId: 'name-tele-oncall', countId: 'count-tele-oncall', cap: 8, label: 'Tele On-Call Intern', increasesCap: false, role: 'On-Call', service: 'tele'}, // NOT eligible
+            'gm_postcall': { nameId: 'name-gm-postcall', countId: 'count-gm-postcall', cap: 8, label: 'GM Post Call Intern', increasesCap: true, role: 'Post-Call', service: 'gm' },
+            'ri_a': { nameId: 'name-ri-a', countId: 'count-ri-a', cap: 8, label: 'RI Res A', increasesCap: true, role: 'RI Res', service: 'shared' },
+            'gm_prepre': { nameId: 'name-gm-prepre', countId: 'count-gm-prepre', cap: 8, label: 'GM Pre-Pre Call Intern', increasesCap: true, role: 'Intern', service: 'gm' },
+            'gm_precall': { nameId: 'name-gm-precall', countId: 'count-gm-precall', cap: 8, label: 'GM Pre-Call Intern', increasesCap: true, role: 'Intern', service: 'gm' },
+            'ri_b': { nameId: 'name-ri-b', countId: 'count-ri-b', cap: 8, label: 'RI Res B', increasesCap: true, role: 'RI Res', service: 'shared' },
+            'gm_oncall': { nameId: 'name-gm-oncall', countId: 'count-gm-oncall', cap: 8, label: 'GM On-Call Intern', increasesCap: false, role: 'On-Call', service: 'gm'}, // GM On-Call NOT eligible
+            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' },
+            'nct': { nameId: 'name-nct', countId: 'count-nct', cap: 3, label: 'NCT Resident', increasesCap: false, role: 'NCT Res', service: 'tele' },
+            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' },
+            'tele_oncall': { nameId: 'name-tele-oncall', countId: 'count-tele-oncall', cap: 8, label: 'Tele On-Call Intern', increasesCap: true, role: 'On-Call', service: 'tele'}, // Tele On-Call IS eligible
             'flex_res_1': { nameId: 'name-flex-res-1', countId: 'count-flex-res-1', cap: 8, label: 'Flex Resident 1', increasesCap: false, role: 'Flex Res', service: 'flex' },
             'flex_res_2': { nameId: 'name-flex-res-2', countId: 'count-flex-res-2', cap: 8, label: 'Flex Resident 2', increasesCap: false, role: 'Flex Res', service: 'flex' },
             'icu_intern_1': { nameId: 'name-icu-intern-1', countId: 'count-icu-intern-1', cap: 8, label: 'ICU Intern 1', increasesCap: false, role: 'ICU Intern', service: 'icu'},
             'icu_intern_2': { nameId: 'name-icu-intern-2', countId: 'count-icu-intern-2', cap: 8, label: 'ICU Intern 2', increasesCap: false, role: 'ICU Intern', service: 'icu'}
         };
 
-        // Simplified eligibility check based on base cap >= 8 and not On-Call
+        // Define eligibility based on rules
         for (const teamId in teams) {
-            teams[teamId].eligibleForIncrease = (teams[teamId].cap >= 8 && teams[teamId].role !== 'On-Call');
+            const team = teams[teamId];
+            if (serviceType === 'gm') {
+                 team.eligibleForIncrease = team.increasesCap && team.role !== 'On-Call'; // GM On-Call excluded
+            } else if (serviceType === 'tele') {
+                 // Only RI Res and Tele On-Call are eligible for Tele increase
+                 team.eligibleForIncrease = (team.role === 'RI Res' || teamId === 'tele_oncall');
+            } else {
+                 team.eligibleForIncrease = false; // Default for Flex, ICU etc.
+            }
         }
 
 
@@ -459,7 +384,9 @@
                 count = countElement ? parseInt(countElement.value) || 0 : 0;
             }
              const cap = team.cap !== undefined ? team.cap : 99;
-            return { ...team, id: teamId, name, count, cap };
+             // Determine eligibility based on service context (needed for status board display)
+             const isEligible = (team.increasesCap && team.role !== 'On-Call') || (team.id === 'tele_oncall'); // Simplified check for display
+            return { ...team, id: teamId, name, count, cap, eligibleForIncrease: isEligible };
         }
 
         function checkAllAtCap(teamIdList, capLevel, currentCounts) {
@@ -478,7 +405,7 @@
         function handleTimeChange() {
             console.log("Time changed, resetting drip tracker.");
             lastDripAssignment = { gm: -1, tele: -1 };
-            updateStatusBoard(); // Update board immediately to potentially change On-Call highlight
+            updateStatusBoard();
             clearResultsList();
         }
 
@@ -489,22 +416,19 @@
             statusGrid.innerHTML = '';
             statusMessage.textContent = nextAdmissionInfo.message || '';
 
-            // Determine active On-Call based on time
             const timeContext = document.querySelector('input[name="time-context"]:checked').value;
             const isAfter1PM = timeContext === 'after';
             const activeGmOnCallId = isAfter1PM ? 'gm_oncall' : null;
             const activeTeleOnCallId = isAfter1PM ? 'tele_oncall' : null;
 
-
-            const currentCounts = {}; // Store current counts for reference if needed later
+            const currentCounts = {};
             statusBoardOrder.forEach(teamId => {
-                 const teamInfo = getTeamInfo(teamId);
+                 const teamInfo = getTeamInfo(teamId); // Gets eligibility info too
                  if (teamInfo) {
                      currentCounts[teamId] = teamInfo.count;
                      const personDiv = document.createElement('div');
                      personDiv.className = 'status-person';
 
-                     // Add highlight class if this is the active On-Call
                      if (teamId === activeGmOnCallId || teamId === activeTeleOnCallId) {
                          personDiv.classList.add('active-on-call');
                      }
@@ -515,7 +439,7 @@
                          case 'tele': roleClass = 'role-tele'; break;
                          case 'shared': roleClass = 'role-ri'; break;
                          case 'flex': roleClass = 'role-flex'; break;
-                         case 'icu': roleClass = 'role-icu'; break; // ICU style
+                         case 'icu': roleClass = 'role-icu'; break;
                          default: roleClass = 'role-gm';
                      }
                       if (teamInfo.role === 'On-Call') roleClass = 'role-oncall';
@@ -523,7 +447,7 @@
 
                      const capDisplay = teamInfo.service !== 'icu' ? `/ ${teamInfo.cap}` : '';
                      const cappedText = teamInfo.service !== 'icu' && teamInfo.count >= teamInfo.cap ? '<span class="status-person-capped"> (CAPPED)</span>' : '';
-                     // Use the simplified eligibility check
+                     // Use the eligibility determined by getTeamInfo
                      const eligibleText = teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
 
 
@@ -542,7 +466,7 @@
                      statusGrid.appendChild(personDiv);
 
                      const slotsContainer = document.getElementById(`slots-${teamId}`);
-                      // Use simplified eligibility for showing 10 slots
+                     // Use eligibility from getTeamInfo for slot display
                      const maxSlotsToShow = teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease ? 10 : teamInfo.cap;
 
 
@@ -552,14 +476,11 @@
                          if (i < teamInfo.count) {
                              slot.classList.add('filled');
                          }
-                         // Only add increase styles if eligible and relevant
                          if (teamInfo.service !== 'icu' && teamInfo.eligibleForIncrease) {
                             if (i === 8) slot.classList.add('increase-9');
                             if (i === 9) slot.classList.add('increase-10');
                          }
 
-
-                         // --- Check Highlighting ---
                          let highlightClass = null;
                          let highlightIndex = -1;
 
@@ -598,11 +519,10 @@
 
         // --- Functions to Determine Next Admission Sequence ---
 
-        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 5) {
+        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 10) { // Default to 10
             console.log(`Calculating ${numToCalculate} for ${serviceType}. Initial tracker:`, JSON.stringify(lastDripAssignment));
             const timeContext = document.querySelector('input[name="time-context"]:checked').value;
             const isBefore1PM = timeContext === 'before';
-            // Removed increasesCapKey - eligibility is now in teams[id].eligibleForIncrease
             const serviceName = (serviceType === 'gm') ? 'General Medicine' : 'Telemetry';
 
             let primaryRecipientId;
@@ -630,7 +550,20 @@
                 let admissionAssignedThisIteration = false;
                 let assignedTo = null;
                 let capInfoText = '';
-                let teamLabel = ''; // To store the label for the results list
+                let teamLabel = '';
+
+                // --- Determine Eligibility for Increase in this context ---
+                const isEligibleForIncrease = (teamId) => {
+                    const team = teams[teamId];
+                    if (!team) return false;
+                    if (serviceType === 'gm') {
+                        // GM: Eligible if cap >= 8 and not On-Call
+                        return team.cap >= 8 && team.role !== 'On-Call';
+                    } else { // Tele
+                        // Tele: Eligible only if RI Res or Tele On-Call
+                        return team.role === 'RI Res' || teamId === 'tele_oncall';
+                    }
+                };
 
                 // 1. Check Primary Recipient
                 const primaryInfo = getTeamInfo(primaryRecipientId);
@@ -638,7 +571,7 @@
                 if (primaryInfo && primaryCurrentCount < primaryInfo.cap) {
                     assignedTo = primaryRecipientId;
                     capInfoText = `(Primary - Base Cap: ${primaryInfo.cap})`;
-                    teamLabel = primaryInfo.label; // Get label
+                    teamLabel = primaryInfo.label;
                     admissionAssignedThisIteration = true;
                 }
 
@@ -653,7 +586,7 @@
                         if (teamInfo && currentCount < teamInfo.cap) {
                             assignedTo = currentDripTeamId;
                             capInfoText = `(Drip - Base Cap: ${teamInfo.cap})`;
-                            teamLabel = teamInfo.label; // Get label
+                            teamLabel = teamInfo.label;
                             currentDripIndex = checkIndex;
                             admissionAssignedThisIteration = true;
                             break;
@@ -675,15 +608,22 @@
                              const currentDripTeamId = dripOrder[checkIndex];
                              const teamInfo = getTeamInfo(currentDripTeamId);
                              const currentCount = tempCounts[currentDripTeamId];
-                             // Use the simplified eligibility check
-                             if (teamInfo && teamInfo.eligibleForIncrease && currentCount < 9) {
+                             // Use the context-aware eligibility check
+                             if (teamInfo && isEligibleForIncrease(currentDripTeamId) && currentCount < 9) {
                                  assignedTo = currentDripTeamId;
                                  capInfoText = `(Drip - Increased Cap: 9)`;
-                                 teamLabel = teamInfo.label; // Get label
+                                 teamLabel = teamInfo.label;
                                  currentDripIndex = checkIndex;
                                  admissionAssignedThisIteration = true;
                                  break;
                              }
+                         }
+                         // Also check primary recipient for increase to 9 if eligible
+                         if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 9) {
+                             assignedTo = primaryRecipientId;
+                             capInfoText = `(Primary - Increased Cap: 9)`;
+                             teamLabel = primaryInfo.label;
+                             admissionAssignedThisIteration = true;
                          }
                      }
                 }
@@ -696,10 +636,7 @@
                      const allAtBase = checkAllAtCap(teamsToCheckBase, Math.min(...teamCaps), tempCounts);
                      if (allAtBase) {
                          // Check if all *eligible* teams are at 9
-                         const teamsEligibleForIncrease = dripOrder.filter(id => teams[id].eligibleForIncrease);
-                         if (teams[primaryRecipientId].eligibleForIncrease) {
-                             teamsEligibleForIncrease.push(primaryRecipientId);
-                         }
+                         const teamsEligibleForIncrease = teamsToCheckBase.filter(id => isEligibleForIncrease(id));
                          const allEligibleAt9 = checkAllAtCap(teamsEligibleForIncrease, 9, tempCounts);
 
                          if (allEligibleAt9) {
@@ -709,15 +646,21 @@
                                  const currentDripTeamId = dripOrder[checkIndex];
                                  const teamInfo = getTeamInfo(currentDripTeamId);
                                  const currentCount = tempCounts[currentDripTeamId];
-                                  // Use the simplified eligibility check
-                                 if (teamInfo && teamInfo.eligibleForIncrease && currentCount < 10) {
+                                 if (teamInfo && isEligibleForIncrease(currentDripTeamId) && currentCount < 10) {
                                      assignedTo = currentDripTeamId;
                                      capInfoText = `(Drip - Increased Cap: 10)`;
-                                     teamLabel = teamInfo.label; // Get label
+                                     teamLabel = teamInfo.label;
                                      currentDripIndex = checkIndex;
                                      admissionAssignedThisIteration = true;
                                      break;
                                  }
+                             }
+                              // Also check primary recipient for increase to 10 if eligible
+                             if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 10) {
+                                 assignedTo = primaryRecipientId;
+                                 capInfoText = `(Primary - Increased Cap: 10)`;
+                                 teamLabel = primaryInfo.label;
+                                 admissionAssignedThisIteration = true;
                              }
                          }
                      }
@@ -729,7 +672,7 @@
                      nextAdmissionsList.push({
                          id: assignedTo,
                          name: recipientInfo.name,
-                         label: teamLabel, // Store the label
+                         label: teamLabel,
                          countBefore: tempCounts[assignedTo],
                          capInfo: capInfoText
                      });
@@ -786,29 +729,40 @@
             gmList.innerHTML = '';
             teleList.innerHTML = '';
 
+            // Update GM List
+            const gmCol = document.getElementById('gm-results-col');
             if (gmSequence && gmSequence.length > 0) {
+                gmCol.style.display = 'block'; // Show column
                 gmSequence.forEach(adm => {
                     const li = document.createElement('li');
-                    // Include the team label in parentheses
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     gmList.appendChild(li);
                 });
             } else {
+                 gmCol.style.display = 'block'; // Still show column to display message
                  gmList.innerHTML = '<li class="no-results">No further GM admissions possible.</li>';
             }
 
+             // Update Tele List
+             const teleCol = document.getElementById('tele-results-col');
              if (teleSequence && teleSequence.length > 0) {
+                 teleCol.style.display = 'block'; // Show column
                 teleSequence.forEach(adm => {
                     const li = document.createElement('li');
-                     // Include the team label in parentheses
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     teleList.appendChild(li);
                 });
             } else {
+                 teleCol.style.display = 'block'; // Still show column to display message
                  teleList.innerHTML = '<li class="no-results">No further Tele admissions possible.</li>';
             }
 
-            listContainer.style.display = 'block';
+            // Show the main results container only if at least one list has content or a message
+            if ((gmSequence && gmSequence.length > 0) || (teleSequence && teleSequence.length > 0)) {
+                 listContainer.style.display = 'block';
+            } else {
+                 listContainer.style.display = 'none';
+            }
         }
 
          function clearResultsList() {
@@ -821,7 +775,7 @@
 
         // --- Button Click Handlers ---
         function highlightNextAdmissionSequence(serviceType) {
-            const result = calculateNextAdmissionsSequence(serviceType, 5);
+            const result = calculateNextAdmissionsSequence(serviceType, 10); // Calculate 10
             let nextAdmissionInfo = { gm: [], tele: [], flex: null, message: result.message };
             let gmList = null;
             let teleList = null;
@@ -848,8 +802,8 @@
         }
 
         function highlightAllServices() {
-             const gmResult = calculateNextAdmissionsSequence('gm', 5);
-             const teleResult = calculateNextAdmissionsSequence('tele', 5);
+             const gmResult = calculateNextAdmissionsSequence('gm', 10); // Calculate 10
+             const teleResult = calculateNextAdmissionsSequence('tele', 10); // Calculate 10
              const flexResult = getNextFlexAdmission();
 
              let combinedMessage = "";
@@ -894,4 +848,3 @@
 
 </body>
 </html>
-
