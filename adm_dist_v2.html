@@ -282,8 +282,8 @@
             <h2>Current Status & Next Admission(s)</h2>
             <div id="status-grid" class="status-grid">
                 </div>
-             <div id="status-message" style="text-align: center; margin-top: 1rem; font-weight: bold; color: #991b1b;">
-                 </div>
+           <div id="status-message" style="text-align: center; margin-top: 1rem; font-weight: bold; color: #991b1b;">
+               </div>
         </div>
 
         <div id="results-list" style="display: none;"> <div class="results-columns">
@@ -307,19 +307,24 @@
         <div class="notes">
              <h3>System Notes:</h3>
              <ul>
-                  <li><strong>Highlight Next 10:</strong> GM/Tele buttons highlight the slots for the next 10 potential admissions on the Status Board and display the list below.</li>
-                   <li><strong>Highlight All:</strong> Shows highlights for GM, Tele, and Flex on the Status Board and displays the GM/Tele lists below.</li>
-                  <li><strong>Time Context:</strong> Select "Before 1 PM" or "1 PM or Later" to determine the admission sequence.</li>
-                  <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8). The active On-Call intern's box on the status board is highlighted with an amber border.</li>
-                  <li><strong>Drip Sequence (Round-Robin):</strong> After the primary recipient is capped, subsequent admissions cycle through the remaining eligible team members (RI Res, Pre-Pre, Pre-Call, NCT) one by one. The tool finds the *next* person in the cycle who is below their base cap.</li>
-                  <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence have reached their base caps. The increase is then applied round-robin to eligible members.</li>
-                  <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Both GM and Tele On-Call *are* eligible for cap increase to 9/10 (after all respective drip members are capped at base).</li>
-                  <li><strong>RI Residents (Combined Counts):</strong> Have a single total count. Base cap 8. Participate in cap increase to 9/10 based on service need.</li>
-                 <li><strong>Gowda Patients:</strong> Distributed equally within the drip system (follow the standard drip).</li>
-                 <li><strong>Weekend Distribution:</strong> Manual 'keep' logic applies (see PDF/local guidelines). This tool calculates the sequence based on time/caps.</li>
-                 <li><strong>Flex/OBS Team:</strong> Two residents, each capped at 8 OBS patients. Next admission goes to the resident with the lower count.</li>
-                 <li><strong>ICU:</strong> Displayed for status awareness only; not part of any admission drip logic in this tool.</li>
-                  <li><strong>Cap Increase Eligibility:</strong> Generally applies to all drip members with a base cap of 8 (RI Res, Post-Call, Pre-Pre, Pre-Call, On-Call). NCT (cap 3) is excluded.</li>
+                 <li><strong>Highlight Next 10:</strong> GM/Tele buttons highlight the slots for the next 10 potential admissions on the Status Board and display the list below.</li>
+                  <li><strong>Highlight All:</strong> Shows highlights for GM, Tele, and Flex on the Status Board and displays the GM/Tele lists below.</li>
+                 <li><strong>Time Context:</strong> Select "Before 1 PM" or "1 PM or Later" to determine the admission sequence.</li>
+                 <li><strong>Primary Recipient:</strong> Before 1 PM, the Post-Call intern takes admissions first until capped (8). After 1 PM, the On-Call intern takes first until capped (8). The active On-Call intern's box on the status board is highlighted with an amber border.</li>
+                 <li><strong>Drip Sequence (Round-Robin):</strong> After the primary recipient is capped, subsequent admissions cycle through the remaining eligible team members (RI Res, Pre-Pre, Pre-Call, NCT) one by one. The tool finds the *next* person in the cycle who is below their base cap.</li>
+                 <li><strong>Cap Increase Timing:</strong> Increases to 9/10 only occur after the primary recipient AND *all* members of the standard drip sequence for that specific service have reached their base caps. The increase is then applied round-robin to eligible members *within that service*.</li>
+                 <li><strong>On-Call Interns:</strong> Have counts/caps (8). Only receive drip admissions after 1 PM (filling first). Both GM and Tele On-Call *are* eligible for cap increase to 9/10 (after all respective drip members are capped at base).</li>
+                 <li><strong>RI Residents (Combined Counts):</strong> Have a single total count. Base cap 8. Participate in cap increase to 9/10 based on service need (eligibility determined by the service triggering the increase).</li>
+                <li><strong>Gowda Patients:</strong> Distributed equally within the drip system (follow the standard drip).</li>
+                <li><strong>Weekend Distribution:</strong> Manual 'keep' logic applies (see PDF/local guidelines). This tool calculates the sequence based on time/caps.</li>
+                <li><strong>Flex/OBS Team:</strong> Two residents, each capped at 8 OBS patients. Next admission goes to the resident with the lower count.</li>
+                <li><strong>ICU:</strong> Displayed for status awareness only; not part of any admission drip logic in this tool.</li>
+                 <li><strong>Cap Increase Eligibility:</strong>
+                    <ul>
+                        <li>GM: Applies to Post-Call, Pre-Pre, Pre-Call, RI Res A, RI Res B, On-Call.</li>
+                        <li>Tele: Applies *only* to RI Res A, RI Res B, On-Call. (NCT, Post-Call, Pre-call are excluded from increase).</li>
+                    </ul>
+                 </li>
              </ul>
         </div>
 
@@ -334,24 +339,22 @@
             'gm_precall': { nameId: 'name-gm-precall', countId: 'count-gm-precall', cap: 8, label: 'GM Pre-Call Intern', increasesCap: true, role: 'Intern', service: 'gm' },
             'ri_b': { nameId: 'name-ri-b', countId: 'count-ri-b', cap: 8, label: 'RI Res B', increasesCap: true, role: 'RI Res', service: 'shared' },
             'gm_oncall': { nameId: 'name-gm-oncall', countId: 'count-gm-oncall', cap: 8, label: 'GM On-Call Intern', increasesCap: true, role: 'On-Call', service: 'gm'}, // GM On-Call IS eligible
-            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' }, // Tele Post-Call NOT eligible
+            'tele_postcall': { nameId: 'name-tele-postcall', countId: 'count-tele-postcall', cap: 8, label: 'Tele Post Call Intern', increasesCap: false, role: 'Post-Call', service: 'tele' }, // Tele Post-Call NOT eligible for increase
             'nct': { nameId: 'name-nct', countId: 'count-nct', cap: 3, label: 'NCT Resident', increasesCap: false, role: 'NCT Res', service: 'tele' }, // NCT NOT eligible
-            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' }, // Tele Pre-Call NOT eligible
+            'tele_precall': { nameId: 'name-tele-precall', countId: 'count-tele-precall', cap: 8, label: 'Tele Pre-call Intern', increasesCap: false, role: 'Intern', service: 'tele' }, // Tele Pre-Call NOT eligible for increase
             'tele_oncall': { nameId: 'name-tele-oncall', countId: 'count-tele-oncall', cap: 8, label: 'Tele On-Call Intern', increasesCap: true, role: 'On-Call', service: 'tele'}, // Tele On-Call IS eligible
             'flex_res_1': { nameId: 'name-flex-res-1', countId: 'count-flex-res-1', cap: 8, label: 'Flex Resident 1', increasesCap: false, role: 'Flex Res', service: 'flex' },
             'flex_res_2': { nameId: 'name-flex-res-2', countId: 'count-flex-res-2', cap: 8, label: 'Flex Resident 2', increasesCap: false, role: 'Flex Res', service: 'flex' },
-            'icu_intern_1': { nameId: 'name-icu-intern-1', countId: 'count-icu-intern-1', cap: 8, label: 'ICU Intern 1', increasesCap: false, role: 'ICU Intern', service: 'icu'},
-            'icu_intern_2': { nameId: 'name-icu-intern-2', countId: 'count-icu-intern-2', cap: 8, label: 'ICU Intern 2', increasesCap: false, role: 'ICU Intern', service: 'icu'}
+            'icu_intern_1': { nameId: 'name-icu-intern-1', countId: 'count-icu-intern-1', cap: 8, label: 'ICU Intern 1', increasesCap: false, role: 'ICU Intern', service: 'icu'}, // Using cap 8 for display consistency, logic ignores it
+            'icu_intern_2': { nameId: 'name-icu-intern-2', countId: 'count-icu-intern-2', cap: 8, label: 'ICU Intern 2', increasesCap: false, role: 'ICU Intern', service: 'icu'} // Using cap 8 for display consistency, logic ignores it
         };
 
-        // Define eligibility based on rules (used for display and logic)
-        // This needs to be determined dynamically within the calculation based on serviceType
-        // We'll store the base eligibility from the `increasesCap` flag for display purposes
+        // Store base eligibility for display purposes
         for (const teamId in teams) {
             teams[teamId].baseEligibleForIncrease = teams[teamId].increasesCap;
         }
 
-
+        // Order for displaying people on the status board
         const statusBoardOrder = [
             'gm_oncall', 'gm_postcall', 'gm_prepre', 'gm_precall',
             'tele_oncall', 'tele_postcall', 'nct', 'tele_precall',
@@ -360,12 +363,20 @@
             'icu_intern_1', 'icu_intern_2'
         ];
 
+        // Define the drip order for each service (excluding the primary recipient)
         const genMedDripOrder = ['ri_a', 'gm_prepre', 'gm_precall', 'ri_b'];
-        const teleDripOrder = ['ri_b', 'nct', 'tele_precall', 'ri_a'];
+        const teleDripOrder = ['ri_b', 'nct', 'tele_precall', 'ri_a']; // RI Residents appear in both drips
 
-        let lastDripAssignment = { gm: -1, tele: -1 };
+        // Track the last assigned person in the *drip* sequence for each service
+        let lastDripAssignment = { gm: -1, tele: -1 }; // Index in the respective dripOrder array
 
         // --- Helper Functions ---
+
+        /**
+         * Gets the current information (name, count, cap, etc.) for a team member.
+         * @param {string} teamId - The ID of the team member (e.g., 'gm_postcall').
+         * @returns {object|null} An object with team info or null if not found.
+         */
         function getTeamInfo(teamId) {
             const team = teams[teamId];
             if (!team) return null;
@@ -376,79 +387,112 @@
                 const countElement = document.getElementById(team.countId);
                 count = countElement ? parseInt(countElement.value) || 0 : 0;
             }
-             const cap = team.cap !== undefined ? team.cap : 99;
-            return { ...team, id: teamId, name, count, cap }; // Return all info including cap
+             const cap = team.cap !== undefined ? team.cap : 99; // Default to high cap if undefined
+            return { ...team, id: teamId, name, count, cap }; // Return all info including calculated cap
         }
 
+        /**
+         * Checks if all specified team members have reached a certain count level.
+         * Takes individual team caps into account (e.g., NCT cap 3).
+         * @param {string[]} teamIdList - Array of team IDs to check.
+         * @param {number} capLevel - The count level to check against (e.g., 8 for base cap).
+         * @param {object} currentCounts - An object mapping team IDs to their current counts.
+         * @returns {boolean} True if all members are at or above the minimum of capLevel and their individual cap.
+         */
         function checkAllAtCap(teamIdList, capLevel, currentCounts) {
             for (const teamId of teamIdList) {
-                if (!currentCounts.hasOwnProperty(teamId)) continue;
+                if (!currentCounts.hasOwnProperty(teamId)) continue; // Skip if count not available
                 const count = currentCounts[teamId];
-                const teamInfo = teams[teamId];
-                if (!teamInfo) continue;
-                const teamCap = teamInfo.cap;
+                const teamInfo = teams[teamId]; // Get full team info including specific cap
+                if (!teamInfo) continue; // Skip if team info not found
+                const teamCap = teamInfo.cap; // The actual cap for this team member
 
+                // Check if the count is less than the target level for this check (capLevel),
+                // but also respect the individual's hard cap (teamCap).
+                // E.g., for NCT (cap 3), checking against capLevel 8 should consider them "at cap" if count is 3.
                 if (count < Math.min(capLevel, teamCap)) {
-                    return false;
+                    return false; // Found someone below the required level
                 }
             }
-            return true;
+            return true; // Everyone is at or above the required level (considering their individual caps)
         }
 
 
+        /**
+         * Handles the change event for the time selection radio buttons.
+         * Resets the drip tracker and updates the board.
+         */
         function handleTimeChange() {
             console.log("Time changed, resetting drip tracker.");
-            lastDripAssignment = { gm: -1, tele: -1 };
-            updateStatusBoard();
-            clearResultsList();
+            lastDripAssignment = { gm: -1, tele: -1 }; // Reset drip sequence tracking
+            updateStatusBoard(); // Update display immediately
+            clearResultsList(); // Clear previous sequence lists
         }
 
         // --- Status Board Update Function ---
+
+        /**
+         * Updates the visual status board based on current counts and highlights next admissions.
+         * @param {object} nextAdmissionInfo - Object containing arrays of next admissions for gm/tele and the next flex recipient.
+         * @param {object[]} nextAdmissionInfo.gm - Array of upcoming GM admissions.
+         * @param {object[]} nextAdmissionInfo.tele - Array of upcoming Tele admissions.
+         * @param {object|null} nextAdmissionInfo.flex - The next Flex recipient.
+         * @param {string} nextAdmissionInfo.message - Message to display (e.g., "All capped").
+         */
         function updateStatusBoard(nextAdmissionInfo = { gm: [], tele: [], flex: null, message: "" }) {
             const statusGrid = document.getElementById('status-grid');
             const statusMessage = document.getElementById('status-message');
-            statusGrid.innerHTML = '';
-            statusMessage.textContent = nextAdmissionInfo.message || '';
+            statusGrid.innerHTML = ''; // Clear previous board
+            statusMessage.textContent = nextAdmissionInfo.message || ''; // Display status message
 
             const timeContext = document.querySelector('input[name="time-context"]:checked').value;
             const isAfter1PM = timeContext === 'after';
+            // Determine who is the *active* on-call based on time
             const activeGmOnCallId = isAfter1PM ? 'gm_oncall' : null;
             const activeTeleOnCallId = isAfter1PM ? 'tele_oncall' : null;
 
-            const currentCounts = {};
+            const currentCounts = {}; // Store counts for potential use elsewhere if needed
+
+            // Iterate through the defined display order
             statusBoardOrder.forEach(teamId => {
                  const teamInfo = getTeamInfo(teamId);
                  if (teamInfo) {
-                     currentCounts[teamId] = teamInfo.count;
+                     currentCounts[teamId] = teamInfo.count; // Store current count
                      const personDiv = document.createElement('div');
                      personDiv.className = 'status-person';
 
+                     // Highlight the border if this person is the active on-call
                      if (teamId === activeGmOnCallId || teamId === activeTeleOnCallId) {
                          personDiv.classList.add('active-on-call');
                      }
 
+                     // Determine role tag color based on service/role
                      let roleClass = '';
                      switch(teamInfo.service) {
                          case 'gm': roleClass = 'role-gm'; break;
                          case 'tele': roleClass = 'role-tele'; break;
-                         case 'shared': roleClass = 'role-ri'; break;
+                         case 'shared': roleClass = 'role-ri'; break; // RI Residents
                          case 'flex': roleClass = 'role-flex'; break;
                          case 'icu': roleClass = 'role-icu'; break;
-                         default: roleClass = 'role-gm';
+                         default: roleClass = 'role-gm'; // Default fallback
                      }
-                      if (teamInfo.role === 'On-Call') roleClass = 'role-oncall';
-                      if (teamInfo.role === 'Post-Call') roleClass = 'role-postcall';
+                     // Specific overrides for call status
+                     if (teamInfo.role === 'On-Call') roleClass = 'role-oncall';
+                     if (teamInfo.role === 'Post-Call') roleClass = 'role-postcall';
 
+                     // Display cap info, unless ICU
                      const capDisplay = teamInfo.service !== 'icu' ? `/ ${teamInfo.cap}` : '';
+                     // Display "(CAPPED)" text if count >= cap (and not ICU)
                      const cappedText = teamInfo.service !== 'icu' && teamInfo.count >= teamInfo.cap ? '<span class="status-person-capped"> (CAPPED)</span>' : '';
-                     // Use the base eligibility flag for display text
+                     // Display eligibility note based on the *base* eligibility flag (for visual consistency)
                      const eligibleText = teamInfo.service !== 'icu' && teamInfo.baseEligibleForIncrease && teamInfo.count >= teamInfo.cap ? ' <span style="font-style:italic; color: #a16207;">(Eligible+)</span>' : '';
 
 
+                     // Create the HTML structure for the person
                      personDiv.innerHTML = `
                          <span class="status-person-name">
-                            ${teamInfo.name}
-                            ${teamInfo.role ? `<span class="role-tag ${roleClass}">${teamInfo.role}</span>` : ''}
+                             ${teamInfo.name}
+                             ${teamInfo.role ? `<span class="role-tag ${roleClass}">${teamInfo.role}</span>` : ''}
                          </span>
                          <div class="slots-container" id="slots-${teamId}"></div>
                          <div class="status-person-count">
@@ -460,47 +504,53 @@
                      statusGrid.appendChild(personDiv);
 
                      const slotsContainer = document.getElementById(`slots-${teamId}`);
-                     // Show 10 slots if base eligible OR if it's GM On-Call (special case from image)
-                     // Updated logic: Show 10 slots for everyone except ICU and NCT
+                     // Determine max slots to show: 10 for most, 3 for NCT, none effectively for ICU (use cap)
                      const maxSlotsToShow = (teamInfo.service !== 'icu' && teamInfo.cap !== 3) ? 10 : teamInfo.cap;
 
 
+                     // Create the visual slots
                      for (let i = 0; i < maxSlotsToShow; i++) {
                          const slot = document.createElement('div');
                          slot.className = 'slot';
                          if (i < teamInfo.count) {
-                             slot.classList.add('filled');
+                             slot.classList.add('filled'); // Mark as filled if count covers this slot
                          }
-                         // Only add increase styles if maxSlotsToShow is 10
+                         // Add styling for the 9th and 10th slots if they are being shown
                          if (maxSlotsToShow === 10) {
-                            if (i === 8) slot.classList.add('increase-9');
-                            if (i === 9) slot.classList.add('increase-10');
+                             if (i === 8) slot.classList.add('increase-9'); // Dashed border for 9th
+                             if (i === 9) slot.classList.add('increase-10'); // Dashed border for 10th
                          }
 
+                         // Check if this slot should be highlighted as the next admission
                          let highlightClass = null;
-                         let highlightIndex = -1;
+                         let highlightIndex = -1; // To show the admission number (1st, 2nd, etc.)
 
+                         // Check GM highlights
                          if (nextAdmissionInfo.gm) {
                               nextAdmissionInfo.gm.forEach((adm, index) => {
-                                 if (adm.id === teamId && i === adm.countBefore) {
-                                     highlightClass = 'next-admission-gm';
-                                     highlightIndex = index + 1;
-                                 }
-                             });
+                                  // Highlight if team matches and slot index matches the count *before* this admission
+                                  if (adm.id === teamId && i === adm.countBefore) {
+                                      highlightClass = 'next-admission-gm';
+                                      highlightIndex = index + 1;
+                                  }
+                              });
                          }
+                         // Check Tele highlights
                          if (nextAdmissionInfo.tele) {
                               nextAdmissionInfo.tele.forEach((adm, index) => {
-                                 if (adm.id === teamId && i === adm.countBefore) {
-                                     highlightClass = 'next-admission-tele';
-                                     highlightIndex = index + 1;
-                                 }
-                             });
+                                  if (adm.id === teamId && i === adm.countBefore) {
+                                      highlightClass = 'next-admission-tele';
+                                      highlightIndex = index + 1;
+                                  }
+                              });
                          }
+                         // Check Flex highlight (only one)
                          if (nextAdmissionInfo.flex && nextAdmissionInfo.flex.id === teamId && i === nextAdmissionInfo.flex.count) {
-                               highlightClass = 'next-admission-flex';
-                               highlightIndex = 1;
+                              highlightClass = 'next-admission-flex';
+                              highlightIndex = 1; // Always the '1st' flex admission shown
                          }
 
+                         // Apply highlight class and number if found
                          if (highlightClass) {
                              slot.classList.add(highlightClass);
                              slot.setAttribute('data-next-index', highlightIndex);
@@ -515,14 +565,24 @@
 
         // --- Functions to Determine Next Admission Sequence ---
 
-        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 10) { // Calculate 10
-            console.log(`Calculating ${numToCalculate} for ${serviceType}. Initial tracker:`, JSON.stringify(lastDripAssignment));
+        /**
+         * Calculates the sequence of the next N admissions for a given service (GM or Tele).
+         * Simulates the admission process according to the rules (primary, drip, cap increase).
+         * @param {string} serviceType - 'gm' or 'tele'.
+         * @param {number} [numToCalculate=10] - How many future admissions to calculate.
+         * @returns {object} An object containing the calculated sequence and any status message.
+         * @returns {object[]} sequence - Array of admission objects {id, name, label, countBefore, capInfo}.
+         * @returns {string|null} message - A message if all teams become capped.
+         */
+        function calculateNextAdmissionsSequence(serviceType, numToCalculate = 10) {
+            console.log(`Calculating ${numToCalculate} for ${serviceType}. Initial drip index: ${lastDripAssignment[serviceType]}`);
             const timeContext = document.querySelector('input[name="time-context"]:checked').value;
             const isBefore1PM = timeContext === 'before';
             const serviceName = (serviceType === 'gm') ? 'General Medicine' : 'Telemetry';
 
             let primaryRecipientId;
             let dripOrder;
+            // Set up service-specific primary recipient and drip order
             if (serviceType === 'gm') {
                 primaryRecipientId = isBefore1PM ? 'gm_postcall' : 'gm_oncall';
                 dripOrder = genMedDripOrder;
@@ -531,19 +591,21 @@
                 dripOrder = teleDripOrder;
             }
 
-            // --- Determine Eligibility for Increase in this context ---
+            // --- Determine Eligibility for Increase specific to this service context ---
             const isEligibleForIncrease = (teamId) => {
                 const team = teams[teamId];
-                if (!team || teamId === 'nct') return false; // NCT never eligible
+                if (!team || teamId === 'nct') return false; // Base checks: team exists, not NCT
+
                 if (serviceType === 'gm') {
-                    // GM: Eligible if cap >= 8 (includes PostCall, PrePre, PreCall, RI_A, RI_B, GM_OnCall)
+                    // GM: Eligible if their base cap is 8 or more (covers PostCall, PrePre, PreCall, RIs, OnCall)
                     return team.cap >= 8;
                 } else { // Tele
-                    // Tele: Eligible only if RI Res or Tele On-Call
+                    // Tele: Eligible ONLY if RI Resident or Tele On-Call
                     return team.role === 'RI Res' || teamId === 'tele_oncall';
                 }
             };
 
+            // Create a temporary copy of current counts to simulate admissions
             let tempCounts = {};
             const allTeamIds = Object.keys(teams);
             allTeamIds.forEach(id => {
@@ -551,19 +613,24 @@
                  if (teamInfo && teamInfo.countId) { tempCounts[id] = teamInfo.count; }
             });
 
-            let nextAdmissionsList = [];
-            let allCappedMessage = null;
+            let nextAdmissionsList = []; // Stores the calculated sequence
+            let allCappedMessage = null; // Message if simulation ends early
+            // Use a *local* drip index for this calculation run, starting from the last known state
             let currentDripIndex = lastDripAssignment[serviceType];
 
+            // Simulate N admissions
             for (let i = 0; i < numToCalculate; i++) {
                 let admissionAssignedThisIteration = false;
                 let assignedTo = null;
-                let capInfoText = '';
-                let teamLabel = '';
+                let capInfoText = ''; // Text describing why this person got the admission (e.g., Primary, Drip, Increased Cap)
+                let teamLabel = ''; // Label of the assigned team member
 
-                // 1. Check Primary Recipient
+                // --- Admission Logic Steps ---
+
+                // 1. Check Primary Recipient (Base Cap)
                 const primaryInfo = getTeamInfo(primaryRecipientId);
                 const primaryCurrentCount = tempCounts[primaryRecipientId];
+                // Assign if primary exists and is below their defined cap
                 if (primaryInfo && primaryCurrentCount < primaryInfo.cap) {
                     assignedTo = primaryRecipientId;
                     capInfoText = `(Primary - Base Cap: ${primaryInfo.cap})`;
@@ -571,48 +638,52 @@
                     admissionAssignedThisIteration = true;
                 }
 
-                // 2. Check Drip Order (Base Cap)
+                // 2. Check Drip Order (Base Cap) - Only if primary didn't take it
                 if (!admissionAssignedThisIteration) {
-                    let initialDripIndex = currentDripIndex;
+                    let initialDripIndex = currentDripIndex; // Start searching from the next person in the drip
                     for (let j = 0; j < dripOrder.length; j++) {
-                        let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length;
+                        let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length; // Cycle through drip order
                         const currentDripTeamId = dripOrder[checkIndex];
                         const teamInfo = getTeamInfo(currentDripTeamId);
                         const currentCount = tempCounts[currentDripTeamId];
+                        // Assign if team exists and is below their defined cap
                         if (teamInfo && currentCount < teamInfo.cap) {
                             assignedTo = currentDripTeamId;
                             capInfoText = `(Drip - Base Cap: ${teamInfo.cap})`;
                             teamLabel = teamInfo.label;
-                            currentDripIndex = checkIndex;
+                            currentDripIndex = checkIndex; // Update the drip index locally for this calculation
                             admissionAssignedThisIteration = true;
-                            break;
+                            break; // Stop searching drip once assigned
                         }
                     }
                 }
 
-                // 3. Check Cap Increase to 9
+                // 3. Check Cap Increase to 9 - Only if not assigned yet
                 if (!admissionAssignedThisIteration) {
+                     // Define the list of teams relevant for *triggering* the increase for this service
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
-                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts); // Use 8 as general base
+                     // Check if ALL relevant teams are at their respective base caps (using 8 as the general base, checkAllAtCap handles NCT's cap 3)
+                     const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts);
 
-                     if (allAtBase) {
-                          let initialDripIndex = currentDripIndex;
-                         // Check drip members first
+                     if (allAtBase) { // Only proceed if trigger condition met
+                         let initialDripIndex = currentDripIndex;
+                         // Check drip members first for the 9th admission
                          for (let j = 0; j < dripOrder.length; j++) {
                              let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length;
                              const currentDripTeamId = dripOrder[checkIndex];
                              const teamInfo = getTeamInfo(currentDripTeamId);
                              const currentCount = tempCounts[currentDripTeamId];
+                             // Assign if team exists, is ELIGIBLE for increase (service-specific check), and count is below 9
                              if (teamInfo && isEligibleForIncrease(currentDripTeamId) && currentCount < 9) {
                                  assignedTo = currentDripTeamId;
                                  capInfoText = `(Drip - Increased Cap: 9)`;
                                  teamLabel = teamInfo.label;
-                                 currentDripIndex = checkIndex;
+                                 currentDripIndex = checkIndex; // Update local drip index
                                  admissionAssignedThisIteration = true;
                                  break;
                              }
                          }
-                         // If no drip member found, check primary recipient
+                         // If no drip member took it, check the primary recipient
                          if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 9) {
                              assignedTo = primaryRecipientId;
                              capInfoText = `(Primary - Increased Cap: 9)`;
@@ -622,33 +693,36 @@
                      }
                 }
 
-                 // 4. Check Cap Increase to 10
+                 // 4. Check Cap Increase to 10 - Only if not assigned yet
                  if (!admissionAssignedThisIteration) {
                      const teamsToCheckBase = [primaryRecipientId, ...dripOrder];
+                     // Check if all relevant teams are at base cap (8)
                      const allAtBase = checkAllAtCap(teamsToCheckBase, 8, tempCounts);
                      if (allAtBase) {
-                         // Check if all *eligible* teams are at 9
+                         // Define the list of teams ELIGIBLE for increase within this service
                          const teamsEligibleForIncrease = teamsToCheckBase.filter(id => isEligibleForIncrease(id));
+                         // Check if all *eligible* teams have reached 9
                          const allEligibleAt9 = checkAllAtCap(teamsEligibleForIncrease, 9, tempCounts);
 
-                         if (allEligibleAt9) {
+                         if (allEligibleAt9) { // Only proceed if trigger (all base) and secondary trigger (all eligible at 9) met
                               let initialDripIndex = currentDripIndex;
-                             // Check drip members first
+                             // Check drip members first for the 10th admission
                              for (let j = 0; j < dripOrder.length; j++) {
                                  let checkIndex = (initialDripIndex + 1 + j) % dripOrder.length;
                                  const currentDripTeamId = dripOrder[checkIndex];
                                  const teamInfo = getTeamInfo(currentDripTeamId);
                                  const currentCount = tempCounts[currentDripTeamId];
+                                 // Assign if team exists, is ELIGIBLE, and count is below 10
                                  if (teamInfo && isEligibleForIncrease(currentDripTeamId) && currentCount < 10) {
                                      assignedTo = currentDripTeamId;
                                      capInfoText = `(Drip - Increased Cap: 10)`;
                                      teamLabel = teamInfo.label;
-                                     currentDripIndex = checkIndex;
+                                     currentDripIndex = checkIndex; // Update local drip index
                                      admissionAssignedThisIteration = true;
                                      break;
                                  }
                              }
-                              // If no drip member found, check primary recipient
+                             // If no drip member took it, check the primary recipient
                              if (!admissionAssignedThisIteration && primaryInfo && isEligibleForIncrease(primaryRecipientId) && primaryCurrentCount < 10) {
                                  assignedTo = primaryRecipientId;
                                  capInfoText = `(Primary - Increased Cap: 10)`;
@@ -661,34 +735,46 @@
 
                 // 5. Handle Assignment or Capped State
                 if (admissionAssignedThisIteration && assignedTo) {
-                     const recipientInfo = getTeamInfo(assignedTo);
-                     nextAdmissionsList.push({
-                         id: assignedTo,
-                         name: recipientInfo.name,
-                         label: teamLabel,
-                         countBefore: tempCounts[assignedTo],
-                         capInfo: capInfoText
-                     });
-                     tempCounts[assignedTo]++;
+                    const recipientInfo = getTeamInfo(assignedTo); // Get full info for name/label
+                    nextAdmissionsList.push({
+                        id: assignedTo,
+                        name: recipientInfo.name, // Use the potentially user-entered name
+                        label: teamLabel, // Use the role/label determined during assignment
+                        countBefore: tempCounts[assignedTo], // Record count *before* incrementing
+                        capInfo: capInfoText // Record the reason for assignment
+                    });
+                    tempCounts[assignedTo]++; // Increment the count in the temporary simulation
                  } else {
+                    // If no one could take the admission in this iteration, all relevant teams are capped.
                     allCappedMessage = `All ${serviceName.toUpperCase()} teams are CAPPED after ${i} potential admissions.`;
-                    break;
+                    break; // Stop the simulation loop
                 }
-            } // End simulation loop
+            } // End simulation loop (for i < numToCalculate)
 
-             // --- Update the persistent drip tracker ---
+             // --- Update the persistent drip tracker based on the *last* drip assignment in this calculation ---
+             // This ensures the next calculation starts correctly.
              if (nextAdmissionsList.length > 0) {
-                 const lastAssigned = nextAdmissionsList[nextAdmissionsList.length - 1];
-                 if (dripOrder.includes(lastAssigned.id)) {
-                     lastDripAssignment[serviceType] = dripOrder.indexOf(lastAssigned.id);
+                 const lastAssignedAdmission = nextAdmissionsList[nextAdmissionsList.length - 1];
+                 // Check if the last person assigned was part of the drip order
+                 if (dripOrder.includes(lastAssignedAdmission.id)) {
+                     // Update the global tracker to the index of the last assigned drip member
+                     lastDripAssignment[serviceType] = dripOrder.indexOf(lastAssignedAdmission.id);
                  }
+                 // If the last assignment was to the primary, the drip index remains where it was before this calculation started.
              }
-             console.log(`Finished ${serviceType} sequence calc. Final tracker:`, JSON.stringify(lastDripAssignment));
+             console.log(`Finished ${serviceType} sequence calc. Final drip index: ${lastDripAssignment[serviceType]}`);
+
 
             return { sequence: nextAdmissionsList, message: allCappedMessage };
         }
 
 
+        /**
+         * Determines the next Flex resident to receive an OBS admission.
+         * @returns {object} Object containing the recipient and any message.
+         * @returns {object|null} recipient - Info of the next recipient {id, count, name} or null.
+         * @returns {string|null} message - Message if both are capped or error.
+         */
         function getNextFlexAdmission() {
             const flexRes1Info = getTeamInfo('flex_res_1');
             const flexRes2Info = getTeamInfo('flex_res_2');
@@ -703,10 +789,13 @@
                 const res1Cap = flexRes1Info.cap;
                 const res2Cap = flexRes2Info.cap;
 
+                // Assign to Res 1 if they are below cap AND (have fewer or equal patients OR Res 2 is capped)
                 if (res1Count < res1Cap && (res1Count <= res2Count || res2Count >= res2Cap)) {
                     nextRecipient = { id: 'flex_res_1', count: res1Count, name: flexRes1Info.name };
+                // Otherwise, assign to Res 2 if they are below cap
                 } else if (res2Count < res2Cap) {
                     nextRecipient = { id: 'flex_res_2', count: res2Count, name: flexRes2Info.name };
+                // Otherwise, both must be capped
                 } else {
                     message = "Both Flex Residents are CAPPED.";
                 }
@@ -715,129 +804,170 @@
         }
 
         // --- Function to update the text results list ---
+
+        /**
+         * Populates the ordered lists below the status board with the calculated sequences.
+         * @param {object[]} gmSequence - Array of GM admission objects from calculation.
+         * @param {object[]} teleSequence - Array of Tele admission objects from calculation.
+         */
         function updateResultsList(gmSequence, teleSequence) {
             const listContainer = document.getElementById('results-list');
             const gmList = document.getElementById('gm-results-list');
             const teleList = document.getElementById('tele-results-list');
-            gmList.innerHTML = '';
-            teleList.innerHTML = '';
+            gmList.innerHTML = ''; // Clear previous list
+            teleList.innerHTML = ''; // Clear previous list
+
+            const gmCol = document.getElementById('gm-results-col');
+            const teleCol = document.getElementById('tele-results-col');
 
             // Update GM List
-            const gmCol = document.getElementById('gm-results-col');
             if (gmSequence && gmSequence.length > 0) {
-                gmCol.style.display = 'block';
-                gmList.parentElement.querySelector('h3').textContent = `Next ${gmSequence.length} GM Admissions`; // Update heading
+                gmCol.style.display = 'block'; // Show the column
+                gmList.parentElement.querySelector('h3').textContent = `Next ${gmSequence.length} GM Admissions`; // Update heading count
                 gmSequence.forEach(adm => {
                     const li = document.createElement('li');
+                    // Display Name (Team Label) Cap Info
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     gmList.appendChild(li);
                 });
             } else {
-                 gmCol.style.display = 'block';
+                 gmCol.style.display = 'block'; // Still show column for the message
                  gmList.parentElement.querySelector('h3').textContent = `Next GM Admissions`;
                  gmList.innerHTML = '<li class="no-results">No further GM admissions possible.</li>';
             }
 
              // Update Tele List
-             const teleCol = document.getElementById('tele-results-col');
              if (teleSequence && teleSequence.length > 0) {
-                 teleCol.style.display = 'block';
-                 teleList.parentElement.querySelector('h3').textContent = `Next ${teleSequence.length} Tele Admissions`; // Update heading
-                teleSequence.forEach(adm => {
+                 teleCol.style.display = 'block'; // Show the column
+                 teleList.parentElement.querySelector('h3').textContent = `Next ${teleSequence.length} Tele Admissions`; // Update heading count
+                 teleSequence.forEach(adm => {
                     const li = document.createElement('li');
                     li.innerHTML = `<strong>${adm.name}</strong> <span class="team-label">(${adm.label})</span> <span class="cap-detail">${adm.capInfo}</span>`;
                     teleList.appendChild(li);
                 });
             } else {
-                 teleCol.style.display = 'block';
+                 teleCol.style.display = 'block'; // Still show column for the message
                   teleList.parentElement.querySelector('h3').textContent = `Next Tele Admissions`;
                  teleList.innerHTML = '<li class="no-results">No further Tele admissions possible.</li>';
             }
 
-            // Show the main results container only if at least one list was populated
-            if ((gmSequence && gmSequence.length > 0) || (teleSequence && teleSequence.length > 0)) {
-                 listContainer.style.display = 'block';
-            } else {
-                 listContainer.style.display = 'none';
-            }
+            // Show the main results container only if at least one list has content (or a "no results" message)
+            listContainer.style.display = 'block';
         }
 
+        /**
+         * Clears the results lists and hides the container.
+         */
          function clearResultsList() {
              const listContainer = document.getElementById('results-list');
              document.getElementById('gm-results-list').innerHTML = '';
              document.getElementById('tele-results-list').innerHTML = '';
-             listContainer.style.display = 'none';
+             listContainer.style.display = 'none'; // Hide the container
          }
 
 
         // --- Button Click Handlers ---
+
+        /**
+         * Calculates and highlights the next admission sequence for a specific service (GM or Tele).
+         * Also updates the corresponding results list.
+         * @param {string} serviceType - 'gm' or 'tele'.
+         */
         function highlightNextAdmissionSequence(serviceType) {
-            const result = calculateNextAdmissionsSequence(serviceType, 10); // Calculate 10
+            const result = calculateNextAdmissionsSequence(serviceType, 10); // Calculate next 10
             let nextAdmissionInfo = { gm: [], tele: [], flex: null, message: result.message };
             let gmList = null;
             let teleList = null;
 
+            // Populate the correct service array in nextAdmissionInfo
             if (serviceType === 'gm') {
                 nextAdmissionInfo.gm = result.sequence;
-                gmList = result.sequence;
+                gmList = result.sequence; // For updating the list
             } else {
                 nextAdmissionInfo.tele = result.sequence;
-                teleList = result.sequence;
+                teleList = result.sequence; // For updating the list
             }
-            updateStatusBoard(nextAdmissionInfo);
-            updateResultsList(gmList, teleList);
+            updateStatusBoard(nextAdmissionInfo); // Update highlights on the board
+            updateResultsList(gmList, teleList); // Update the text list(s)
         }
 
+        /**
+         * Calculates and highlights the next Flex admission.
+         * Clears the GM/Tele results lists.
+         */
         function highlightNextFlexAdmission() {
             const result = getNextFlexAdmission();
             let nextAdmissionInfo = { gm: [], tele: [], flex: null, message: result.message };
             if (result.recipient) {
-                nextAdmissionInfo.flex = result.recipient;
+                nextAdmissionInfo.flex = result.recipient; // Set the flex highlight info
             }
-             updateStatusBoard(nextAdmissionInfo);
-             clearResultsList();
+             updateStatusBoard(nextAdmissionInfo); // Update board (clears GM/Tele highlights)
+             clearResultsList(); // Hide and clear GM/Tele lists
         }
 
+        /**
+         * Calculates and highlights admissions for ALL services (GM, Tele, Flex).
+         * Updates both GM and Tele results lists.
+         */
         function highlightAllServices() {
-             const gmResult = calculateNextAdmissionsSequence('gm', 10); // Calculate 10
-             const teleResult = calculateNextAdmissionsSequence('tele', 10); // Calculate 10
+             // Calculate sequences independently first
+             const gmResult = calculateNextAdmissionsSequence('gm', 10);
+             const teleResult = calculateNextAdmissionsSequence('tele', 10);
              const flexResult = getNextFlexAdmission();
 
+             // Combine any capped messages
              let combinedMessage = "";
              if (gmResult.message) combinedMessage += gmResult.message + " ";
              if (teleResult.message) combinedMessage += teleResult.message + " ";
              if (flexResult.message) combinedMessage += flexResult.message;
 
+             // Update the status board with all highlights
              updateStatusBoard({
                  gm: gmResult.sequence,
                  tele: teleResult.sequence,
                  flex: flexResult.recipient,
-                 message: combinedMessage.trim() || null
+                 message: combinedMessage.trim() || null // Show combined message or nothing
              });
+             // Update both results lists
              updateResultsList(gmResult.sequence, teleResult.sequence);
          }
 
 
+        /**
+         * Resets all counts to 0, clears names, sets time to default, and updates the display.
+         */
         function resetCounts() {
             for (const teamId in teams) {
                 const team = teams[teamId];
+                 // Reset count input if it exists
                  const countElement = document.getElementById(team.countId);
                  if (countElement) { countElement.value = 0; }
+                 // Reset name input if it exists
                  const nameElement = document.getElementById(team.nameId);
                   if (nameElement && nameElement.type === 'text') { nameElement.value = ''; }
             }
+            // Reset time selection to default
             document.getElementById('time-before-1pm').checked = true;
+            // Reset the global drip tracker
             lastDripAssignment = { gm: -1, tele: -1 };
+            // Update the board (clears highlights)
             updateStatusBoard();
+            // Clear the results lists
             clearResultsList();
+            // Provide feedback
             document.getElementById('status-message').textContent = "All counts and names reset.";
         }
 
         // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            updateStatusBoard();
+            updateStatusBoard(); // Initial draw of the status board
+            // Add event listeners for time change
             document.querySelectorAll('input[name="time-context"]').forEach(radio => {
                 radio.addEventListener('change', handleTimeChange);
+            });
+            // Add event listeners to all input fields to update the board dynamically
+            document.querySelectorAll('.input-wrapper input').forEach(input => {
+                input.addEventListener('input', () => updateStatusBoard()); // Update board on any input change
             });
         });
 
