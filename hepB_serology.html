@@ -20,6 +20,7 @@
             line-height: 1.6;
             background-color: #f1f5f9; /* Equivalent to bg-slate-100 */
             padding: 20px; /* Replaces body p-4 */
+            color: #0f172a; /* Default text color slate-900 */
         }
 
         /* Main Container - Mimics Tailwind max-w-4xl, mx-auto, p-6/8, rounded, shadow, border, gradient */
@@ -41,7 +42,7 @@
             margin-bottom: 0.5rem; /* mb-2 */
             text-align: center;
             padding-bottom: 10px;
-             border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e2e8f0; /* border-slate-200 */
         }
 
         .subtitle {
@@ -70,7 +71,7 @@
             font-weight: 600; /* font-semibold */
             color: #1e293b; /* text-slate-800 */
             padding: 0 8px; /* px-2 */
-            margin-left: -8px; /* -ml-2 */
+            margin-left: -8px; /* Adjust to align better */
             margin-bottom: 15px;
         }
 
@@ -93,7 +94,6 @@
 
         /* Select Inputs */
         select {
-            /* Inherited styles from Tailwind */
             margin-top: 4px; /* mt-1 */
             display: block;
             width: 100%;
@@ -104,8 +104,6 @@
             background-color: white; /* bg-white */
             color: #0f172a; /* text-slate-900 */
             font-size: 0.875rem; /* sm:text-sm */
-
-            /* Custom arrow styling (kept from original) */
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 0.5rem center;
             background-repeat: no-repeat;
@@ -127,33 +125,33 @@
             margin-top: 2rem; /* mt-8 */
             padding: 1.5rem 1rem 1rem 1rem; /* pt-6 pb-4 px-4 */
             background-color: #f8fafc; /* bg-slate-50 */
-            border: 1px solid #e2e8f0; /* border-slate-200 */
-            border-radius: 8px; /* rounded-lg */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
+            border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+            margin: 1.5rem -20px -20px -20px; /* Extend to fieldset edges */
         }
 
         .button-wrapper {
-             display: flex;
-             justify-content: center;
-             gap: 1rem; /* Replacement for space-x-4 */
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Replacement for space-x-4 */
         }
 
         /* Buttons */
         button {
-            padding: 10px 15px; /* px-6 py-2.5 adjusted */
+            padding: 10px 20px; /* px-6 py-2.5 adjusted */
             font-size: 0.875rem; /* text-sm */
             font-weight: 500; /* font-medium */
             border-radius: 6px; /* rounded-md */
             border: none; /* Added */
             cursor: pointer;
-            transition: background-color 0.15s ease-in-out;
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
         }
 
         button:focus {
-             outline: 2px solid transparent; /* focus:outline-none */
-             outline-offset: 2px;
-             box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.5); /* focus:ring approximation */
+            outline: 2px solid transparent; /* focus:outline-none */
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.5); /* focus:ring approximation */
         }
 
         button:disabled {
@@ -169,50 +167,49 @@
         #interpret-btn:hover {
             background-color: #1d4ed8; /* hover:bg-blue-700 */
         }
-         #interpret-btn:focus {
-             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
-         }
-
+        #interpret-btn:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+        }
 
         /* Secondary Button (Reset) */
         #reset-btn {
             background-color: #e2e8f0; /* bg-slate-200 */
             color: #1e293b; /* text-slate-800 */
+            border: 1px solid #cbd5e1; /* Add subtle border */
         }
         #reset-btn:hover {
             background-color: #cbd5e1; /* hover:bg-slate-300 */
         }
-         #reset-btn:focus {
-              box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5); /* focus:ring-slate-400 */
-         }
+        #reset-btn:focus {
+            box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5); /* focus:ring-slate-400 */
+        }
 
         /* Results Area */
         #result {
             margin-top: 2rem; /* mt-8 */
             padding: 1.5rem; /* p-6 */
             background-color: #eff6ff; /* bg-blue-50 */
-            border: 1px solid #93c5fd; /* border-blue-300 */
+            border: 1px solid #bfdbfe; /* border-blue-200 */
             border-radius: 8px; /* rounded-lg */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.05); /* shadow-sm */
             display: none; /* Initially hidden */
         }
 
         #result > div {
-            margin-bottom: 1rem; /* space-y-4 */
+            margin-bottom: 1.25rem; /* space-y-5 */
         }
         #result > div:last-child {
             margin-bottom: 0;
         }
 
-
         .result-label {
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 500; /* font-medium */
+            display: block;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* font-semibold */
             color: #1e40af; /* text-blue-800 */
             text-transform: uppercase; /* uppercase */
             letter-spacing: 0.05em; /* tracking-wider */
-            display: block; /* Ensure it's on its own line */
-            margin-bottom: 4px;
+            margin-bottom: 4px; /* mb-1 */
         }
 
         #interpretation {
@@ -222,9 +219,10 @@
         }
 
         #phase-stage {
-             font-size: 1rem; /* text-base */
-             font-weight: 500; /* font-medium */
-             color: #2563eb; /* text-blue-600 */
+            font-size: 1rem; /* text-base */
+            font-weight: 500; /* font-medium */
+            color: #2563eb; /* text-blue-600 */
+            margin-top: 0.25rem; /* Add space below label */
         }
 
         #recommendations {
@@ -232,32 +230,33 @@
             color: #334155; /* text-slate-700 */
             line-height: 1.65; /* leading-relaxed */
         }
-         /* Style for lists within recommendations */
+        /* Style for lists within recommendations */
         #recommendations ul {
-            list-style-position: inside;
+            list-style-position: outside; /* Use outside for better alignment */
             list-style-type: disc;
             margin-top: 0.5rem;
-            padding-left: 0; /* Reset default padding */
+            padding-left: 1.25rem; /* Standard indent */
         }
-         #recommendations ul ul { /* Nested lists */
-            margin-left: 1.5rem;
+        #recommendations ul ul { /* Nested lists */
+            margin-left: 1.25rem; /* Indent further */
             margin-top: 0.25rem;
-         }
-         #recommendations li {
-            margin-bottom: 0.25rem; /* space-y-1 */
-         }
-
+            list-style-type: circle; /* Different marker for nested */
+        }
+        #recommendations li {
+            margin-bottom: 0.35rem; /* space-y-1.5 */
+        }
 
         .disclaimer {
-             margin-top: 1.25rem; /* mt-5 */
+             margin-top: 1.5rem; /* mt-6 */
              font-size: 0.75rem; /* text-xs */
              color: #64748b; /* text-slate-500 */
              border-top: 1px solid #e2e8f0; /* border-t border-slate-200 */
-             padding-top: 0.75rem; /* pt-3 */
+             padding-top: 1rem; /* pt-4 */
              font-style: italic;
-        }
+         }
          .disclaimer strong {
-            font-style: normal; /* Reset italic for strong tag */
+             font-style: normal; /* Reset italic for strong tag */
+             color: #475569; /* text-slate-600 */
          }
 
         /* Responsive Grid */
@@ -270,6 +269,11 @@
             }
             .input-grid {
                 grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+            }
+            .button-container {
+                 margin: 1.5rem -32px -32px -32px; /* Extend to container edges on md+ */
+                 padding-left: 32px;
+                 padding-right: 32px;
             }
         }
 
@@ -287,52 +291,47 @@
                 <legend>Core Serological Markers</legend>
                 <div class="input-grid">
                     <div>
-                        <!-- MODIFIED LABEL -->
-                        <label for="hbsag">Hep Bs Antigen / HBsAg:</label>
+                        <label for="hbsag">Hep Bs Antigen (HBsAg):</label>
                         <select id="hbsag" name="hbsag">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Result...</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
                     <div>
-                         <!-- MODIFIED LABEL -->
-                        <label for="anti_hbs">Hep Bs Antibody / Anti-HBs:</label>
+                        <label for="anti_hbs">Hep Bs Antibody (Anti-HBs):</label>
                         <select id="anti_hbs" name="anti_hbs">
-                            <option value="na">N/A</option>
-                            <option value="<10">< 10 IU/L (Negative/Non-immune)</option> <!-- Added interpretation -->
-                            <option value=">=10">≥ 10 IU/L (Positive/Immune)</option> <!-- Added interpretation -->
+                            <option value="na">Select Result...</option>
+                            <option value="<10">&lt; 10 IU/L (Negative/Non-immune)</option>
+                            <option value=">=10">≥ 10 IU/L (Positive/Immune)</option>
                         </select>
                     </div>
                     <div>
-                         <!-- MODIFIED LABEL -->
-                        <label for="anti_hbc_total">Total Hep B Core Ab / Anti-HBc Total:</label>
+                        <label for="anti_hbc_total">Total Hep B Core Ab (Anti-HBc Total); Not IgG but is a proxy:</label>
                         <select id="anti_hbc_total" name="anti_hbc_total">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Result...</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
                      <div>
-                         <!-- MODIFIED LABEL -->
-                        <label for="anti_hbc_igm">Hep B Core IgM Ab / Anti-HBc IgM:</label>
+                        <label for="anti_hbc_igm">Hep B Core IgM Ab (Anti-HBc IgM):</label>
                         <select id="anti_hbc_igm" name="anti_hbc_igm">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Result...</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
                     </div>
-                     <!-- No separate IgG input needed - Total +/- IgM gives the info -->
-                </div>
+                    </div>
             </fieldset>
 
              <fieldset>
-                <legend>Additional Markers (for Phasing/Staging)</legend>
+                <legend>Additional Markers (for Phasing/Staging Chronic HBV)</legend>
                 <div class="input-grid">
                      <div>
                         <label for="hbeag">HBeAg (e Antigen):</label>
                         <select id="hbeag" name="hbeag">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Result...</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
@@ -340,7 +339,7 @@
                      <div>
                         <label for="anti_hbe">Anti-HBe (e Antibody):</label>
                         <select id="anti_hbe" name="anti_hbe">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Result...</option>
                             <option value="Negative">Negative</option>
                             <option value="Positive">Positive</option>
                         </select>
@@ -348,21 +347,18 @@
                     <div>
                         <label for="hbv_dna">HBV DNA Level:</label>
                         <select id="hbv_dna" name="hbv_dna">
-                            <option value="na">N/A</option>
-                            <option value="Undetectable">Undetectable</option>
-                            <option value="Low (<2000 IU/mL)">Low (<2000 IU/mL)</option>
-                            <option value="Mod (2000-20k IU/mL)">Moderate (2k-20k IU/mL)</option>
-                            <option value="High (>=20k IU/mL)">High (≥20k IU/mL)</option>
-                        </select>
+                            <option value="na">Select Level...</option>
+                            <option value="Undetectable">Undetectable / Not Detected</option>
+                            <option value="Low (<=2000 IU/mL)">Low (≤2000 IU/mL)</option> <option value="Mod (>2000-20k IU/mL)">Moderate (&gt;2k-20k IU/mL)</option> <option value="High (>=20k IU/mL)">High (≥20k IU/mL)</option>
+                            <option value="Very High (>1M IU/mL)">Very High (&gt;1M IU/mL)</option> </select>
                     </div>
                      <div>
                         <label for="alt">ALT Level:</label>
                         <select id="alt" name="alt">
-                            <option value="na">N/A</option>
+                            <option value="na">Select Level...</option>
                             <option value="Normal">Normal</option>
-                            <option value="Elevated">Elevated</option>
-                            <option value="Slightly Elevated">Slightly Elevated (e.g., 1-2x ULN)</option> <!-- Added detail -->
-                        </select>
+                            <option value="Slightly Elevated">Slightly Elevated (e.g., 1-2x ULN)</option>
+                            <option value="Elevated">Elevated (e.g., >2x ULN)</option> </select>
                     </div>
                 </div>
             </fieldset>
@@ -382,17 +378,17 @@
                 <p id="interpretation"></p>
             </div>
             <div id="phase-stage-section" style="display: none;">
-                 <p class="result-label">Likely Phase / Stage (if Chronic):</p>
+                 <p class="result-label">Likely Phase / Stage:</p>
                  <p id="phase-stage"></p>
             </div>
              <div>
                  <p class="result-label">Recommendations / Notes:</p>
                  <div id="recommendations">
-                    {/* Recommendations will be inserted here by JS */}
+                     {/* Recommendations will be inserted here by JS */}
                  </div>
-             </div>
+            </div>
              <p class="disclaimer">
-                <strong>Disclaimer:</strong> This tool provides interpretations based on common serological patterns. Results should always be interpreted in the full clinical context by a qualified healthcare professional. Atypical patterns or specific clinical situations may require expert consultation. This tool does not replace clinical judgment. Follow current AASLD/EASL or local guidelines.
+                <strong>Disclaimer:</strong> This tool provides interpretations based on common serological patterns derived from general guidelines. Results <strong>must</strong> always be interpreted in the full clinical context by a qualified healthcare professional. Atypical patterns, specific clinical situations (e.g., immunosuppression, pregnancy, co-infections), or variations in assays may require expert consultation. This tool does not replace clinical judgment or established diagnostic guidelines (e.g., AASLD, EASL).
             </p>
         </div>
     </div>
@@ -429,150 +425,260 @@
             const hbvDna = hbvDnaSelect.value;
             const alt = altSelect.value;
 
-            let interpretation = 'Unable to interpret clearly with provided data.';
+            let interpretation = 'Unable to interpret clearly. Please ensure all core markers (HBsAg, Anti-HBs, Total Anti-HBc) are selected.';
             let phaseStage = '';
-            let recommendations = ['<ul><li>Clinical correlation is always required.</li>']; // Start list
+            let recommendations = ['<ul>']; // Start list
+
+            // --- Helper function to add recommendations ---
+            function addRec(rec) {
+                recommendations.push(`<li>${rec}</li>`);
+            }
+             function addNestedRec(rec) {
+                recommendations.push(`<ul><li>${rec}</li></ul>`);
+            }
+             function addSubRec(rec) {
+                 // Assumes the last item added was the start of a sub-list or a regular item
+                 if (recommendations[recommendations.length - 1] === '</ul>') {
+                     recommendations.pop(); // Remove closing tag
+                     recommendations.push(`<li>${rec}</li>`);
+                     recommendations.push('</ul>'); // Add back closing tag
+                 } else {
+                      recommendations.push(`<li>${rec}</li>`); // Add as regular item if not in sublist
+                 }
+            }
+
 
             // --- Core Logic based on HBsAg, Anti-HBc Total, Anti-HBs, Anti-HBc IgM ---
 
+            // Check for minimal required data
+            if (hbsag === 'na' || antiHbcTotal === 'na' || antiHbs === 'na') {
+                 addRec('Requires at least HBsAg, Anti-HBs, and Anti-HBc Total results for a basic interpretation.');
+            }
             // 1. Susceptible
-            if (hbsag === 'Negative' && antiHbcTotal === 'Negative' && antiHbs === '<10') {
-                interpretation = 'No evidence of HBV infection or immunity; Susceptible.';
-                recommendations.push('<li>Consider Hepatitis B vaccination series.</li>');
+            else if (hbsag === 'Negative' && antiHbcTotal === 'Negative' && antiHbs === '<10') {
+                interpretation = 'Susceptible to HBV Infection.';
+                addRec('No serological evidence of past or present HBV infection, nor immunity.');
+                addRec('Consider Hepatitis B vaccination series if not contraindicated and based on risk factors.');
             }
             // 2. Immune - Vaccination
             else if (hbsag === 'Negative' && antiHbcTotal === 'Negative' && antiHbs === '>=10') {
-                interpretation = 'Immune due to HBV vaccination.';
-                recommendations.push('<li>Protected from HBV infection. No further action typically needed regarding HBV immunity.</li>');
-                 recommendations.push('<li>Anti-HBc is negative, confirming immunity is from vaccine, not past infection.</li>');
+                interpretation = 'Immune - Likely due to HBV Vaccination.';
+                addRec('Protected from HBV infection (Anti-HBs ≥ 10 IU/L).');
+                addRec('Negative Anti-HBc indicates immunity is from vaccine, not past natural infection.');
+                addRec('No further action typically needed regarding HBV immunity.');
             }
             // 3. Immune - Resolved Natural Infection
             else if (hbsag === 'Negative' && antiHbcTotal === 'Positive' && antiHbs === '>=10') {
-                 interpretation = 'Immune due to past/resolved natural HBV infection.';
-                 recommendations.push('<li>Protected from HBV reinfection.</li>');
-                 recommendations.push('<li>Positive Anti-HBc Total (likely IgG) indicates past exposure.</li>');
-                 recommendations.push('<li>Low risk of reactivation, but consider if significant immunosuppression planned (check HBV DNA if needed).</li>');
-                 // Occult HBV check
+                 interpretation = 'Immune - Due to Resolved Natural HBV Infection.';
+                 addRec('Indicates past infection that has cleared.');
+                 addRec('Protected from HBV reinfection (Anti-HBs ≥ 10 IU/L).');
+                 addRec('Positive Anti-HBc Total (implies IgG positive as IgM is likely negative in resolved state) confirms past exposure.');
+                 addRec('Low risk of HBV reactivation, but remains a possibility under significant immunosuppression (e.g., chemotherapy, biologics). Consider checking HBV DNA if immunosuppression is planned.');
+                 // Check for Occult HBV possibility (though less common with positive Anti-HBs)
                  if (hbvDna !== 'na' && hbvDna !== 'Undetectable') {
-                    recommendations.push('<li>Note: Detectable HBV DNA with this pattern could indicate occult HBV - consult specialist if clinically relevant (e.g., immunosuppression, elevated LFTs).</li>');
+                     addRec('<strong>Note:</strong> Detectable HBV DNA in this pattern is unusual but could suggest occult HBV or lab variability. Consult specialist if clinically relevant (e.g., unexplained LFT elevation, planned immunosuppression).');
                  }
             }
              // 4. Isolated Anti-HBc Positive
             else if (hbsag === 'Negative' && antiHbcTotal === 'Positive' && antiHbs === '<10') {
-                interpretation = 'Isolated Anti-HBc positive.';
-                 recommendations.push('<li>Possible Interpretations:<ul><li>Resolved infection (Anti-HBs has waned below detectable levels). This is common.</li><li>False-positive Anti-HBc result (less common).</li><li>Low-level chronic infection (HBsAg below detection limit - occult HBV).</li><li>Resolving acute infection ("window period" after HBsAg loss, before Anti-HBs appears).</li></ul></li>'); // Nested list
-                 if (antiHbcIgm === 'Positive') {
-                    recommendations.push('<li>Positive IgM strongly suggests resolving acute infection (window period). Retest HBsAg/Anti-HBs/IgM later (e.g., 4-8 weeks).</li>');
-                 } else { // IgM Negative or N/A
-                     recommendations.push('<li>Negative IgM makes resolving acute infection less likely (but not impossible).</li>');
-                     recommendations.push('<li>Consider checking HBV DNA, especially if immunosuppression planned or liver enzymes are elevated, to rule out occult HBV.</li>');
-                     recommendations.push('<li>Repeating Anti-HBs may clarify (sometimes low levels reappear).</li>');
-                     recommendations.push('<li>Positive Anti-HBc Total here is likely due to IgG.</li>');
-                 }
-            }
-             // --- Patterns involving Positive HBsAg ---
-            else if (hbsag === 'Positive') {
-                recommendations.push('<li>Positive HBsAg indicates HBV infection (acute or chronic).</li>');
-                recommendations.push('<li>Initial positive HBsAg should ideally be confirmed with a neutralization assay or repeat testing, especially in low-risk individuals.</li>');
+                interpretation = 'Isolated Anti-HBc Positive.';
+                addRec('This pattern has several possible interpretations:');
+                recommendations.push('<ul>'); // Start nested list
+                addSubRec('<strong>Resolved Past Infection:</strong> Most common reason. Anti-HBs levels may have waned below the detection limit over time.');
+                addSubRec('<strong>False-Positive Anti-HBc:</strong> Less common, consider especially in low-risk individuals. Repeat testing may be useful.');
+                addSubRec('<strong>Low-Level Chronic Infection (Occult HBV):</strong> HBsAg is below the assay\'s detection limit, but HBV DNA may be detectable. More likely if risk factors present or immunosuppressed.');
+                addSubRec('<strong>Resolving Acute Infection ("Window Period"):</strong> Occurs after HBsAg clearance but before Anti-HBs becomes detectable. Anti-HBc IgM would typically be positive in this phase.');
+                recommendations.push('</ul>'); // End nested list
 
-                // 5. Acute HBV
+                if (antiHbcIgm === 'Positive') {
+                     addRec('<strong>Positive IgM strongly suggests the "Window Period" of resolving acute infection.</strong> Retest HBsAg, Anti-HBs, and Anti-HBc IgM in 4-8 weeks.');
+                     phaseStage = 'Acute HBV: Window Phase (Resolving)';
+                } else if (antiHbcIgm === 'Negative') {
+                     addRec('Negative IgM makes the window period less likely (but not impossible if IgM has waned). Focus shifts to other possibilities.');
+                     addRec('Consider checking HBV DNA, especially if immunosuppression is planned, liver enzymes are elevated, or risk factors for HBV exist, to evaluate for occult HBV.');
+                     addRec('Repeating Anti-HBs testing might sometimes show low positive levels upon recheck.');
+                     addRec('Positive Anti-HBc Total with negative IgM implies Anti-HBc IgG is positive.');
+                } else { // IgM is N/A
+                    addRec('Anti-HBc IgM result is needed to help differentiate between resolving acute infection and other causes.');
+                    addRec('Consider checking HBV DNA and repeating Anti-HBs as above.');
+                }
+            }
+            // --- Patterns involving Positive HBsAg ---
+            else if (hbsag === 'Positive') {
+                addRec('Positive HBsAg indicates active HBV infection (acute or chronic).');
+                addRec('Initial positive HBsAg should ideally be confirmed with a neutralization assay or repeat testing, especially in low-prevalence settings.');
+
+                // 5. Acute HBV Infection
                 if (antiHbcTotal === 'Positive' && antiHbcIgm === 'Positive') {
                     interpretation = 'Acute Hepatitis B Infection.';
-                    phaseStage = 'Acute Phase (Typical)'; // Use phaseStage for clarity
-                    recommendations.push('<li>Anti-HBc IgM is the key marker for acute infection (generally detectable for ~6 months).</li>');
-                    recommendations.push('<li>Monitor LFTs, symptoms, and repeat serologies in ~6 months to assess for resolution (loss of HBsAg, development of Anti-HBs) or progression to chronic infection.</li>');
-                     recommendations.push('<li>Check HBeAg/Anti-HBe and HBV DNA for baseline assessment of viral activity/infectiousness.</li>');
-                    recommendations.push('<li>Reportable condition in many regions.</li>');
-                    // ** NEW NOTE based on provided text **
-                    recommendations.push('<li>Note: In persons with known chronic HBV, a positive IgM can sometimes indicate an acute flare (exacerbation), not necessarily a new infection. Clinical history is vital.</li>');
+                    phaseStage = 'Acute Phase';
+                    addRec('Anti-HBc IgM is the key marker for acute infection (typically positive for ~6 months).');
+                    addRec('Anti-HBs is typically negative during early acute infection.');
+                     // Check HBeAg/Anti-HBe status if available
+                    if (hbeag === 'Positive' && (antiHbe === 'Negative' || antiHbe === 'na')) {
+                         phaseStage += ' (HBeAg Positive - High Infectivity)';
+                         addRec('HBeAg positive suggests higher viral replication and infectivity.');
+                    } else if (hbeag === 'Negative' && antiHbe === 'Positive') {
+                         phaseStage += ' (HBeAg Negative / Anti-HBe Positive - Lower Infectivity)';
+                         addRec('Anti-HBe positive suggests lower viral replication and infectivity compared to HBeAg positive state.');
+                    }
+                    addRec('Monitor LFTs (ALT), symptoms, and repeat serologies (HBsAg, Anti-HBs, Anti-HBc IgM) in ~6 months to assess for resolution (HBsAg loss, Anti-HBs gain) or progression to chronic infection.');
+                    addRec('Check HBV DNA for baseline viral load.');
+                    addRec('Consider potential for transmission; counsel on precautions.');
+                    addRec('Reportable condition in many jurisdictions.');
+                     // ** NEW NOTE based on provided text **
+                    addRec('Note: In persons with known chronic HBV, a positive IgM can sometimes indicate an acute flare (exacerbation), not necessarily a new primary infection. Clinical history is vital.');
+
                 }
-                // 6. Chronic HBV (or possibly late/resolving acute if <6 months since onset and IgM borderline/falling)
+                // 6. Chronic HBV Infection (or possibly late acute if IgM status unclear/borderline and duration < 6 months)
                 else if (antiHbcTotal === 'Positive' && (antiHbcIgm === 'Negative' || antiHbcIgm === 'na')) {
-                    interpretation = 'Chronic Hepatitis B Infection.'; // Presumed chronic if IgM negative
-                    recommendations.push('<li>HBsAg persistence > 6 months confirms chronic infection. If duration unknown, this pattern strongly suggests chronic infection.</li>');
-                    recommendations.push('<li>Positive Anti-HBc Total with negative IgM indicates presence of Anti-HBc IgG.</li>');
-                    recommendations.push('<li>Requires further evaluation: staging (assess liver fibrosis via non-invasive tests or biopsy) and monitoring.</li>');
-                    recommendations.push('<li>Assess for treatment eligibility based on phase, DNA level, ALT level, and degree of liver fibrosis/inflammation.</li>');
+                    interpretation = 'Chronic Hepatitis B Infection.'; // Presumed chronic if IgM negative or unknown but HBsAg persists
+                    addRec('HBsAg persistence > 6 months confirms chronic infection. If duration unknown, this pattern (HBsAg+, Total Anti-HBc+, IgM Anti-HBc-) strongly suggests chronic infection.');
+                    addRec('Positive Anti-HBc Total with negative/unknown IgM implies Anti-HBc IgG is positive.');
+                    addRec('Requires further evaluation: staging (assess liver fibrosis via non-invasive tests like FibroScan/APRI/FIB-4, or biopsy if needed) and monitoring.');
+                    addRec('Assess for treatment eligibility based on HBV phase, DNA level, ALT level, degree of liver fibrosis/inflammation, age, and comorbidities. Refer to current AASLD/EASL guidelines.');
+                    addRec('Screen for hepatocellular carcinoma (HCC) based on risk stratification (e.g., age, family history, cirrhosis).');
 
                     // --- Sub-typing Chronic HBV based on Additional Markers ---
-                    // Use clear logic based on guidelines (AASLD/EASL general principles)
-                    if (hbeag === 'Positive' && alt === 'Normal' && (hbvDna === 'High (>=20k IU/mL)' || hbvDna === 'Mod (2000-20k IU/mL)')) { // High DNA, Normal ALT -> Immune Tolerant
-                        phaseStage = 'Chronic HBV: Likely Immune-Tolerant Phase';
-                        recommendations.push('<li>Characterized by HBeAg+, high HBV DNA, normal ALT. Lower risk of immediate liver damage, but long-term risk exists.</li>');
-                        recommendations.push('<li>Monitor ALT/DNA regularly (e.g., every 6-12 months). Treatment usually deferred unless older age or evidence of fibrosis.</li>');
-                    } else if (hbeag === 'Positive' && alt === 'Elevated' && (hbvDna === 'High (>=20k IU/mL)' || hbvDna === 'Mod (2000-20k IU/mL)')) { // High DNA, Elevated ALT -> Immune Active HBeAg+
-                        phaseStage = 'Chronic HBV: Likely Immune-Active Phase (HBeAg Positive)';
-                        recommendations.push('<li>Characterized by HBeAg+, high/moderate HBV DNA, elevated ALT. Indicates active liver inflammation.</li>');
-                        recommendations.push('<li>Higher priority for treatment assessment to prevent liver damage progression.</li>');
-                    } else if (hbeag === 'Negative' && alt === 'Elevated' && (hbvDna === 'Mod (2000-20k IU/mL)' || hbvDna === 'High (>=20k IU/mL)')) { // DNA >2000, Elevated ALT -> Immune Active HBeAg-
-                         phaseStage = 'Chronic HBV: Likely Immune-Active Phase (HBeAg Negative)';
-                         recommendations.push('<li>Characterized by HBeAg-, Anti-HBe+ (usually), moderate/high HBV DNA (>2000 IU/mL), elevated ALT. Significant risk of liver damage.</li>');
-                         recommendations.push('<li>High priority for treatment assessment. Anti-HBe status is often positive but not strictly required for diagnosis.</li>');
-                    } else if (hbeag === 'Negative' && (alt === 'Normal' || alt === 'Slightly Elevated') && (hbvDna === 'Undetectable' || hbvDna === 'Low (<2000 IU/mL)')) { // DNA <2000, Normal ALT -> Inactive Carrier
-                         phaseStage = 'Chronic HBV: Likely Inactive Carrier State';
-                         recommendations.push('<li>Characterized by HBeAg-, Anti-HBe+ (usually), low/undetectable HBV DNA (<2000 IU/mL), persistently normal ALT.</li>');
-                         recommendations.push('<li>Lower risk of progression if truly inactive. Monitor ALT (e.g., every 6-12m) and HBV DNA periodically to ensure stability.</li>');
-                    } else if (hbeag === 'na' || antiHbe === 'na' || hbvDna === 'na' || alt === 'na') {
+                    // Define DNA levels based on selection
+                    const isDnaHigh = (hbvDna === 'High (>=20k IU/mL)' || hbvDna === 'Very High (>1M IU/mL)');
+                    const isDnaMod = (hbvDna === 'Mod (>2000-20k IU/mL)');
+                    const isDnaLowOrUndetectable = (hbvDna === 'Low (<=2000 IU/mL)' || hbvDna === 'Undetectable');
+                    const isDnaAbove2k = isDnaHigh || isDnaMod; // DNA > 2000 IU/mL
+                    const isDnaAbove20k = isDnaHigh; // DNA >= 20k IU/mL
+
+                    // Define ALT levels
+                    const isAltNormal = (alt === 'Normal');
+                    const isAltElevated = (alt === 'Elevated' || alt === 'Slightly Elevated'); // Combine elevated categories for phasing logic
+
+                    // Check if sufficient data for phasing is available
+                    if (hbeag === 'na' || antiHbe === 'na' || hbvDna === 'na' || alt === 'na') {
                          phaseStage = 'Chronic HBV: Phase Requires More Data';
-                         recommendations.push('<li>Complete HBeAg/Anti-HBe, HBV DNA, and ALT needed to better determine the phase and guide management.</li>');
-                    } else {
-                         // Catch-all for less common/transitional patterns
-                         phaseStage = 'Chronic HBV: Pattern Requires Further Evaluation';
-                         recommendations.push('<li>This combination of HBeAg/Anti-HBe, DNA, and ALT may represent a transitional phase or requires expert interpretation.</li>');
-                         recommendations.push('<li>Consider trends over time, fibrosis assessment, and consult guidelines or a specialist.</li>');
+                         addRec('Complete HBeAg/Anti-HBe status, HBV DNA level, and ALT level are needed to determine the specific phase of chronic HBV and guide management.');
+                    }
+                    // Immune-Tolerant Phase (HBeAg+, High DNA, Normal ALT)
+                    else if (hbeag === 'Positive' && isAltNormal && (isDnaHigh || hbvDna === 'Very High (>1M IU/mL)')) {
+                        phaseStage = 'Chronic HBV: Likely Immune-Tolerant Phase';
+                        addRec('Characterized by HBeAg+, very high HBV DNA (often >1 million IU/mL), but normal ALT levels.');
+                        addRec('Indicates the immune system is not actively attacking infected liver cells.');
+                        addRec('Lower risk of immediate liver damage, but long-term risk of HCC and progression exists.');
+                        addRec('Monitor ALT/DNA regularly (e.g., every 6 months). Treatment usually deferred unless older age (>30-40), family history of HCC, or evidence of fibrosis on non-invasive testing/biopsy.');
+                        addRec('Anti-HBe is typically negative.');
+                    }
+                    // Immune-Active Phase, HBeAg-Positive (HBeAg+, High/Mod DNA, Elevated ALT)
+                    else if (hbeag === 'Positive' && isAltElevated && isDnaAbove20k) {
+                        phaseStage = 'Chronic HBV: Likely Immune-Active Phase (HBeAg Positive)';
+                        addRec('Characterized by HBeAg+, high HBV DNA (typically >20,000 IU/mL), and elevated ALT.');
+                        addRec('Indicates active immune response causing liver inflammation and damage.');
+                        addRec('Higher risk of progression to cirrhosis and HCC.');
+                        addRec('High priority for treatment assessment based on guidelines.');
+                        addRec('Anti-HBe is typically negative.');
+                    }
+                    // Immune-Active Phase, HBeAg-Negative (HBeAg-, Mod/High DNA >2000, Elevated ALT)
+                    else if (hbeag === 'Negative' && isAltElevated && isDnaAbove2k) {
+                         phaseStage = 'Chronic HBV: Likely Immune-Active Phase (HBeAg Negative)';
+                         addRec('Characterized by HBeAg-, moderate/high HBV DNA (>2000 IU/mL), and elevated ALT.');
+                         addRec('Represents significant ongoing liver inflammation, often with fluctuating DNA/ALT levels.');
+                         addRec('Significant risk of liver fibrosis progression and HCC.');
+                         addRec('High priority for treatment assessment based on guidelines.');
+                         addRec('Anti-HBe is typically positive in this phase.');
+                    }
+                    // Inactive Carrier State (HBeAg-, Low/Undetectable DNA <=2000, Normal ALT)
+                    else if (hbeag === 'Negative' && isAltNormal && isDnaLowOrUndetectable) {
+                         phaseStage = 'Chronic HBV: Likely Inactive Carrier State';
+                         addRec('Characterized by HBeAg-, low or undetectable HBV DNA (≤2000 IU/mL), and persistently normal ALT.');
+                         addRec('Represents a state of minimal viral replication and liver inflammation.');
+                         addRec('Lower risk of progression if truly inactive, but reactivation can occur.');
+                         addRec('Monitor ALT (e.g., every 6-12 months) and HBV DNA periodically (e.g., annually or biannually) to ensure stability. Reversion to active disease can occur.');
+                         addRec('Anti-HBe is typically positive.');
+                    }
+                     // Catch-all for other chronic patterns / Grey Zone
+                    else {
+                         phaseStage = 'Chronic HBV: Pattern Requires Further Evaluation / Grey Zone';
+                         addRec('This combination of HBeAg/Anti-HBe, DNA, and ALT may represent a transitional phase, HBeAg-positive with lower DNA/ALT, or require expert interpretation.');
+                         addRec('Consider trends over time (serial ALT, DNA), liver fibrosis assessment, and consult current guidelines or a specialist.');
+                         addRec('For example: HBeAg+, DNA <20k IU/mL, or HBeAg-, DNA >2000 IU/mL but normal ALT - these need careful assessment for treatment/monitoring.');
                     }
                 }
                 // 7. Atypical: HBsAg Positive, Anti-HBc Total Negative (Rare)
                 else if (antiHbcTotal === 'Negative') {
                     interpretation = 'Atypical Pattern: HBsAg Positive, Anti-HBc Total Negative.';
-                     recommendations.push('<li>This is uncommon. Possible Causes:<ul><li>Very early acute infection (pre-Anti-HBc seroconversion; IgM may be pending).</li><li>Severe immunosuppression impairing antibody production.</li><li>False-positive HBsAg result.</li><li>Rarely, transient HBsAg positivity after recent vaccination (days to few weeks).</li><li>Potential genetic variants affecting HBsAg or core protein expression/detection (very rare).</li></ul></li>'); // Nested list
-                    recommendations.push('<li>Requires repeat testing (HBsAg confirmation, Anti-HBc Total, Anti-HBc IgM) and clinical correlation.</li>');
+                    addRec('This is an uncommon pattern. Possible considerations:');
+                    recommendations.push('<ul>'); // Start nested list
+                    addSubRec('<strong>Very Early Acute Infection:</strong> Before Anti-HBc seroconversion (Anti-HBc IgM may be pending or also negative initially).');
+                    addSubRec('<strong>Severe Immunosuppression:</strong> Impaired ability to produce antibodies.');
+                    addSubRec('<strong>False-Positive HBsAg:</strong> Especially if initial test, confirmation is crucial.');
+                    addSubRec('<strong>Transient HBsAg after Vaccination:</strong> Rare, can occur for days to a few weeks post-vaccination.');
+                    addSubRec('<strong>HBV Genetic Variants:</strong> Affecting core protein expression/detection (very rare).');
+                    recommendations.push('</ul>'); // End nested list
+                    addRec('Requires repeat testing (confirm HBsAg, repeat Anti-HBc Total, check Anti-HBc IgM) and close clinical correlation.');
                 }
                  else {
-                     // Catch other HBsAg positive cases not fitting above logic
-                     interpretation = 'HBV Infection (Pattern requires clarification)';
-                     recommendations.push('<li>HBsAg is positive, indicating infection, but the pattern of core antibodies is unusual or incomplete.</li>');
-                     recommendations.push('<li>Please ensure all core marker results (Total Anti-HBc, IgM Anti-HBc) are entered correctly. Clinical correlation needed.</li>');
+                     // Catch other HBsAg positive cases not fitting above logic (e.g., missing IgM data but Total is positive)
+                     interpretation = 'HBV Infection (Pattern requires clarification or more data)';
+                     addRec('HBsAg is positive, indicating infection, but the pattern of core antibodies (Total/IgM) is unusual or incomplete for definitive classification (acute vs chronic).');
+                     addRec('Ensure Anti-HBc Total and IgM results are entered correctly. Clinical history (duration of potential exposure/symptoms) is important.');
+                     addRec('If duration > 6 months known or suspected, likely chronic. If recent exposure/symptoms, could be acute.');
                  }
             }
-            // 8. Handle other incomplete data scenarios
-            else if (hbsag === 'na' || antiHbcTotal === 'na' || antiHbs === 'na') {
-                 interpretation = 'Incomplete Data for Full Interpretation.';
-                 recommendations.push('<li>Requires at least HBsAg, Anti-HBs, and Anti-HBc Total results for a basic interpretation.</li>');
-                 recommendations.push('<li>Anti-HBc IgM is crucial for differentiating acute vs. chronic infection when HBsAg is positive.</li>');
+             // 8. Occult HBV Infection (Specific Pattern)
+            else if (hbsag === 'Negative' && antiHbcTotal === 'Positive' && (hbvDna !== 'na' && hbvDna !== 'Undetectable')) {
+                 interpretation = 'Possible Occult HBV Infection.';
+                 phaseStage = 'Occult HBV';
+                 addRec('Characterized by negative HBsAg but detectable HBV DNA (often low level).');
+                 addRec('Anti-HBc Total is positive (usually IgG). Anti-HBs may be positive or negative.');
+                 addRec('ALT is typically normal.');
+                 addRec('Usually found in individuals with resolved infection or isolated Anti-HBc.');
+                 addRec('Risk of transmission is very low, but reactivation can occur with significant immunosuppression.');
+                 addRec('Management depends on clinical context (e.g., monitor if immunosuppression planned, otherwise often no specific HBV action needed but requires clinical judgment).');
+            }
+             // 9. Handle other incomplete/unclear scenarios not caught above
+            else {
+                 // This case might be reached if only core markers are selected but don't fit standard patterns,
+                 // or if selections are contradictory (though the logic tries to prioritize).
+                 interpretation = 'Interpretation Unclear or Incomplete Data.';
+                 addRec('The combination of selected markers does not fit a standard interpretation pattern or essential data is missing.');
+                 addRec('Please review all selections, especially HBsAg, Anti-HBs, and Total Anti-HBc.');
+                 addRec('Consult clinical guidelines or a specialist.');
             }
 
-             // Final check for recommendation list structure and ensure it's closed
-            if (recommendations.length <= 1) { // Only the default item
-                 recommendations = ['<ul><li>No specific recommendations generated based on this pattern, consult guidelines.</li></ul>'];
+
+            // --- Finalize and Display Results ---
+
+            // Close the main UL tag if recommendations were added
+            if (recommendations.length > 1) {
+                recommendations.push('</ul>');
             } else {
-                 recommendations.push('</ul>'); // Close the main UL if items were added
+                 // If no specific recommendations were added beyond the initial '<ul>'
+                 recommendations = ['<ul><li>No specific recommendations generated for this pattern. Clinical correlation and guideline consultation advised.</li></ul>'];
             }
             recommendationsDisplay.innerHTML = recommendations.join(''); // Join items
 
-
-            // Display results
+            // Display results section
             interpretationDisplay.textContent = interpretation;
             if (phaseStage) {
                  phaseStageDisplay.textContent = phaseStage;
                  phaseStageSection.style.display = 'block';
             } else {
                  phaseStageSection.style.display = 'none';
+                 phaseStageDisplay.textContent = ''; // Clear any previous value
             }
 
             resultDiv.style.display = 'block';
-             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+             // Scroll smoothly to the results
+             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Changed to 'start' for better visibility
         }
 
 
         // --- Form Handling Logic ---
         function resetForm() {
-            form.reset();
+            form.reset(); // Resets all form fields to default
             resultDiv.style.display = 'none';
             interpretationDisplay.textContent = '';
             phaseStageDisplay.textContent = '';
             recommendationsDisplay.innerHTML = '';
             phaseStageSection.style.display = 'none';
+             // Scroll back to the top smoothly
              window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -583,7 +689,7 @@
         // Hide results if form inputs change after interpretation
         form.addEventListener('change', () => {
             if (resultDiv.style.display !== 'none') {
-                 resultDiv.style.display = 'none';
+                 resultDiv.style.display = 'none'; // Hide results when inputs change
             }
         });
 
