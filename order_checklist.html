@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Distribution Tool (DRIP System - G - v16.2)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset and Font */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; background-color: #f1f5f9; padding: 20px; }
+
+        /* Main Container */
+        .main-container { max-width: 1440px; margin: 20px auto; background: linear-gradient(to bottom, white, #f8fafc); padding: 24px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
+
+        /* Headings and Text */
+        h1 { font-size: 1.875rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; text-align: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; }
+        .subtitle { font-size: 1rem; color: #475569; margin-bottom: 1rem; text-align: center; }
+
+        /* Improved Time Selection (from original CSS - not directly used by this content but kept for fidelity) */
+        .time-selection { text-align: center; margin-bottom: 2rem; padding: 10px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .time-selection strong { color: #1e293b; font-weight: 600; }
+        .time-selection label { display: inline-flex; align-items: center; padding: 8px 15px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; background-color: white; font-weight: 500; color: #334155; margin: 0; }
+        .time-selection input[type="radio"] { display: none; }
+        .time-selection input[type="radio"]:checked + label { background-color: #e0f2fe; border-color: #38bdf8; color: #0c4a6e; font-weight: 600; }
+        .time-selection label:hover { background-color: #f0f9ff; border-color: #7dd3fc; }
+
+        /* Content Layout (Grid for Input Sections - from original CSS) */
+        .input-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2rem; }
+
+        /* Service Section Styling (from original CSS) */
+        fieldset.service-section { border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; margin-bottom: 1rem; }
+        fieldset.ri-section { border-color: #1d4ed8; background-color: #eff6ff; }
+        fieldset.ri-section legend { color: #1d4ed8; }
+        fieldset.icu-section { border-color: #7c3aed; background-color: #f5f3ff; }
+        fieldset.icu-section legend { color: #7c3aed; }
+        /* General legend styling (from original CSS) */
+        legend { font-size: 1.125rem; font-weight: 600; color: #1e293b; padding: 0 8px; margin-left: -8px; margin-bottom: 15px; }
+
+
+        /* --- Custom Styling for Diagnosis Blocks --- */
+        .diagnosis-block {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .diagnosis-block h3 { /* Specific heading for each diagnosis */
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .diagnosis-block fieldset { /* Overriding general fieldset for this context */
+            border: 1px solid #d1d5db; /* Slightly darker border for contrast */
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f9fafb;
+            margin-bottom: 15px;
+        }
+        .diagnosis-block fieldset legend { /* Overriding general legend */
+            font-size: 1rem;
+            font-weight: 500; /* Slightly less bold than main section legends */
+            color: #374151; /* Darker gray for legend text */
+            padding: 0 6px;
+            margin-left: 0px; /* Reset margin if needed */
+            margin-bottom: 12px;
+        }
+        .diagnosis-block ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .diagnosis-block ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+        .diagnosis-block input[type="checkbox"] {
+            margin-right: 10px;
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
+        }
+        .diagnosis-block label { /* For checklist items */
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #334155;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+        /* For order set items that are not checklists */
+        .order-item {
+            padding-left: 5px; /* Indent if not using checkbox */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Time-Sensitive Diagnoses: Recognition & Initial Management</h1>
+        <p class="subtitle">A guide for residents and medical students on diagnoses requiring prompt action. These are initial considerations and not exhaustive protocols. Always refer to institutional guidelines and consult supervising physicians. Doses and specific agents are illustrative and require clinical judgment.</p>
+
+        <!-- Cardiovascular -->
+        <div class="diagnosis-block">
+            <h3>Acute Coronary Syndrome (ACS) - General Approach</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">STAT ECG (within 10 minutes of arrival if chest pain) & continuous cardiac monitoring</li>
+                    <li class="order-item">IV access x2 (preferably large bore)</li>
+                    <li class="order-item">Oxygen if SpO2 < 90% or respiratory distress</li>
+                    <li class="order-item">Aspirin 162-325 mg PO (chewable), unless contraindicated</li>
+                    <li class="order-item">Nitroglycerin SL (0.4mg q5min x3 doses) if SBP >90 mmHg, no RV infarct, no recent PDE5i</li>
+                    <li class="order-item">Morphine (if pain persists despite NTG, use cautiously)</li>
+                    <li class="order-item">Labs: STAT Troponin (serial), CBC, CMP, Coags (PT/INR, PTT), Lipid panel</li>
+                    <li class="order-item">Portable CXR</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="acs_ecg" disabled checked> <label for="acs_ecg">ECG obtained & interpreted immediately</label></li>
+                    <li><input type="checkbox" id="acs_asa" disabled> <label for="acs_asa">Aspirin administered</label></li>
+                    <li><input type="checkbox" id="acs_cardio_consult" disabled> <label for="acs_cardio_consult">Consult Cardiology (urgency based on STEMI/NSTEMI/UA)</label></li>
+                    <li><input type="checkbox" id="acs_cath_lab" disabled> <label for="acs_cath_lab">Consider Cath Lab activation (if STEMI or high-risk NSTEMI)</label></li>
+                    <li><input type="checkbox" id="acs_antiplatelet" disabled> <label for="acs_antiplatelet">Consider P2Y12 inhibitor (e.g., Clopidogrel, Ticagrelor) - often after Cardiology consult</label></li>
+                    <li><input type="checkbox" id="acs_anticoag" disabled> <label for="acs_anticoag">Consider anticoagulation (e.g., Heparin, LMWH) - often after Cardiology consult</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>STEMI (ST-Elevation Myocardial Infarction)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">IMMEDIATE Cardiology consult & Cath Lab activation (goal: door-to-balloon <90 min)</li>
+                    <li class="order-item">Follow ACS protocol (ASA, O2, NTG, Morphine as needed)</li>
+                    <li class="order-item">P2Y12 inhibitor (e.g., Ticagrelor 180mg load, Prasugrel 60mg load, or Clopidogrel 300-600mg load) per institutional protocol/Cardiology</li>
+                    <li class="order-item">Anticoagulation (e.g., Unfractionated Heparin bolus and drip, or Bivalirudin) per protocol</li>
+                    <li class="order-item">Consider Beta-blocker PO (e.g., Metoprolol tartrate 25mg) if no contraindications (HF, bradycardia, hypotension, high-risk features)</li>
+                    <li class="order-item">High-intensity statin (e.g., Atorvastatin 80mg)</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="stemi_cath_activation" disabled checked> <label for="stemi_cath_activation">Cath Lab Activated (or fibrinolysis considered if PCI unavailable/delayed)</label></li>
+                    <li><input type="checkbox" id="stemi_dual_antiplatelet" disabled> <label for="stemi_dual_antiplatelet">Dual antiplatelet therapy loaded</label></li>
+                    <li><input type="checkbox" id="stemi_anticoag" disabled> <label for="stemi_anticoag">Anticoagulation initiated</label></li>
+                    <li><input type="checkbox" id="stemi_monitor_vitals" disabled> <label for="stemi_monitor_vitals">Monitor for arrhythmias, hemodynamic instability</label></li>
+                    <li><input type="checkbox" id="stemi_cxr" disabled> <label for="stemi_cxr">CXR reviewed for cardiomegaly, pulmonary edema</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>NSTEMI (Non-ST-Elevation Myocardial Infarction) / Unstable Angina</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">Follow ACS protocol (ASA, O2, NTG, Morphine as needed)</li>
+                    <li class="order-item">Cardiology consult</li>
+                    <li class="order-item">Risk stratification (e.g., TIMI, GRACE score)</li>
+                    <li class="order-item">P2Y12 inhibitor (e.g., Clopidogrel, Ticagrelor) per Cardiology/protocol (timing depends on strategy - early invasive vs. conservative)</li>
+                    <li class="order-item">Anticoagulation (e.g., UFH, LMWH, Fondaparinux) per Cardiology/protocol</li>
+                    <li class="order-item">Beta-blocker PO (if no contraindications)</li>
+                    <li class="order-item">High-intensity statin</li>
+                    <li class="order-item">Serial ECGs and Troponins</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="nstemi_cardio_consult" disabled checked> <label for="nstemi_cardio_consult">Cardiology consulted</label></li>
+                    <li><input type="checkbox" id="nstemi_risk_strat" disabled> <label for="nstemi_risk_strat">Risk stratification performed</label></li>
+                    <li><input type="checkbox" id="nstemi_antiplatelet" disabled> <label for="nstemi_antiplatelet">Antiplatelet therapy initiated/planned</label></li>
+                    <li><input type="checkbox" id="nstemi_anticoag" disabled> <label for="nstemi_anticoag">Anticoagulation initiated/planned</label></li>
+                    <li><input type="checkbox" id="nstemi_admission" disabled> <label for="nstemi_admission">Admit to appropriate level of care (e.g., Telemetry, CCU)</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Acute Decompensated Heart Failure (ADHF) / Cardiogenic Shock</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2 to maintain SpO2 >90%, consider BiPAP/CPAP if respiratory distress, intubation if impending failure</li>
+                    <li class="order-item">IV access, cardiac monitoring, frequent vitals</li>
+                    <li class="order-item">Labs: STAT Troponin, BNP/NT-proBNP, CBC, CMP, Lactate, ABG (if severe)</li>
+                    <li class="order-item">STAT ECG, Portable CXR</li>
+                    <li class="order-item">STAT Echocardiogram (if not recently done or change in status)</li>
+                    <li class="order-item">Diuretics (e.g., Furosemide IV bolus, then drip or q6-12h) - dose based on home regimen and renal function</li>
+                    <li class="order-item">Vasodilators (e.g., Nitroglycerin IV) if SBP adequate and no severe aortic stenosis</li>
+                    <li class="order-item">If hypotensive/cardiogenic shock: Vasopressors (e.g., Norepinephrine) +/- Inotropes (e.g., Dobutamine, Milrinone) - ICU consult</li>
+                    <li class="order-item">Strict I/Os, daily weights</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="adhf_airway" disabled> <label for="adhf_airway">Airway/Breathing secured</label></li>
+                    <li><input type="checkbox" id="adhf_diuresis" disabled> <label for="adhf_diuresis">Diuresis initiated (if wet)</label></li>
+                    <li><input type="checkbox" id="adhf_echo" disabled> <label for="adhf_echo">Echocardiogram ordered/reviewed</label></li>
+                    <li><input type="checkbox" id="adhf_icu_consult" disabled> <label for="adhf_icu_consult">Consult ICU if shock, respiratory failure, or requires advanced therapies</label></li>
+                    <li><input type="checkbox" id="adhf_cardio_consult" disabled> <label for="adhf_cardio_consult">Consult Cardiology</label></li>
+                    <li><input type="checkbox" id="adhf_precipitants" disabled> <label for="adhf_precipitants">Identify and address precipitants (e.g., ischemia, arrhythmia, infection, non-compliance)</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Atrial Fibrillation with Rapid Ventricular Response (Afib RVR) or Instability</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access, continuous cardiac monitoring</li>
+                    <li class="order-item">STAT ECG</li>
+                    <li class="order-item">Labs: CBC, CMP (esp. K, Mg), TSH, Troponin, (BNP if HF concern)</li>
+                    <li class="order-item">If hemodynamically UNSTABLE (hypotension, AMS, shock, ischemic chest pain): Synchronized Cardioversion (e.g., 100-200J biphasic)</li>
+                    <li class="order-item">If STABLE: Rate control - IV Beta-blocker (e.g., Metoprolol 5mg IV q5min x3, Esmolol drip) OR IV Calcium Channel Blocker (e.g., Diltiazem 0.25mg/kg IV bolus, then drip) - caution if HF with reduced EF for CCBs.</li>
+                    <li class="order-item">Consider Amiodarone or Digoxin if other agents contraindicated/ineffective or if HF.</li>
+                    <li class="order-item">Assess need for anticoagulation (CHA2DS2-VASc score)</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="afib_stability" disabled> <label for="afib_stability">Assess hemodynamic stability</label></li>
+                    <li><input type="checkbox" id="afib_cardioversion" disabled> <label for="afib_cardioversion">Cardiovert if unstable</label></li>
+                    <li><input type="checkbox" id="afib_rate_control" disabled> <label for="afib_rate_control">Initiate rate control if stable</label></li>
+                    <li><input type="checkbox" id="afib_anticoag_assess" disabled> <label for="afib_anticoag_assess">Assess anticoagulation need/initiate if appropriate</label></li>
+                    <li><input type="checkbox" id="afib_cardio_consult" disabled> <label for="afib_cardio_consult">Consult Cardiology (especially for new onset, difficult to control, or rhythm control strategy)</label></li>
+                    <li><input type="checkbox" id="afib_precipitants" disabled> <label for="afib_precipitants">Identify and treat underlying causes (e.g., infection, PE, hyperthyroid, electrolyte imbalance)</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Aortic Dissection</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access x2 large bore (preferably one in each arm for BP monitoring)</li>
+                    <li class="order-item">Continuous cardiac and BP monitoring</li>
+                    <li class="order-item">IMMEDIATE aggressive BP control: Target SBP 100-120 mmHg (IV Beta-blocker like Esmolol or Labetalol first, then IV vasodilator like Nicardipine or Nitroprusside if needed)</li>
+                    <li class="order-item">IMMEDIATE aggressive heart rate control: Target HR <60 bpm (IV Beta-blocker)</li>
+                    <li class="order-item">Pain control (IV Morphine)</li>
+                    <li class="order-item">Labs: STAT CBC, CMP, Troponin, Coags, D-dimer (if low suspicion, consider), Type & Crossmatch</li>
+                    <li class="order-item">STAT Imaging: CT Angiogram of Chest/Abdomen/Pelvis (CTA) is gold standard. TEE if unstable or CTA contraindicated/unavailable. CXR (may show widened mediastinum).</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="dissect_bp_hr_control" disabled checked> <label for="dissect_bp_hr_control">BP and HR control initiated STAT</label></li>
+                    <li><input type="checkbox" id="dissect_ctsurg_consult" disabled checked> <label for="dissect_ctsurg_consult">IMMEDIATE consult Cardiothoracic Surgery</label></li>
+                    <li><input type="checkbox" id="dissect_vascsurg_consult" disabled> <label for="dissect_vascsurg_consult">Consult Vascular Surgery (especially for Type B)</label></li>
+                    <li><input type="checkbox" id="dissect_imaging" disabled> <label for="dissect_imaging">STAT definitive imaging ordered/obtained</label></li>
+                    <li><input type="checkbox" id="dissect_no_anticoag" disabled> <label for="dissect_no_anticoag">AVOID anticoagulation until diagnosis confirmed/ruled out</label></li>
+                    <li><input type="checkbox" id="dissect_icu" disabled> <label for="dissect_icu">Transfer to ICU</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Massive/Submassive Pulmonary Embolism (PE)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, High-flow O2, IV access x2 large bore, cardiac monitoring</li>
+                    <li class="order-item">If hypotensive (Massive PE): Fluid bolus (cautiously, e.g., 500ml NS), consider Vasopressors (Norepinephrine)</li>
+                    <li class="order-item">Anticoagulation: STAT Unfractionated Heparin bolus (e.g., 80 units/kg) then drip (e.g., 18 units/kg/hr) OR LMWH (e.g., Enoxaparin 1mg/kg SC q12h) if hemodynamically stable.</li>
+                    <li class="order-item">Labs: STAT Troponin, BNP, ABG, CBC, CMP, Coags, D-dimer (if PE not yet confirmed and low/intermediate probability)</li>
+                    <li class="order-item">STAT Imaging: CT Angiogram (CTA) chest. V/Q scan if CTA contraindicated. Bedside Echocardiogram (look for RV strain).</li>
+                    <li class="order-item">Consider Thrombolysis (e.g., Alteplase 100mg IV over 2h for massive PE, or 50mg for submassive with deterioration) OR Catheter-directed therapy OR Embolectomy.</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="pe_anticoag" disabled checked> <label for="pe_anticoag">Anticoagulation initiated</label></li>
+                    <li><input type="checkbox" id="pe_imaging" disabled> <label for="pe_imaging">STAT diagnostic imaging ordered/obtained</label></li>
+                    <li><input type="checkbox" id="pe_icu_consult" disabled> <label for="pe_icu_consult">Consult ICU (especially for massive/submassive PE)</label></li>
+                    <li><input type="checkbox" id="pe_pulm_consult" disabled> <label for="pe_pulm_consult">Consult Pulmonology / PERT team if available</label></li>
+                    <li><input type="checkbox" id="pe_thrombolysis_consider" disabled> <label for="pe_thrombolysis_consider">Assess for thrombolysis/advanced therapy candidacy</label></li>
+                    <li><input type="checkbox" id="pe_hemodynamic_support" disabled> <label for="pe_hemodynamic_support">Provide hemodynamic support if needed</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <!-- Neurological -->
+        <div class="diagnosis-block">
+            <h3>Stroke (Ischemic)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">Activate Stroke Code/Team</li>
+                    <li class="order-item">ABCs, O2 if SpO2 <94%, IV access x2, cardiac monitoring, NPO</li>
+                    <li class="order-item">STAT non-contrast Head CT (goal: within 20-25 min of arrival)</li>
+                    <li class="order-item">STAT fingerstick glucose (treat if <60 mg/dL)</li>
+                    <li class="order-item">Labs: CBC, CMP, Coags (PT/INR, PTT), Troponin, Type & Screen (if intervention planned)</li>
+                    <li class="order-item">STAT ECG</li>
+                    <li class="order-item">Assess for tPA/thrombectomy eligibility (last known well time, NIHSS, contraindications)</li>
+                    <li class="order-item">BP management: If tPA candidate, SBP <185 / DBP <110. If not, permissive HTN (SBP up to 220) unless other indication for lowering. (IV Labetalol, Nicardipine)</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="stroke_code_activated" disabled checked> <label for="stroke_code_activated">Stroke Code Activated</label></li>
+                    <li><input type="checkbox" id="stroke_head_ct" disabled checked> <label for="stroke_head_ct">STAT Head CT obtained & interpreted</label></li>
+                    <li><input type="checkbox" id="stroke_neuro_consult" disabled checked> <label for="stroke_neuro_consult">Neurology consult STAT</label></li>
+                    <li><input type="checkbox" id="stroke_tpa_eval" disabled> <label for="stroke_tpa_eval">tPA eligibility assessed (door-to-needle goal <60 min)</label></li>
+                    <li><input type="checkbox" id="stroke_thrombectomy_eval" disabled> <label for="stroke_thrombectomy_eval">Thrombectomy eligibility assessed (CTA/CTP as needed)</label></li>
+                    <li><input type="checkbox" id="stroke_bp_control" disabled> <label for="stroke_bp_control">Blood pressure managed per guidelines</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Stroke (Hemorrhagic - ICH/SAH)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access x2, cardiac monitoring, NPO, elevate HOB 30 degrees</li>
+                    <li class="order-item">STAT non-contrast Head CT</li>
+                    <li class="order-item">Labs: CBC, CMP, Coags (PT/INR, PTT - REVERSE if on anticoagulants), Type & Crossmatch</li>
+                    <li class="order-item">BP management: Aggressive BP control (target SBP depends on specific guidelines, e.g., <140-160 mmHg for ICH - IV Labetalol, Nicardipine)</li>
+                    <li class="order-item">If on anticoagulants: REVERSE STAT (e.g., PCC, Vitamin K for warfarin; Idarucizumab for dabigatran; Andexanet alfa for Factor Xa inhibitors)</li>
+                    <li class="order-item">Seizure precautions; consider prophylactic antiepileptics for SAH (e.g., Levetiracetam)</li>
+                    <li class="order-item">For SAH: Nimodipine 60mg PO/NG q4h</li>
+                    <li class="order-item">CTA Head/Neck to evaluate for aneurysm/AVM if SAH or suspected underlying lesion</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="hstroke_head_ct" disabled checked> <label for="hstroke_head_ct">STAT Head CT obtained & interpreted</label></li>
+                    <li><input type="checkbox" id="hstroke_neurosx_consult" disabled checked> <label for="hstroke_neurosx_consult">Neurosurgery consult STAT</label></li>
+                    <li><input type="checkbox" id="hstroke_neuro_consult" disabled> <label for="hstroke_neuro_consult">Neurology/Neurocritical Care consult STAT</label></li>
+                    <li><input type="checkbox" id="hstroke_bp_control" disabled> <label for="hstroke_bp_control">Blood pressure managed aggressively</label></li>
+                    <li><input type="checkbox" id="hstroke_coag_reversal" disabled> <label for="hstroke_coag_reversal">Coagulopathy reversed if present</label></li>
+                    <li><input type="checkbox" id="hstroke_icu" disabled> <label for="hstroke_icu">Transfer to ICU/Neurosurgical ICU</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>Bacterial Meningitis / Encephalitis</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access x2, cardiac monitoring, seizure precautions</li>
+                    <li class="order-item">STAT Labs: Blood cultures x2, CBC, CMP, Coags, Lactate, Glucose. HIV test.</li>
+                    <li class="order-item">STAT Empiric Antibiotics (ASAP, ideally within 1 hour of suspicion, DO NOT DELAY FOR LP if unstable or CT needed first):
+                        <ul>
+                            <li class="order-item" style="margin-left: 20px;">Ceftriaxone 2g IV q12h (OR Cefotaxime)</li>
+                            <li class="order-item" style="margin-left: 20px;">PLUS Vancomycin 15-20mg/kg IV q8-12h (target trough 15-20)</li>
+                            <li class="order-item" style="margin-left: 20px;">PLUS Acyclovir 10mg/kg IV q8h (if encephalitis suspected or cannot differentiate)</li>
+                            <li class="order-item" style="margin-left: 20px;">PLUS Ampicillin 2g IV q4h (if age >50 or immunocompromised, for Listeria coverage)</li>
+                        </ul>
+                    </li>
+                    <li class="order-item">Dexamethasone 10mg IV q6h (give WITH or just BEFORE first dose of antibiotics, especially if S. pneumoniae suspected)</li>
+                    <li class="order-item">Lumbar Puncture (LP) STAT (CSF for cell count/diff, gram stain/culture, protein, glucose, viral PCRs, fungal, crypto Ag if indicated) - UNLESS signs of increased ICP, focal neuro deficit, new seizure, papilledema, or severe immunocompromise (then Head CT first).</li>
+                    <li class="order-item">Head CT if indicated before LP. MRI Brain if encephalitis suspected.</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="mening_abx_dexa" disabled checked> <label for="mening_abx_dexa">STAT Empiric Antibiotics & Dexamethasone administered</label></li>
+                    <li><input type="checkbox" id="mening_lp_ordered" disabled> <label for="mening_lp_ordered">Lumbar Puncture ordered/performed (or CT if indicated first)</label></li>
+                    <li><input type="checkbox" id="mening_id_consult" disabled> <label for="mening_id_consult">Consult Infectious Diseases</label></li>
+                    <li><input type="checkbox" id="mening_neuro_consult" disabled> <label for="mening_neuro_consult">Consult Neurology</label></li>
+                    <li><input type="checkbox" id="mening_icu_consider" disabled> <label for="mening_icu_consider">Consider ICU admission (especially if AMS, seizures, shock)</label></li>
+                    <li><input type="checkbox" id="mening_droplet_precautions" disabled> <label for="mening_droplet_precautions">Implement droplet precautions until bacterial meningitis ruled out</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <!-- GI -->
+         <div class="diagnosis-block">
+            <h3>GI Bleed (Upper - Variceal / Non-Variceal; Lower - Massive)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access x2 large bore (16-18G), cardiac monitoring</li>
+                    <li class="order-item">NPO</li>
+                    <li class="order-item">Fluid resuscitation (crystalloids, then blood products)</li>
+                    <li class="order-item">Labs: STAT CBC (serial q4-6h), CMP, Coags (PT/INR, PTT), Type & Crossmatch (at least 2-4 units PRBCs), Fibrinogen</li>
+                    <li class="order-item">Transfuse PRBCs for Hgb <7 g/dL (target Hgb 7-9 g/dL; higher if active massive bleed or severe CAD)</li>
+                    <li class="order-item">Transfuse platelets if <50,000/µL and active bleeding. FFP/PCC for INR >1.5-2 and active bleeding. Cryoprecipitate if fibrinogen <100-150 mg/dL.</li>
+                    <li class="order-item">Proton Pump Inhibitor (PPI): Pantoprazole 80mg IV bolus, then 8mg/hr drip (for suspected non-variceal UGI bleed) OR Pantoprazole 40mg IV BID.</li>
+                    <li class="order-item">If variceal bleed suspected/confirmed:
+                        <ul>
+                            <li class="order-item" style="margin-left: 20px;">Octreotide 50mcg IV bolus, then 50mcg/hr drip</li>
+                            <li class="order-item" style="margin-left: 20px;">Ceftriaxone 1g IV daily (SBP prophylaxis)</li>
+                        </ul>
+                    </li>
+                    <li class="order-item">Consider NG/OG lavage (room temp water) for localization/visualization if UGI bleed, but not mandatory and risks re-bleeding.</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="gib_hemodynamic_stability" disabled> <label for="gib_hemodynamic_stability">Assess and address hemodynamic stability</label></li>
+                    <li><input type="checkbox" id="gib_blood_products" disabled> <label for="gib_blood_products">Blood products ordered/transfused as needed</label></li>
+                    <li><input type="checkbox" id="gib_gi_consult" disabled checked> <label for="gib_gi_consult">Consult Gastroenterology STAT for urgent endoscopy (EGD/colonoscopy)</label></li>
+                    <li><input type="checkbox" id="gib_icu_consider" disabled> <label for="gib_icu_consider">Consider ICU admission for massive bleed, instability, variceal bleed</label></li>
+                    <li><input type="checkbox" id="gib_ir_consult" disabled> <label for="gib_ir_consult">Consider Interventional Radiology consult (for angiography/embolization if endoscopy fails or not feasible for lower GI bleed)</label></li>
+                    <li><input type="checkbox" id="gib_surgery_consult" disabled> <label for="gib_surgery_consult">Consider Surgery consult (if refractory bleeding)</label></li>
+                    <li><input type="checkbox" id="gib_reverse_anticoag" disabled> <label for="gib_reverse_anticoag">Hold/reverse anticoagulants/antiplatelets if safe</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <!-- Sepsis -->
+        <div class="diagnosis-block">
+            <h3>Sepsis / Septic Shock</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations (Surviving Sepsis Campaign Hour-1 Bundle)</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2, IV access x2 large bore, continuous monitoring</li>
+                    <li class="order-item">Measure Lactate level (remeasure if initial lactate >2 mmol/L)</li>
+                    <li class="order-item">Obtain Blood Cultures x2 (aerobic/anaerobic from different sites) BEFORE antibiotics if possible without significant delay</li>
+                    <li class="order-item">Administer Broad-Spectrum Antibiotics STAT (within 1 hour of recognition) - e.g., Vancomycin PLUS (Piperacillin-Tazobactam OR Cefepime OR Meropenem). Tailor to suspected source and local antibiogram.</li>
+                    <li class="order-item">Begin rapid administration of 30 mL/kg crystalloid (NS or LR) for hypotension or lactate ≥4 mmol/L.</li>
+                    <li class="order-item">Apply Vasopressors if hypotensive during or after fluid resuscitation to maintain MAP ≥65 mmHg (Norepinephrine is first-line).</li>
+                    <li class="order-item">Identify and control source of infection (e.g., drain abscess, remove infected line).</li>
+                    <li class="order-item">Other labs: CBC, CMP, Coags, Procalcitonin (optional), UA/Urine culture, CXR. Other cultures as indicated (sputum, wound).</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="sepsis_lactate_cultures_abx_fluids_pressors" disabled checked> <label for="sepsis_lactate_cultures_abx_fluids_pressors">Hour-1 Bundle elements initiated/completed</label></li>
+                    <li><input type="checkbox" id="sepsis_icu_consult" disabled> <label for="sepsis_icu_consult">Consult ICU for septic shock or severe sepsis with organ dysfunction</label></li>
+                    <li><input type="checkbox" id="sepsis_id_consult" disabled> <label for="sepsis_id_consult">Consider Infectious Diseases consult (especially if complex, unclear source, or resistant organisms)</label></li>
+                    <li><input type="checkbox" id="sepsis_source_control" disabled> <label for="sepsis_source_control">Source control measures initiated/planned</label></li>
+                    <li><input type="checkbox" id="sepsis_reassess_volume" disabled> <label for="sepsis_reassess_volume">Reassess volume status and tissue perfusion frequently</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <!-- Add more diagnosis blocks here following the same pattern -->
+        <!-- For brevity in this example, I will stop here, but you would continue for all diagnoses on your list. -->
+        <!-- Example of a placeholder for further diagnoses: -->
+
+        <div class="diagnosis-block">
+            <h3>Acute Abdomen (General Workup to find specific cause)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2 if needed, IV access x2 large bore, cardiac monitoring</li>
+                    <li class="order-item">NPO</li>
+                    <li class="order-item">Fluid resuscitation (crystalloids) if signs of dehydration or shock</li>
+                    <li class="order-item">Pain control (IV analgesics, e.g., Morphine, Hydromorphone, Ketorolac - use NSAIDs cautiously if renal concern or bleed risk)</li>
+                    <li class="order-item">Labs: STAT CBC, CMP, Lipase, Lactate, UA, Urine pregnancy test (females of childbearing age), Coags, Type & Screen (if surgery anticipated)</li>
+                    <li class="order-item">Imaging: Based on suspected etiology - Upright CXR/Abdominal X-ray series (for free air, obstruction), CT Abdomen/Pelvis (with/without contrast - often the workhorse), Ultrasound (for biliary, GYN, appendicitis in peds/pregnancy)</li>
+                    <li class="order-item">Consider empiric antibiotics if perforation or intra-abdominal infection suspected (e.g., Piperacillin-Tazobactam or Ciprofloxacin + Metronidazole)</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="aa_hemodynamic_stability" disabled> <label for="aa_hemodynamic_stability">Assess and address hemodynamic stability</label></li>
+                    <li><input type="checkbox" id="aa_imaging_ordered" disabled> <label for="aa_imaging_ordered">Appropriate imaging ordered STAT</label></li>
+                    <li><input type="checkbox" id="aa_surgery_consult" disabled> <label for="aa_surgery_consult">Consult General Surgery STAT (if surgical abdomen suspected - e.g., peritonitis, obstruction, perforation, appendicitis, cholecystitis, ischemia)</label></li>
+                    <li><input type="checkbox" id="aa_gyn_consult" disabled> <label for="aa_gyn_consult">Consider GYN consult if suspected GYN etiology (e.g., ectopic, ovarian torsion, PID)</label></li>
+                    <li><input type="checkbox" id="aa_pain_control" disabled> <label for="aa_pain_control">Adequate pain control provided</label></li>
+                    <li><input type="checkbox" id="aa_antibiotics_consider" disabled> <label for="aa_antibiotics_consider">Empiric antibiotics considered/initiated if indicated</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="diagnosis-block">
+            <h3>DKA (Diabetic Ketoacidosis) / HHS (Hyperosmolar Hyperglycemic State)</h3>
+            <fieldset>
+                <legend>Initial Orders & Considerations</legend>
+                <ul>
+                    <li class="order-item">ABCs, O2 if needed, IV access x2 large bore, cardiac monitoring (q1-2h EKG for K changes if severe)</li>
+                    <li class="order-item">Labs STAT: Fingerstick glucose, Serum glucose, BMP (q1-2h initially), Serum ketones (beta-hydroxybutyrate preferred), ABG/VBG, CBC, UA, Osmolality. Consider cultures if infection trigger.</li>
+                    <li class="order-item">Fluid Resuscitation: 1-1.5 L NS or LR in first hour. Then 250-500 mL/hr (0.9% NS until glucose <200-250, then D5W 0.45% NS). Adjust based on hydration status. (HHS needs more aggressive volume).</li>
+                    <li class="order-item">Insulin: Regular insulin IV.
+                        <ul>
+                             <li class="order-item" style="margin-left:20px">Option 1: Bolus 0.1 units/kg IV, then drip 0.1 units/kg/hr.</li>
+                             <li class="order-item" style="margin-left:20px">Option 2 (if K+ known >3.3): Drip 0.14 units/kg/hr (no bolus).</li>
+                        </ul>
+                    </li>
+                    <li class="order-item">Potassium:
+                        <ul>
+                            <li class="order-item" style="margin-left:20px">If K+ <3.3 mEq/L: HOLD insulin, give 20-40 mEq K+/hr until K+ >3.3.</li>
+                            <li class="order-item" style="margin-left:20px">If K+ 3.3-5.2 mEq/L: Give 20-30 mEq K+ in each liter of IV fluid to keep K+ 4-5.</li>
+                            <li class="order-item" style="margin-left:20px">If K+ >5.2 mEq/L: Do not give K+, check K+ q2h.</li>
+                        </ul>
+                    </li>
+                    <li class="order-item">Bicarbonate: Generally NOT recommended unless pH <6.9 and severe cardiac instability. If given, 50-100 mmol NaHCO3 in 400ml sterile water + 10-20mEq KCl over 2 hours.</li>
+                    <li class="order-item">Phosphate: Replace if <1.0 mg/dL AND symptomatic (muscle weakness, respiratory depression).</li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Physician Checklist (Key Actions / Consults)</legend>
+                <ul>
+                    <li><input type="checkbox" id="dka_fluids_insulin_k" disabled checked> <label for="dka_fluids_insulin_k">IV fluids, Insulin, and Potassium management initiated per protocol</label></li>
+                    <li><input type="checkbox" id="dka_monitoring" disabled> <label for="dka_monitoring">Close monitoring of glucose, electrolytes (esp K+), anion gap, mental status</label></li>
+                    <li><input type="checkbox" id="dka_icu_consult" disabled> <label for="dka_icu_consult">Consult ICU (especially for severe DKA/HHS, AMS, severe electrolyte issues, pH <7.0)</label></li>
+                    <li><input type="checkbox" id="dka_endo_consult" disabled> <label for="dka_endo_consult">Consider Endocrinology consult</label></li>
+                    <li><input type="checkbox" id="dka_precipitant" disabled> <label for="dka_precipitant">Identify and treat underlying precipitant (infection, non-compliance, new diabetes, MI)</label></li>
+                    <li><input type="checkbox" id="dka_transition_sq" disabled> <label for="dka_transition_sq">Plan for transition to subcutaneous insulin once criteria met</label></li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="notes" style="margin-top: 30px; padding-top:20px; border-top: 1px solid #cbd5e1;">
+            <h3>General Teaching Points for Time-Sensitive Diagnoses:</h3>
+            <ul>
+                <li><strong>"Sick vs. Not Sick":</strong> Develop your clinical gestalt. Does the patient look unwell? Trust your gut and investigate.</li>
+                <li><strong>ABCs First:</strong> Always ensure Airway, Breathing, and Circulation are stable or being actively managed.</li>
+                <li><strong>Early Recognition:</strong> The sooner you identify these, the better the outcome. Know the classic and atypical presentations.</li>
+                <li><strong>Prompt Action:</strong> "Time is tissue" (or brain, or life). Initiate critical interventions quickly.</li>
+                <li><strong>Teamwork & Communication:</strong>
+                    <ul>
+                        <li>Activate appropriate teams early (Stroke team, Cath lab, Rapid Response).</li>
+                        <li>Communicate clearly with nurses, specialists, and senior physicians. Use closed-loop communication.</li>
+                    </ul>
+                </li>
+                <li><strong>Frequent Reassessment:</strong> Patients can deteriorate rapidly. Re-evaluate vital signs, exam, and response to interventions.</li>
+                <li><strong>Know Your Resources:</strong> Understand how to get STAT labs, imaging, and consults in your institution.</li>
+                <li><strong>Address Reversibles:</strong> Think about H's and T's in unstable patients.</li>
+                <li><strong>Don't Delay Consults:</strong> If you think you'll need a specialist, call them sooner rather than later.</li>
+                <li><strong>Documentation:</strong> While acting fast, ensure key findings, interventions, and times are documented.</li>
+            </ul>
+        </div>
+
+    </div>
+    <!-- No script needed for this static list -->
+</body>
+</html>
