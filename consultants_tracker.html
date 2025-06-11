@@ -89,16 +89,22 @@
                     <label for="consultantService" class="block text-sm font-medium text-gray-700">Consultant Service</label>
                     <select id="consultantService" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <option value="">Select a service...</option>
+                        <option>Attending (Internal Medicine)</option>
                         <option>Cardiology</option>
                         <option>Endocrinology</option>
                         <option>Gastroenterology (GI)</option>
+                        <option>General Surgery</option>
                         <option>Hematology/Oncology</option>
                         <option>Infectious Disease (ID)</option>
                         <option>Nephrology</option>
                         <option>Neurology</option>
+                        <option>Neurosurgery</option>
+                        <option>Podiatry</option>
                         <option>Pulmonology</option>
                         <option>Rheumatology</option>
-                        <option>Attending (Internal Medicine)</option>
+                        <option>Thoracic Surgery</option>
+                        <option>Urology</option>
+                        <option>Vascular Surgery</option>
                         <option>Other</option>
                     </select>
                 </div>
@@ -108,6 +114,13 @@
                         <input type="date" id="checkDate" required class="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <button type="button" id="todayBtn" class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">Today</button>
                     </div>
+                </div>
+                <div>
+                    <label for="noteType" class="block text-sm font-medium text-gray-700">Note Type</label>
+                    <select id="noteType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="Progress Note">Progress Note</option>
+                        <option value="Initial Consultation">Initial Consultation</option>
+                    </select>
                 </div>
                 <div>
                     <label for="noteStatus" class="block text-sm font-medium text-gray-700">Note Status</label>
@@ -177,6 +190,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Note Type</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comments</th>
                             <th scope="col" class="relative px-6 py-3 no-print"><span class="sr-only">Actions</span></th>
@@ -218,6 +232,7 @@
             const initialsInput = document.getElementById('initials');
             const consultantServiceInput = document.getElementById('consultantService');
             const checkDateInput = document.getElementById('checkDate');
+            const noteTypeInput = document.getElementById('noteType');
             const noteStatusInput = document.getElementById('noteStatus');
             const isUrgentInput = document.getElementById('isUrgent');
             const commentsInput = document.getElementById('comments');
@@ -284,6 +299,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${entry.initials}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateForDisplay(entry.date)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.service}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.noteType || 'N/A'}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.status}</td>
                         <td class="px-6 py-4 text-sm text-gray-500"><div class="w-48 whitespace-pre-wrap">${entry.comments || ''}</div></td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium no-print space-x-2">
@@ -363,6 +379,7 @@
                 cancelEditButton.classList.add('hidden');
                 currentlyEditingId = null;
                 checkDateInput.value = getTodayDate();
+                noteTypeInput.value = "Progress Note";
                 handleServiceChange();
             };
 
@@ -397,6 +414,7 @@
                     initials: initialsInput.value.trim().toUpperCase(),
                     date: checkDateInput.value,
                     service: consultantServiceInput.value,
+                    noteType: noteTypeInput.value,
                     status: noteStatusInput.value,
                     isUrgent: isUrgentInput.checked,
                     comments: commentsInput.value.trim()
@@ -424,6 +442,7 @@
                 initialsInput.value = entry.initials;
                 checkDateInput.value = entry.date;
                 consultantServiceInput.value = entry.service;
+                noteTypeInput.value = entry.noteType;
                 noteStatusInput.value = entry.status;
                 isUrgentInput.checked = entry.isUrgent;
                 commentsInput.value = entry.comments;
