@@ -37,7 +37,7 @@
                 border: 1px solid #ddd;
                 padding: 8px;
                 text-align: left;
-                font-size: 12px; /* Smaller font for printing */
+                font-size: 11px; /* Smaller font for printing */
             }
             th {
                 background-color: #f2f2f2;
@@ -61,38 +61,70 @@
 
         <!-- Form for new entries -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-8 no-print">
-            <h2 class="text-xl font-semibold mb-4">Add New Patient Entry</h2>
-            <form id="entryForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 id="form-title" class="text-xl font-semibold mb-4">Add New Patient Entry</h2>
+            <form id="entryForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                 <!-- Column 1 -->
                 <div>
-                    <div>
-                        <label for="initials" class="block text-sm font-medium text-gray-700">Patient Initials</label>
-                        <input type="text" id="initials" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="mt-4">
-                        <label for="admissionTime" class="block text-sm font-medium text-gray-700">Date-Time of Admission</label>
-                        <input type="datetime-local" id="admissionTime" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="mt-4">
-                        <label for="edNoteTime" class="block text-sm font-medium text-gray-700">Date-Time ED Opened Note</label>
-                        <input type="datetime-local" id="edNoteTime" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                     <div class="mt-4">
-                        <label for="housestaffNoteTime" class="block text-sm font-medium text-gray-700">Date-Time Housestaff Opened Note</label>
-                        <input type="datetime-local" id="housestaffNoteTime" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <label for="initials" class="block text-sm font-medium text-gray-700">Patient Initials</label>
+                    <input type="text" id="initials" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="reasonForDelay" class="block text-sm font-medium text-gray-700">Reason for Delay / Note Status</label>
+                    <select id="reasonForDelay" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Select a reason...</option>
+                        <option value="ED note not opened">ED note not opened</option>
+                        <option value="ED note opened but no information">ED note opened but no information</option>
+                        <option value="ED note opened with partial information">ED note opened with partial information</option>
+                        <option value="ED note opened completed but not signed">ED note opened completed but not signed</option>
+                        <option value="ED note signed">ED note signed</option>
+                        <option value="Other">Other (specify in details)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="registrationTime" class="block text-sm font-medium text-gray-700">Date-Time of Registration</label>
+                    <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="datetime-local" id="registrationTime" required class="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <button type="button" id="nowBtnRegistration" class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 no-print">Now</button>
                     </div>
                 </div>
-                <!-- Column 2 -->
+
+                 <div>
+                    <label for="admissionTime" class="block text-sm font-medium text-gray-700">Date-Time of Admission</label>
+                     <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="datetime-local" id="admissionTime" required class="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <button type="button" id="nowBtnAdmission" class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 no-print">Now</button>
+                    </div>
+                </div>
                 <div>
-                    <div>
-                        <label for="edNoteDetails" class="block text-sm font-medium text-gray-700">ED Note Details (at time of housestaff review)</label>
-                        <textarea id="edNoteDetails" rows="8" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Copy and paste relevant ED note content here..."></textarea>
+                    <label for="edNoteTime" class="block text-sm font-medium text-gray-700">Date-Time ED Opened Note</label>
+                     <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="datetime-local" id="edNoteTime" required class="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <button type="button" id="nowBtnEd" class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 no-print">Now</button>
                     </div>
-                    <div class="mt-4 text-right">
-                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Add Entry
-                        </button>
+                </div>
+                 <div>
+                    <label for="housestaffNoteTime" class="block text-sm font-medium text-gray-700">Date-Time Housestaff Opened Note</label>
+                     <div class="mt-1 flex rounded-md shadow-sm">
+                        <input type="datetime-local" id="housestaffNoteTime" class="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <button type="button" id="nowBtnHousestaff" class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 no-print">Now</button>
                     </div>
+                </div>
+
+                <!-- Full-width Note Details -->
+                <div class="md:col-span-2">
+                    <label for="edNoteDetails" class="block text-sm font-medium text-gray-700">ED Note Details (at time of housestaff review)</label>
+                    <textarea id="edNoteDetails" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Copy and paste relevant ED note content here..."></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="md:col-span-2 text-right space-x-2">
+                    <button type="button" id="cancelEditButton" class="hidden inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Save Entry
+                    </button>
                 </div>
             </form>
         </div>
@@ -118,12 +150,14 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Initials</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admission Time</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admission</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ED Note Open</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Housestaff Note Open</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delay</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason/Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ED Note Details</th>
-                        <th scope="col" class="relative px-6 py-3 no-print"><span class="sr-only">Delete</span></th>
+                        <th scope="col" class="relative px-6 py-3 no-print"><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
                 <tbody id="entriesTableBody" class="bg-white divide-y divide-gray-200">
@@ -164,6 +198,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // DOM Elements
             const form = document.getElementById('entryForm');
+            const formTitle = document.getElementById('form-title');
             const entriesTableBody = document.getElementById('entriesTableBody');
             const noEntriesMessage = document.getElementById('no-entries');
             const printButton = document.getElementById('printButton');
@@ -171,133 +206,187 @@
             const modal = document.getElementById('confirmationModal');
             const confirmClearButton = document.getElementById('confirmClear');
             const cancelClearButton = document.getElementById('cancelClear');
+            const cancelEditButton = document.getElementById('cancelEditButton');
             
-            // Local storage key
+            // Form Inputs
+            const initialsInput = document.getElementById('initials');
+            const registrationTimeInput = document.getElementById('registrationTime');
+            const admissionTimeInput = document.getElementById('admissionTime');
+            const edNoteTimeInput = document.getElementById('edNoteTime');
+            const housestaffNoteTimeInput = document.getElementById('housestaffNoteTime');
+            const reasonForDelayInput = document.getElementById('reasonForDelay');
+            const edNoteDetailsInput = document.getElementById('edNoteDetails');
+
+            // "Now" Buttons
+            const nowBtnRegistration = document.getElementById('nowBtnRegistration');
+            const nowBtnAdmission = document.getElementById('nowBtnAdmission');
+            const nowBtnEd = document.getElementById('nowBtnEd');
+            const nowBtnHousestaff = document.getElementById('nowBtnHousestaff');
+
+            // App State
             const STORAGE_KEY = 'patientHandoffEntries';
-
-            // Load entries from local storage on page load
             let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            let currentlyEditingIndex = null;
 
-            // Function to render entries in the table
+            // --- UTILITY FUNCTIONS ---
+            
+            const getCurrentDateTimeLocal = () => {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                return now.toISOString().slice(0, 16);
+            };
+
+            const formatDateTimeForDisplay = (dt) => {
+                if (!dt) return 'N/A';
+                const date = new Date(dt);
+                return date.toLocaleString('en-US', {
+                    month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', hour12: true
+                });
+            };
+
+            const calculateDelay = (start, end) => {
+                if (!start || !end) return { text: 'N/A', isLong: false };
+                const startTime = new Date(start);
+                const endTime = new Date(end);
+                let diff = (endTime.getTime() - startTime.getTime()) / 1000;
+                if (diff < 0) return { text: 'Invalid', isLong: true };
+                const hours = Math.floor(diff / 3600);
+                diff %= 3600;
+                const minutes = Math.floor(diff / 60);
+                return {
+                    text: `${hours}h ${minutes}m`,
+                    isLong: (hours >= 1)
+                };
+            };
+            
+            // --- STATE MANAGEMENT ---
+
+            const saveEntries = () => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+            };
+            
+            // --- UI RENDERING ---
+
             const renderEntries = () => {
-                entriesTableBody.innerHTML = ''; // Clear existing table rows
-                
-                if (entries.length === 0) {
-                    noEntriesMessage.style.display = 'block';
-                } else {
-                    noEntriesMessage.style.display = 'none';
-                }
+                entriesTableBody.innerHTML = '';
+                noEntriesMessage.style.display = entries.length === 0 ? 'block' : 'none';
 
                 entries.forEach((entry, index) => {
                     const row = document.createElement('tr');
-                    
                     const delay = calculateDelay(entry.edNoteTime, entry.housestaffNoteTime);
-
-                    // Format dates for display
-                    const formatDateTime = (dt) => {
-                        if (!dt) return 'N/A';
-                        const date = new Date(dt);
-                        return date.toLocaleString('en-US', { 
-                            month: 'short', day: 'numeric', 
-                            hour: '2-digit', minute: '2-digit', hour12: true 
-                        });
-                    };
-
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${entry.initials}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTime(entry.admissionTime)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTime(entry.edNoteTime)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTime(entry.housestaffNoteTime)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTimeForDisplay(entry.registrationTime)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTimeForDisplay(entry.admissionTime)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTimeForDisplay(entry.edNoteTime)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDateTimeForDisplay(entry.housestaffNoteTime)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${delay.isLong ? 'text-red-600' : 'text-green-600'}">${delay.text}</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 notes-cell"><div class="w-64 whitespace-pre-wrap">${entry.edNoteDetails}</div></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium no-print">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.reasonForDelay || 'N/A'}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500 notes-cell"><div class="w-48 whitespace-pre-wrap">${entry.edNoteDetails}</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium no-print space-x-2">
+                            <button data-index="${index}" class="text-indigo-600 hover:text-indigo-900 edit-btn">Edit</button>
                             <button data-index="${index}" class="text-red-600 hover:text-red-900 delete-btn">Delete</button>
                         </td>
                     `;
                     entriesTableBody.appendChild(row);
                 });
 
-                // Add delete event listeners after rendering
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', deleteEntry);
-                });
+                document.querySelectorAll('.edit-btn').forEach(b => b.addEventListener('click', startEdit));
+                document.querySelectorAll('.delete-btn').forEach(b => b.addEventListener('click', deleteEntry));
             };
 
-            // Function to save entries to local storage
-            const saveEntries = () => {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-            };
-
-            // Function to calculate time delay
-            const calculateDelay = (start, end) => {
-                if (!start || !end) return { text: 'N/A', isLong: false };
-
-                const startTime = new Date(start);
-                const endTime = new Date(end);
-                let diff = (endTime.getTime() - startTime.getTime()) / 1000; // difference in seconds
-
-                if (diff < 0) return { text: 'Invalid', isLong: true };
+            const resetForm = () => {
+                form.reset();
+                formTitle.textContent = 'Add New Patient Entry';
+                cancelEditButton.classList.add('hidden');
+                currentlyEditingIndex = null;
                 
-                const hours = Math.floor(diff / 3600);
-                diff %= 3600;
-                const minutes = Math.floor(diff / 60);
-
-                return {
-                    text: `${hours}h ${minutes}m`,
-                    isLong: (hours >= 1) // Highlight if delay is 1 hour or more
-                };
+                // Set default times for new entry
+                registrationTimeInput.value = getCurrentDateTimeLocal();
+                admissionTimeInput.value = getCurrentDateTimeLocal();
+                edNoteTimeInput.value = getCurrentDateTimeLocal();
+                housestaffNoteTimeInput.value = '';
+                reasonForDelayInput.value = '';
             };
+
+            // --- EVENT HANDLERS ---
             
-            // Function to handle form submission
-            const addEntry = (e) => {
+            const saveEntry = (e) => {
                 e.preventDefault();
-                const newEntry = {
-                    id: Date.now(), // Unique ID for each entry
-                    initials: document.getElementById('initials').value.trim().toUpperCase(),
-                    admissionTime: document.getElementById('admissionTime').value,
-                    edNoteTime: document.getElementById('edNoteTime').value,
-                    housestaffNoteTime: document.getElementById('housestaffNoteTime').value,
-                    edNoteDetails: document.getElementById('edNoteDetails').value.trim()
+                const entryData = {
+                    initials: initialsInput.value.trim().toUpperCase(),
+                    registrationTime: registrationTimeInput.value,
+                    admissionTime: admissionTimeInput.value,
+                    edNoteTime: edNoteTimeInput.value,
+                    housestaffNoteTime: housestaffNoteTimeInput.value,
+                    reasonForDelay: reasonForDelayInput.value,
+                    edNoteDetails: edNoteDetailsInput.value.trim()
                 };
 
-                entries.push(newEntry);
+                if (currentlyEditingIndex !== null) {
+                    entries[currentlyEditingIndex] = {...entries[currentlyEditingIndex], ...entryData};
+                } else {
+                    entryData.id = Date.now();
+                    entries.push(entryData);
+                }
+                
                 saveEntries();
                 renderEntries();
-                form.reset();
+                resetForm();
             };
 
-            // Function to delete a single entry
+            function startEdit(e) {
+                const index = parseInt(e.target.dataset.index, 10);
+                const entry = entries[index];
+                
+                currentlyEditingIndex = index;
+                
+                initialsInput.value = entry.initials;
+                registrationTimeInput.value = entry.registrationTime;
+                admissionTimeInput.value = entry.admissionTime;
+                edNoteTimeInput.value = entry.edNoteTime;
+                housestaffNoteTimeInput.value = entry.housestaffNoteTime;
+                reasonForDelayInput.value = entry.reasonForDelay;
+                edNoteDetailsInput.value = entry.edNoteDetails;
+                
+                formTitle.textContent = `Editing Entry: ${entry.initials}`;
+                cancelEditButton.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
             const deleteEntry = (e) => {
                 const indexToDelete = parseInt(e.target.dataset.index, 10);
                 entries.splice(indexToDelete, 1);
                 saveEntries();
                 renderEntries();
+                if (currentlyEditingIndex === indexToDelete) {
+                    resetForm();
+                }
             };
             
-            // Event Listeners
-            form.addEventListener('submit', addEntry);
+            // --- EVENT LISTENERS ---
+            form.addEventListener('submit', saveEntry);
+            cancelEditButton.addEventListener('click', resetForm);
             
-            printButton.addEventListener('click', () => {
-                window.print();
-            });
+            nowBtnRegistration.addEventListener('click', () => registrationTimeInput.value = getCurrentDateTimeLocal());
+            nowBtnAdmission.addEventListener('click', () => admissionTimeInput.value = getCurrentDateTimeLocal());
+            nowBtnEd.addEventListener('click', () => edNoteTimeInput.value = getCurrentDateTimeLocal());
+            nowBtnHousestaff.addEventListener('click', () => housestaffNoteTimeInput.value = getCurrentDateTimeLocal());
 
-            // Modal logic for clearing data
-            clearButton.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-            });
-
-            cancelClearButton.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-            
+            printButton.addEventListener('click', () => window.print());
+            clearButton.addEventListener('click', () => modal.classList.remove('hidden'));
+            cancelClearButton.addEventListener('click', () => modal.classList.add('hidden'));
             confirmClearButton.addEventListener('click', () => {
                 entries = [];
                 saveEntries();
                 renderEntries();
+                resetForm();
                 modal.classList.add('hidden');
             });
 
-            // Initial render
+            // --- INITIALIZATION ---
+            resetForm();
             renderEntries();
         });
     </script>
